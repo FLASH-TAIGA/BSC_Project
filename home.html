@@ -1,0 +1,376 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <script src="theme.js"></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="libs/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="libs/fontawesome/css/all.min.css">
+    <link rel="stylesheet" href="proj.css">
+    <link rel="stylesheet" href="theme.css">
+    <title>FL - Home</title>
+</head>
+<body>
+
+    <!-- Top Bar -->
+    <div class="top-announcement bg-light py-2 d-none d-md-block">
+        <div class="container">
+            <div class="d-flex justify-content-between align-items-center">
+                <p class="mb-0"><i class="fas fa-bell text-danger me-2"></i>THIS IS STRICTLY FOR LEARNING PURPOSES.</p>
+                <div id="topbarUser"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg bg-white sticky-top py-3">
+        <div class="container-fluid px-4">
+            <a class="navbar-brand moodle-logo" href="home.html">
+                <span class="moodle-tilde">~</span>FLASH<br>LEARNING<span class="moodle-tilde">~</span>
+            </a>
+            <img style="width:70px;height:auto;border-radius:50%;" src="image/fl5.jpg" alt="FL Logo">
+            <button class="navbar-toggler ms-2" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                    <li class="nav-item"><a class="nav-link active" href="home.html">Home</a></li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" data-bs-toggle="dropdown">Learn</a>
+                        <ul class="dropdown-menu">
+                            <li><a class="dropdown-item" href="questions.html"><i class="fas fa-book-open me-2 text-primary"></i>Study Notes</a></li>
+                            <li><a class="dropdown-item" href="solutions.html"><i class="fas fa-question-circle me-2 text-success"></i>Q&amp;A Bank</a></li>
+                        </ul>
+                    </li>
+                    <li class="nav-item"><a class="nav-link" href="about.html">About</a></li>
+                    <li class="nav-item"><a class="nav-link" href="contact.html">Contact</a></li>
+                </ul>
+                <!-- Global Search -->
+                <form class="d-flex me-2" onsubmit="globalSearch(event)">
+                    <div class="input-group" style="width:240px;">
+                        <input type="text" class="form-control form-control-sm rounded-pill-start" id="globalSearchInput" placeholder="Search subjects, tutors...">
+                        <button class="btn btn-success btn-sm rounded-pill-end" type="submit"><i class="fas fa-search"></i></button>
+                    </div>
+                </form>
+                <div class="d-flex align-items-center gap-2" id="navAuthArea">
+                    <button class="theme-toggle" onclick="toggleTheme()" title="Toggle dark/light mode"><i class="fas fa-moon icon-moon"></i><i class="fas fa-sun icon-sun"></i></button>
+                    <a href="login.html" class="btn btn-outline-success rounded-pill px-3">Log In</a>
+                    <a href="signup.html" class="btn moodle-btn-primary rounded-pill px-3">Sign Up</a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <header class="hero-section py-5 d-flex align-items-center">
+        <div class="container">
+            <div class="row align-items-center">
+                <div class="col-lg-6 mb-4 mb-lg-0 text-center text-lg-start">
+                    <img src="image/light.avif" alt="Flash Learning" class="img-fluid" style="max-width:380px;border-radius:80px;box-shadow:10px 10px 30px rgba(0,0,0,0.3);">
+                </div>
+                <div class="col-lg-6">
+                    <h1 class="display-3 fw-bold hero-title">Online learning,<br>delivered your way</h1>
+                    <p class="lead hero-description mb-4">Join thousands of students and tutors on FL — the most flexible peer-learning platform built for academic excellence.</p>
+                    <div class="d-flex gap-3 flex-wrap">
+                        <a href="signup.html" class="btn moodle-btn-primary px-4 py-3">Get Started <i class="fas fa-arrow-right ms-2"></i></a>
+                        <a href="about.html" class="btn btn-outline-secondary px-4 py-3">Learn More</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Why FL Section -->
+    <section class="py-5 bg-light">
+        <div class="container">
+            <div class="row align-items-center g-5">
+                <div class="col-lg-6">
+                    <div class="image-card rounded-4 p-2">
+                        <img src="image/stud.webp" style="width:49%;" alt="Students studying" class="img-fluid rounded-4">
+                        <img src="image/img.webp" style="width:49%;" alt="Learning" class="img-fluid rounded-4">
+                    </div>
+                </div>
+                <div class="col-lg-6">
+                    <p class="text-uppercase fw-bold text-muted small mb-2">Why FL?</p>
+                    <h2 class="fw-bold mb-3">FL puts the <span class="text-primary">POWER OF EDUCATION</span> in your hands.</h2>
+                    <p class="para text-muted">At FL, our mission is to empower educators and fellow peer students. Flexible, secure, and customisable — FL gives you the freedom to learn on your terms and promote your studies.</p>
+                    <a href="services.html" class="btn moodle-btn-primary mt-3 px-4">Book a Session</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Feature Cards -->
+    <section class="features-section py-5">
+        <div class="container">
+            <h2 class="text-center fw-bold mb-5">Everything you need to succeed</h2>
+            <div class="row g-4">
+                <div class="col-md-4">
+                    <div class="feature-card card h-100 p-4">
+                        <div class="feature-icon-container"><div class="feature-icon rounded-circle mx-auto"><i class="fas fa-table-cells"></i></div></div>
+                        <div class="card-body px-0">
+                            <h5 class="feature-title">Customise your learning</h5>
+                            <p class="feature-description">Choose your subjects, tutors, and schedule. Build a learning experience that fits your life.</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="feature-card card h-100 p-4">
+                        <div class="feature-icon-container"><div class="feature-icon rounded-circle mx-auto"><i class="fas fa-lock"></i></div></div>
+                        <div class="card-body px-0">
+                            <h5 class="feature-title">Safe &amp; secure platform</h5>
+                            <p class="feature-description">Your data and study materials are protected. We take privacy seriously so you can focus on learning.</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="feature-card card h-100 p-4">
+                        <div class="feature-icon-container"><div class="feature-icon rounded-circle mx-auto"><i class="fas fa-hand"></i></div></div>
+                        <div class="card-body px-0">
+                            <h5 class="feature-title">Easy &amp; affordable</h5>
+                            <p class="feature-description">We understand student budgets. FL keeps costs low so quality education is accessible to everyone.</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="feature-card card h-100 p-4">
+                        <div class="feature-icon-container"><div class="feature-icon rounded-circle mx-auto"><i class="fas fa-bus"></i></div></div>
+                        <div class="card-body px-0">
+                            <h5 class="feature-title">Learn even when away</h5>
+                            <p class="feature-description">No tutor nearby? No problem. Access notes and Q&amp;A banks from anywhere, anytime.</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="feature-card card h-100 p-4">
+                        <div class="feature-icon-container"><div class="feature-icon rounded-circle mx-auto"><i class="fas fa-expand"></i></div></div>
+                        <div class="card-body px-0">
+                            <h5 class="feature-title">Scales with you</h5>
+                            <p class="feature-description">From one student to an entire department — FL grows with your academic needs.</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="feature-card card h-100 p-4">
+                        <div class="feature-icon-container"><div class="feature-icon rounded-circle mx-auto"><i class="fas fa-home"></i></div></div>
+                        <div class="card-body px-0">
+                            <h5 class="feature-title">Any device, anywhere</h5>
+                            <p class="feature-description">Phone, tablet, or laptop — FL works seamlessly across all your devices.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Reviews Section -->
+    <section class="reviews py-5">
+        <div class="container-fluid px-4 px-md-5">
+            <h2 class="text-center fw-bold mb-2" style="color:#d4fe00;">Student Praise</h2>
+            <p class="text-center text-white-50 mb-5">What our community says about FL</p>
+            <div id="reviewCarousel" class="carousel slide" data-bs-ride="carousel">
+                <div class="carousel-inner">
+                    <div class="carousel-item active">
+                        <div class="row g-4 justify-content-center">
+                            <div class="col-md-4">
+                                <div class="bg-white rounded-4 p-4 shadow text-dark h-100">
+                                    <div class="d-flex align-items-center mb-3">
+                                        <div class="rounded-circle bg-success text-white d-flex align-items-center justify-content-center me-3" style="width:50px;height:50px;font-size:1.3rem;font-weight:700;">O</div>
+                                        <div><h6 class="mb-0 fw-bold">Oliver Spiteri</h6><small class="text-muted">Student</small></div>
+                                        <div class="ms-auto text-warning">★★★★★</div>
+                                    </div>
+                                    <p class="mb-0 text-muted">"I'm so happy with the peer-tutoring system! The tutors are really helpful and make learning enjoyable. My grades went from C to B+. I highly recommend it."</p>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="bg-white rounded-4 p-4 shadow text-dark h-100">
+                                    <div class="d-flex align-items-center mb-3">
+                                        <div class="rounded-circle bg-primary text-white d-flex align-items-center justify-content-center me-3" style="width:50px;height:50px;font-size:1.3rem;font-weight:700;">U</div>
+                                        <div><h6 class="mb-0 fw-bold">Utis Adams</h6><small class="text-muted">Student</small></div>
+                                        <div class="ms-auto text-warning">★★★★★</div>
+                                    </div>
+                                    <p class="mb-0 text-muted">"The support is outstanding, the layout is top notch and very user friendly. If you're looking to upgrade your study experience, this is the place."</p>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="bg-white rounded-4 p-4 shadow text-dark h-100">
+                                    <div class="d-flex align-items-center mb-3">
+                                        <div class="rounded-circle bg-warning text-dark d-flex align-items-center justify-content-center me-3" style="width:50px;height:50px;font-size:1.3rem;font-weight:700;">A</div>
+                                        <div><h6 class="mb-0 fw-bold">Amara Diallo</h6><small class="text-muted">Student</small></div>
+                                        <div class="ms-auto text-warning">★★★★★</div>
+                                    </div>
+                                    <p class="mb-0 text-muted">"FL made studying so much easier. I can access notes at any time and book sessions with tutors who actually care about my progress."</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="carousel-item">
+                        <div class="row g-4 justify-content-center">
+                            <div class="col-md-4">
+                                <div class="bg-white rounded-4 p-4 shadow text-dark h-100">
+                                    <div class="d-flex align-items-center mb-3">
+                                        <div class="rounded-circle bg-danger text-white d-flex align-items-center justify-content-center me-3" style="width:50px;height:50px;font-size:1.3rem;font-weight:700;">C</div>
+                                        <div><h6 class="mb-0 fw-bold">Chloe Nkeng</h6><small class="text-muted">Student</small></div>
+                                        <div class="ms-auto text-warning">★★★★★</div>
+                                    </div>
+                                    <p class="mb-0 text-muted">"Booking a session is so simple. I found a tutor for Organic Chemistry within minutes and passed my exam. This platform is a lifesaver."</p>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="bg-white rounded-4 p-4 shadow text-dark h-100">
+                                    <div class="d-flex align-items-center mb-3">
+                                        <div class="rounded-circle bg-info text-white d-flex align-items-center justify-content-center me-3" style="width:50px;height:50px;font-size:1.3rem;font-weight:700;">M</div>
+                                        <div><h6 class="mb-0 fw-bold">Marcus Tabi</h6><small class="text-muted">Student</small></div>
+                                        <div class="ms-auto text-warning">★★★★☆</div>
+                                    </div>
+                                    <p class="mb-0 text-muted">"The study notes section alone is worth signing up for. I downloaded past papers for three subjects and aced my resits. Brilliant resource."</p>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="bg-white rounded-4 p-4 shadow text-dark h-100">
+                                    <div class="d-flex align-items-center mb-3">
+                                        <div class="rounded-circle bg-success text-white d-flex align-items-center justify-content-center me-3" style="width:50px;height:50px;font-size:1.3rem;font-weight:700;">F</div>
+                                        <div><h6 class="mb-0 fw-bold">Fatou Bah</h6><small class="text-muted">Student</small></div>
+                                        <div class="ms-auto text-warning">★★★★★</div>
+                                    </div>
+                                    <p class="mb-0 text-muted">"I was struggling with Econometrics and couldn't find help anywhere. FL matched me with a PhD tutor in 24 hours. My dissertation is back on track."</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="d-flex justify-content-center gap-3 mt-4">
+                    <button class="btn btn-sm btn-outline-light rounded-circle" data-bs-target="#reviewCarousel" data-bs-slide="prev" style="background-color: aquamarine;"><i class="fas fa-chevron-left"></i></button>
+                    <button class="btn btn-sm btn-outline-light rounded-circle" data-bs-target="#reviewCarousel" data-bs-slide="next" style="background-color: aquamarine;"><i class="fas fa-chevron-right"></i></button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Tutors Auto-Scroll Carousel -->
+    <section class="py-5 bg-light">
+        <div class="container">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <h4 class="fw-bold mb-0">Meet Our Tutors</h4>
+                <a href="about.html" class="btn btn-outline-success btn-sm rounded-pill">View All</a>
+            </div>
+            <div class="row g-4 justify-content-center" id="homeTutorGrid">
+                <div class="col-12 text-center py-3 text-muted"><div class="spinner-border spinner-border-sm text-success me-2"></div>Loading...</div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA Banner -->
+    <section class="py-5 bg-primary text-white text-center">
+        <div class="container">
+            <h2 class="fw-bold mb-3">Ready to start learning?</h2>
+            <p class="lead mb-4">Join FL today and take control of your academic journey.</p>
+            <a href="signup.html" class="btn btn-warning btn-lg px-5 rounded-pill fw-bold">Create Free Account</a>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-dark text-white pt-5 pb-3">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-4 mb-4">
+                    <h5 class="text-warning mb-3">FLASH LEARNING</h5>
+                    <p class="text-white-50 small">Empowering students through accessible, high-quality tutoring and resources.</p>
+                    <div class="mt-3">
+                        <a href="#" class="text-white me-3"><i class="fab fa-facebook fa-lg"></i></a>
+                        <a href="#" class="text-white me-3"><i class="fab fa-twitter fa-lg"></i></a>
+                        <a href="#" class="text-white"><i class="fab fa-instagram fa-lg"></i></a>
+                    </div>
+                </div>
+                <div class="col-md-2 mb-4">
+                    <h6 class="text-white mb-3">Quick Links</h6>
+                    <ul class="list-unstyled">
+                        <li><a href="home.html" class="text-white-50 text-decoration-none small">Home</a></li>
+                        <li><a href="questions.html" class="text-white-50 text-decoration-none small">Study Notes</a></li>
+                        <li><a href="solutions.html" class="text-white-50 text-decoration-none small">Q&amp;A Bank</a></li>
+                        <li><a href="services.html" class="text-white-50 text-decoration-none small">Book Session</a></li>
+                    </ul>
+                </div>
+                <div class="col-md-3 mb-4">
+                    <h6 class="text-white mb-3">Legal</h6>
+                    <ul class="list-unstyled">
+                        <li><a href="privacy.html" class="text-white-50 text-decoration-none small">Privacy Policy</a></li>
+                        <li><a href="terms.html" class="text-white-50 text-decoration-none small">Terms of Use</a></li>
+                        <li><a href="about.html" class="text-white-50 text-decoration-none small">About Us</a></li>
+                    </ul>
+                </div>
+                <div class="col-md-3 mb-4">
+                    <h6 class="text-white mb-3">Newsletter</h6>
+                    <p class="text-white-50 small">Get updates on new study materials.</p>
+                    <div class="input-group">
+                        <input type="email" class="form-control form-control-sm" placeholder="Your email">
+                        <button class="btn btn-warning btn-sm" type="button">Join</button>
+                    </div>
+                </div>
+            </div>
+            <hr class="border-secondary">
+            <div class="text-center small text-white-50">&copy; 2024 Flash Learning Platform. All Rights Reserved.</div>
+        </div>
+    </footer>
+
+    <!-- Scroll to Top Button -->
+    <button id="scrollTopBtn" onclick="window.scrollTo({top:0,behavior:'smooth'})" title="Back to top"
+        style="position:fixed;bottom:2rem;right:2rem;z-index:1050;width:48px;height:48px;border-radius:50%;background:#4CAF50;border:none;color:#fff;font-size:1.2rem;box-shadow:0 4px 12px rgba(0,0,0,0.2);display:none;cursor:pointer;transition:opacity 0.2s;">
+        <i class="fas fa-arrow-up"></i>
+    </button>
+
+    <script src="libs/bootstrap/js/bootstrap.bundle.min.js"></script>
+    <script src="auth.js"></script>
+    <script>
+        // Update navbar based on login state
+        const user = getCurrentUser();
+        if (user) {
+            document.getElementById('navAuthArea').innerHTML = `
+                <button class="theme-toggle" onclick="toggleTheme()"><i class="fas fa-moon icon-moon"></i><i class="fas fa-sun icon-sun"></i></button>
+                <span class="text-muted small me-2">Hi, <strong>${user.name.split(' ')[0]}</strong></span>
+                <a href="${user.role === 'admin' ? 'dashboard-admin.html' : user.role === 'tutor' ? 'dashboard-tutor.html' : 'dashboard-student.html'}" class="btn moodle-btn-primary rounded-pill px-3">Dashboard</a>
+                <button onclick="logout()" class="btn btn-outline-danger rounded-pill px-3">Logout</button>`;
+            document.getElementById('topbarUser').innerHTML = `<span class="text-muted small"><i class="fas fa-user-circle me-1"></i>Logged in as <strong>${user.name}</strong> (${user.role})</span>`;
+        }
+
+        // Live tutor grid on home page (show first 6)
+        const COLORS = ['primary','success','danger','warning','info'];
+        fetch('api/tutors.php')
+            .then(r => r.json())
+            .then(d => {
+                const grid = document.getElementById('homeTutorGrid');
+                if (!d.success || !d.tutors.length) { grid.innerHTML = '<div class="col-12 text-center text-muted">No tutors yet.</div>'; return; }
+                grid.innerHTML = d.tutors.slice(0, 6).map((t, i) => {
+                    const color   = COLORS[i % COLORS.length];
+                    const firstSub = t.subjects ? t.subjects.split(',')[0].trim() : 'General';
+                    const avatar  = t.photo_filename
+                        ? `<img src="image/${t.photo_filename}" style="width:70px;height:70px;border-radius:50%;object-fit:cover;" class="mx-auto mb-3 d-block" alt="${t.name}">`
+                        : `<div class="rounded-circle bg-${color} bg-opacity-10 text-${color} mx-auto mb-3 d-flex align-items-center justify-content-center" style="width:70px;height:70px;font-size:1.8rem;"><i class="fas fa-user-tie"></i></div>`;
+                    return `<div class="col-6 col-md-4"><div class="card border-0 shadow-sm text-center p-4 rounded-4 h-100">${avatar}<h6 class="fw-bold">${t.name}</h6><p class="text-muted small mb-0">${firstSub}</p></div></div>`;
+                }).join('');
+            })
+            .catch(() => { document.getElementById('homeTutorGrid').innerHTML = ''; });
+        // Scroll to top button visibility
+        window.addEventListener('scroll', () => {
+            document.getElementById('scrollTopBtn').style.display = window.scrollY > 300 ? 'block' : 'none';
+        });
+
+        // Global search
+        function globalSearch(e) {
+            e.preventDefault();
+            const q = document.getElementById('globalSearchInput').value.trim();
+            if (!q) return;
+            const u = getCurrentUser();
+            if (u && u.role === 'student') {
+                sessionStorage.setItem('fl_search_query', q);
+                window.location.href = 'dashboard-student.html#book';
+            } else if (u) {
+                window.location.href = 'dashboard-' + u.role + '.html';
+            } else {
+                sessionStorage.setItem('fl_search_query', q);
+                window.location.href = 'signup.html';
+            }
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <script src="theme.js"></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="proj.css">
+    <link rel="stylesheet" href="theme.css">
+    <link href="libs/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="libs/fontawesome/css/all.min.css">
+    <title>FL-Study Notes</title>
+</head>
+<body>
+    <div class="top-announcement bg-light py-2 d-none d-md-block"><div class="container"><p class="mb-0 small"><i class="fas fa-bell text-danger me-2"></i>THIS IS STRICTLY FOR LEARNING PURPOSES.</p></div></div>
+    <nav class="navbar navbar-expand-lg bg-white sticky-top py-3">
+        <div class="container-fluid px-4">
+            <a class="navbar-brand moodle-logo" href="home.html"><span class="moodle-tilde">~</span>FLASH<br>LEARNING<span class="moodle-tilde">~</span></a>
+            <img style="width:70px;height:auto;border-radius:50%;" src="image/fl5.jpg" alt="FL Logo">
+            <button class="navbar-toggler ms-2" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"><span class="navbar-toggler-icon"></span></button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                    <li class="nav-item"><a class="nav-link" href="home.html">Home</a></li>
+                    <li class="nav-item dropdown"><a class="nav-link dropdown-toggle active" href="#" data-bs-toggle="dropdown">Learn</a><ul class="dropdown-menu"><li><a class="dropdown-item" href="questions.html"><i class="fas fa-book-open me-2 text-primary"></i>Study Notes</a></li><li><a class="dropdown-item" href="solutions.html"><i class="fas fa-question-circle me-2 text-success"></i>Q&amp;A Bank</a></li></ul></li>
+                    <li class="nav-item"><a class="nav-link" href="about.html">About</a></li>
+                    <li class="nav-item"><a class="nav-link" href="contact.html">Contact</a></li>
+                </ul>
+                <div class="d-flex align-items-center gap-2" id="navAuthArea">
+                    <button class="theme-toggle" onclick="toggleTheme()" title="Toggle dark/light mode"><i class="fas fa-moon icon-moon"></i><i class="fas fa-sun icon-sun"></i></button><a href="login.html" class="btn btn-outline-success rounded-pill px-3">Log In</a><a href="signup.html" class="btn moodle-btn-primary rounded-pill px-3">Sign Up</a></div>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container mt-5">
+    <h2 class="mb-4">Lecture Notes Vault</h2>
+    <div class="row">
+        <!-- Sidebar List -->
+        <div class="col-md-4">
+            <div class="card mb-3 p-3">
+                <h5>Advanced Physics Vol 1</h5>
+                <p class="small text-muted">Tutor: Prof. Richards</p>
+                <button class="btn btn-sm btn-primary" onclick="loadPDF('image/null.pdf')">View Notes</button>
+            </div>
+            <div class="card mb-3 p-3">
+                <h5>Microeconomics Summary</h5>
+                <p class="small text-muted">Tutor: Dr. Sarah Smith</p>
+                <button class="btn btn-sm btn-primary" onclick="loadPDF('image/PHP.pdf')">View Notes</button>
+            </div>
+        </div>
+        <!-- Restricted Viewer -->
+        <div class="col-md-8">
+            <div class="border rounded bg-light p-2" style="height: 600px;">
+                <p class="text-center text-muted pt-5" id="placeholder">Select a file to view (Download disabled)</p>
+                <!-- #toolbar=0 prevents standard UI tools -->
+                <iframe id="pdfViewer" src="" width="100%" height="100%" style="display:none;" oncontextmenu="return false;"></iframe>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    function loadPDF(fileName) {
+        document.getElementById('placeholder').style.display = 'none';
+        const viewer = document.getElementById('pdfViewer');
+        viewer.style.display = 'block';
+        // The #toolbar=0 is a browser-level hint to hide download/print buttons
+        viewer.src = fileName + "#toolbar=0&navpanes=0&scrollbar=0";
+    }
+</script>
+
+
+    <!-- Footer -->
+    <footer class="bg-dark text-white pt-5 pb-3 mt-5">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-4 mb-4">
+                    <h5 class="text-warning mb-4">FLASH LEARNING</h5>
+                    <p>Empowering students through accessible, high-quality tutoring and resources. Join our community of learners today.</p>
+                    <div class="mt-3">
+                        <a href="#" class="text-white me-3"><i class="fab fa-facebook fa-lg"></i></a>
+                        <a href="#" class="text-white me-3"><i class="fab fa-twitter fa-lg"></i></a>
+                        <a href="#" class="text-white"><i class="fab fa-instagram fa-lg"></i></a>
+                    </div>
+                </div>
+                <div class="col-md-2 mb-4">
+                    <h5>Quick Links</h5>
+                    <ul class="list-unstyled mt-3">
+                        <li><a href="questions.html" class="text-white-50 text-decoration-none">Study Notes</a></li>
+                        <li><a href="solutions.html" class="text-white-50 text-decoration-none">Q&amp;A Bank</a></li>
+                        <li><a href="contact.html" class="text-white-50 text-decoration-none">Contact</a></li>
+                    </ul>
+                </div>
+                <div class="col-md-3 mb-4">
+                    <h5>Legal</h5>
+                    <ul class="list-unstyled mt-3">
+                        <li><a href="privacy.html" class="text-white-50 text-decoration-none">Privacy Policy</a></li>
+                        <li><a href="terms.html" class="text-white-50 text-decoration-none">Terms of Use</a></li>
+                        <li><a href="#" class="text-white-50 text-decoration-none">Rules</a></li>
+                    </ul>
+                </div>
+                <div class="col-md-3 mb-4">
+                    <h5>Newsletter</h5>
+                    <p class="small">Get updates on new study materials.</p>
+                    <div class="input-group mb-3">
+                        <input type="text" class="form-control" placeholder="Email">
+                        <button class="btn btn-warning" type="button">Join</button>
+                    </div>
+                </div>
+            </div>
+            <hr class="bg-secondary">
+            <div class="text-center small text-white-50">
+                &copy; 2023 Flash Learning Platform. All Rights Reserved.
+            </div>
+        </div>
+    </footer>
+    <script src="libs/bootstrap/js/bootstrap.bundle.min.js"></script>
+    <script src="auth.js"></script>
+    <script>const u=getCurrentUser();if(u)document.getElementById('navAuthArea').innerHTML=`<a href="${u.role==='admin'?'dashboard-admin.html':u.role==='tutor'?'dashboard-tutor.html':'dashboard-student.html'}" class="btn moodle-btn-primary rounded-pill px-3">Dashboard</a><button onclick="logout()" class="btn btn-outline-danger rounded-pill px-3">Logout</button>`;</script>
+</body>
+</html>

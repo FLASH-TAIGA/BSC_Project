@@ -1,0 +1,586 @@
+/* Custom Fonts */
+body {
+    font-family: 'Open Sans', sans-serif;
+    color: #333;
+    background-color: #f8f9fa;
+}
+
+h1, h2, h3, h4, h5, h6 {
+    font-family: 'Playfair Display', serif;
+    color: #1a2a4b;
+}
+
+/* Navbar */
+.navbar {
+    border-bottom: 1px solid #f0f0f0;
+}
+.dropdown:hover .dropdown-menu {
+    display: block;
+}
+
+.moodle-logo {
+    font-family: 'Open Sans', sans-serif;
+    font-weight: 700;
+    font-size: 1.8rem;
+    color: #4CAF50;
+    text-decoration: none;
+    margin-right: 2rem;
+}
+
+.moodle-tilde {
+    color: #FF5722;
+    margin-right: -0.1em;
+}
+
+.navbar-nav .nav-link {
+    color: #495057;
+    font-weight: 600;
+    margin-right: 1.2rem;
+    padding-left: 0;
+    padding-right: 0;
+}
+
+.navbar-nav .nav-link:hover {
+    color: #4CAF50;
+    border-left: white 3px solid;
+    border-right: white 3px solid;
+    border-bottom-left-radius: 60px;
+    border-top-left-radius: 60px;
+    border-top-right-radius: 60px;
+    border-bottom-right-radius: 60px;
+}
+
+.navbar-nav .dropdown-toggle::after {
+    margin-left: 0.5rem;
+    vertical-align: 0.05em;
+}
+
+.dropdown-menu {
+    border-radius: 0.5rem;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    border: none;
+    padding: 0.5rem 0;
+}
+
+.dropdown-item {
+    padding: 0.75rem 1.5rem;
+    font-weight: 500;
+    color: #495057;
+}
+
+.dropdown-item:hover {
+    background-color: #f0f8f0;
+    color: #4CAF50;
+    border-left: white 3px solid;
+border-right: white 3px solid;
+border-bottom-left-radius: 60px;
+border-top-left-radius: 60px;
+border-top-right-radius: 60px;
+border-bottom-right-radius: 60px;
+}
+
+/* Custom Buttons (matching Moodle style) */
+.moodle-btn-primary {
+    background-color: #4CAF50;
+    border-color: #4CAF50;
+    color: white;
+    font-weight: 600;
+    padding: 0.75rem 1.5rem;
+    border-radius: 2rem;
+    transition: background-color 0.2s ease, border-color 0.2s ease;
+}
+
+.moodle-btn-primary:hover {
+    background-color: #43a047;
+    border-color: #43a047;
+    color: white;
+}
+
+.moodle-btn-secondary {
+    background-color: transparent;
+    border-color: #adb5bd;
+    color: #495057;
+    font-weight: 600;
+    padding: 0.75rem 1.5rem;
+    border-radius: 2rem;
+    transition: all 0.2s ease;
+}
+
+.moodle-btn-secondary:hover {
+    background-color: #f0f0f0;
+    border-color: #adb5bd;
+    color: #495057;
+}
+
+.moodle-btn-arrow {
+    padding-right: 2rem;
+}
+
+/* Hero Section */
+.hero-section {
+    background-color: #fbfbfc68;
+    min-height: 70vh;
+    padding-top: 5rem;
+    padding-bottom: 5rem;
+    background-image: url('image/whitesmoke.webp');
+    background-size: cover;
+    background-position: center;
+}
+
+.hero-title {
+    font-size: 4.5rem;
+    line-height: 1.1;
+    color: #1a2a4b;
+}
+
+.hero-description {
+    font-size: 1.25rem;
+    color: #6c757d;
+}
+
+/* Image Card */
+.image-card {
+    background-color: white;
+    overflow: hidden;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+    border: 1px solid #e9ecef;
+}
+
+.image-card img {
+    min-height: 400px;
+    object-fit: cover;
+}
+
+/* Flash (hero) image - responsive rules moved from inline styles */
+.flash img {
+    width: 100%;
+    max-width: 400px;
+    height: auto;
+    border-radius: 80px;
+    display: block;
+    margin: 0 auto;
+}
+
+/* Side images placed inside .image-card (two-image layout) */
+.image-card .side-images {
+    display: flex;
+    gap: 1rem;
+    flex-wrap: wrap;
+}
+.image-card .side-images .col-md-6 {
+    padding: 0; /* rely on row gutters for spacing */
+}
+.image-card .side-images img {
+    width: 100%;
+    height: auto;
+    min-height: auto; /* override the general min-height for these side images */
+    object-fit: cover;
+}
+
+.image-caption {
+    font-size: 0.9rem;
+    color: #ced4da;
+    border-top-left-radius: 0;
+    border-top-right-radius: 0;
+    width: 100%;
+    left: 0;
+    transform: translateY(1px);
+}
+
+.content-heading {
+    font-size: 9rem;
+    line-height: 1.2;
+    
+}
+
+.para{
+    font-size: 20px;
+}
+.floating-chat-btn {
+    position: fixed;
+    bottom: 2rem;
+    right: 2rem;
+    z-index: 1050;
+}
+
+.moodle-chat-btn {
+    background-color: #ff5722;
+    border-color: #ff5722;
+    width: 60px;
+    height: 60px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+    transition: background-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.moodle-chat-btn:hover {
+    background-color: #e64a19;
+    border-color: #e64a19;
+    box-shadow: 0 6px 15px rgba(0, 0, 0, 0.3);
+}
+
+/* Features Section */
+.features-section {
+    background-color: #f8f9fa; /* Light grey background */
+    padding-top: 4rem;
+    padding-bottom: 4rem;
+    background-image: url('image/back5.webp');
+    background-size: cover;
+    background-position: center;
+}
+
+.feature-card {
+    border: none;
+    border-radius: 1rem;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08); /* Softer shadow */
+    transition: transform 0.2s ease-in-out;
+    background-color: #fff; /* White cards */
+}
+
+.feature-card:hover {
+    transform: translateY(-5px); /* Slightly lift on hover */
+}
+
+.feature-icon-container {
+    padding: 1.5rem 0;
+}
+
+.feature-icon {
+    width: 60px;
+    height: 60px;
+    background-color: #f0ad4e; /* Moodle Orange */
+    color: white;
+    font-size: 1.5rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.feature-title {
+    font-size: 1.3rem;
+    font-weight: 600;
+    color: #343a40; /* Dark grey title */
+    margin-bottom: 0.75rem;
+    text-align: left;
+}
+
+.feature-description {
+    font-size: 1rem;
+    color: #6c757d; /* Grey description */
+    text-align: left;
+}
+
+.reviews{
+    background-image: url('image/fl2.avif');
+    background-size: cover;
+    background-position: center;
+    min-height: 500px;
+    padding: 60px 0;}
+
+.main-review img {
+    width: 100px;
+    height: auto;
+    border-radius: 15px;
+    border: #bbb 2px solid;
+    font-family: 'Times New Roman', Times, serif;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1) 2px 2px 4px;
+}
+.review {
+    margin-top: 0;
+    font-size: 1.6rem;
+    color: #03f21b;
+    line-height: 1.6;
+    font-family: 'Times New Roman', Times, serif;
+}
+.bot-comment {
+    /* margin-top: 40px; */
+    font-size: 1rem;
+    color: #555;
+    background-color: #e6e6e6;
+    width: 300px;
+    padding: 10px;
+    border-radius: 20px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    position: absolute;
+    bottom: 200px;
+    right: 50px;
+    z-index: 1;
+    /* transition: transform 0.3s ease; */
+    font-family: 'Times New Roman', Times, serif;
+}
+.bot-comment h2 {
+    font-size: 1.2rem;
+    margin-bottom: 5px;
+    color: #007bff;
+}
+.bot-comment p {
+    font-size: 0.9rem;
+    color: #777;
+}
+
+.tag-list{
+    width: 30rem;
+    font-family: "Montserrat";
+    position: relative;
+    overflow: hidden;
+    margin-bottom: 30px;
+}
+.inner{
+    width: fit-content;
+    display: flex;
+    gap:1rem;
+    animation: loop 5s linear infinite;
+    -webkit-animation: loop 5s linear infinite;
+}
+.tag{
+
+    align-items: center;
+    gap: 3px;
+    /* padding: 0.7rem 1rem; */
+    color: #e2e8f0;
+    font-size: 0.9rem;
+    /* background-color: #334155; */
+    border-radius: 0.4rem;
+    box-shadow:
+                0 0.1rem 0.2rem rgba(0, 0, 0, 0.1),
+                0 0.1rem 0.5rem rgba(0, 0, 0, 0.06),
+                0 0.2rem 1.5rem rgba(0, 0, 0, 0.06);
+}
+.inner img{
+    width: 300px;
+    height: 300px;
+    border-radius: 10px;
+    -webkit-border-radius: 10px;
+    -moz-border-radius: 10px;
+    -ms-border-radius: 10px;
+    -o-border-radius: 10px;
+}
+.fade{
+    position: absolute;
+    background: linear-gradient(90deg,#1e293b, transparent 30%,
+                transparent 70%,#1e293b );
+    inset: 0;
+    pointer-events: none;
+}
+
+@keyframes loop {
+    0% {
+        transform: translateX(0);
+    }
+    100% {
+        transform: translateX(-6%);
+        -webkit-transform: translateX(-6%);
+        -moz-transform: translateX(-6%);
+        -ms-transform: translateX(-6%);
+        -o-transform: translateX(-6%);
+}
+}
+/* Custom Variables */
+:root {
+    --primary-color: #0d6efd;
+    --secondary-color: #6c757d;
+    --dark-bg: #1e293b;
+}
+
+body {
+    font-family: 'Inter', sans-serif;
+    color: #334155;
+}
+
+/* Hero Section */
+.hero-title {
+    line-height: 1.1;
+    letter-spacing: -1px;
+}
+
+.moodle-btn-primary {
+    padding: 12px 30px;
+    border-radius: 50px;
+    font-weight: 600;
+    transition: all 0.3s ease;
+}
+
+.moodle-btn-primary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(13, 110, 253, 0.3);
+}
+
+/* Image Section */
+.image-card {
+    overflow: hidden;
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+    background: #fff;
+    padding: 15px;
+}
+
+.image-card img {
+    transition: transform 0.5s ease;
+    object-fit: cover;
+    height: 400px;
+}
+
+.image-card:hover img {
+    transform: scale(1.02);
+}
+
+.image-caption {
+    width: 100%;
+    backdrop-filter: blur(5px);
+}
+
+/* Feature Cards */
+.feature-card {
+    border: none;
+    border-radius: 20px;
+    padding: 30px;
+    transition: all 0.3s ease;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+}
+
+.feature-card:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 15px 40px rgba(0,0,0,0.1);
+}
+
+.feature-icon-container {
+    margin-bottom: 20px;
+}
+
+.feature-icon {
+    width: 60px;
+    height: 60px;
+    background: rgba(13, 110, 253, 0.1);
+    color: var(--primary-color);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 24px;
+}
+
+.feature-title {
+    font-weight: 700;
+    margin-bottom: 15px;
+}
+
+.feature-description {
+    color: #64748b;
+    font-size: 0.95rem;
+    line-height: 1.6;
+}
+
+.para {
+    border-left: 4px solid var(--primary-color);
+    padding-left: 20px;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/* Responsive adjustments */
+@media (max-width: 991.98px) {
+    .navbar-collapse {
+        background-color: white;
+        padding: 1rem;
+        border-radius: 0.5rem;
+        margin-top: 1rem;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    }
+    .navbar-nav .nav-link {
+        margin-right: 0;
+        padding: 0.75rem 0;
+    }
+    .hero-title {
+        font-size: 3rem;
+    }
+    .hero-description {
+        font-size: 1.1rem;
+    }
+    .moodle-btn-primary {
+        width: 100%;
+        text-align: center;
+    }
+    .image-card img {
+        min-height: 250px;
+    }
+    .content-heading {
+        font-size: 2.2rem;
+    }
+}
+
+@media (max-width: 767.98px) {
+    .hero-title {
+        font-size: 2.5rem;
+        text-align: center;
+    }
+    .hero-description {
+        text-align: center;
+    }
+    .moodle-btn-arrow {
+        display: block;
+        width: 100%;
+        text-align: center;
+    }
+    .content-heading {
+        font-size: 1.8rem;
+        text-align: center;
+    }
+    .text-uppercase.fw-bold.text-muted.small {
+        text-align: center;
+    }
+}

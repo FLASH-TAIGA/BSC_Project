@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <script src="theme.js"></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="proj.css">
+    <link rel="stylesheet" href="theme.css">
+    <link href="libs/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="libs/fontawesome/css/all.min.css">
+    <title>FL - Sign Up</title>
+    <style>
+        .auth-wrapper { min-height: 100vh; background: linear-gradient(135deg, #1a2a4b 0%, #4CAF50 100%); display: flex; align-items: center; }
+        .auth-card { border-radius: 1.5rem; box-shadow: 0 20px 60px rgba(0,0,0,0.2); }
+        .auth-logo { font-size: 2rem; font-weight: 700; color: #4CAF50; }
+        .auth-logo span { color: #FF5722; }
+        .role-card { border: 2px solid #dee2e6; border-radius: 1rem; padding: 1rem; cursor: pointer; transition: all 0.2s; }
+        .role-card:hover, .role-card.selected { border-color: #4CAF50; background: #f0f8f0; }
+        .role-card input { display: none; }
+    </style>
+</head>
+<body>
+<div class="auth-wrapper">
+    <div class="container py-5">
+        <div class="row justify-content-center">
+            <div class="col-md-6">
+                <div class="auth-card card p-4 p-md-5">
+                    <div class="text-end mb-2"><button class="theme-toggle" onclick="toggleTheme()" title="Toggle dark/light mode"><i class="fas fa-moon icon-moon"></i><i class="fas fa-sun icon-sun"></i></button></div>
+                    <div class="text-center mb-4">
+                        <a href="index.html" class="auth-logo text-decoration-none"><span>~</span>FLASH LEARNING<span>~</span></a>
+                        <p class="text-muted mt-2">Create your account</p>
+                    </div>
+                    <div id="signupError" class="alert alert-danger d-none"></div>
+                    <form id="signupForm">
+                        <div class="mb-3">
+                            <label class="form-label fw-semibold">Full Name</label>
+                            <input type="text" id="signupName" class="form-control form-control-lg" placeholder="Your full name" required>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label fw-semibold">Email Address</label>
+                            <input type="email" id="signupEmail" class="form-control form-control-lg" placeholder="you@example.com" required>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label fw-semibold">Password</label>
+                            <div class="input-group">
+                                <input type="password" id="signupPassword" class="form-control form-control-lg" placeholder="Min. 6 characters" required minlength="6">
+                                <button class="btn btn-outline-secondary" type="button" onclick="togglePwd('signupPassword')"><i class="fas fa-eye"></i></button>
+                            </div>
+                        </div>
+                        <div class="mb-4">
+                            <label class="form-label fw-semibold">I am joining as a...</label>
+                            <div class="row g-3">
+                                <div class="col-6">
+                                    <label class="role-card d-block text-center" id="roleStudent" onclick="selectRole('student')">
+                                        <i class="fas fa-user-graduate fa-2x text-primary mb-2 d-block"></i>
+                                        <strong>Student</strong>
+                                        <p class="small text-muted mb-0">Access notes & book sessions</p>
+                                    </label>
+                                </div>
+                                <div class="col-6">
+                                    <label class="role-card d-block text-center" id="roleTutor" onclick="selectRole('tutor')">
+                                        <i class="fas fa-chalkboard-teacher fa-2x text-success mb-2 d-block"></i>
+                                        <strong>Tutor</strong>
+                                        <p class="small text-muted mb-0">Teach & manage sessions</p>
+                                    </label>
+                                </div>
+                            </div>
+                            <input type="hidden" id="selectedRole" value="student">
+                        </div>
+                        <button type="submit" class="btn moodle-btn-primary w-100 py-3 fs-5">Create Account</button>
+                        <p class="text-center text-muted small mt-3">By signing up you agree to our <a href="terms.html" target="_blank" class="text-success fw-semibold">Terms of Use</a>, including the 15% platform service fee.</p>
+                    </form>
+                    <hr class="my-4">
+                    <p class="text-center mb-0">Already have an account? <a href="login.html" class="text-success fw-semibold">Log In</a></p>
+                    <p class="text-center mt-2"><a href="index.html" class="text-muted small"><i class="fas fa-arrow-left me-1"></i>Back to Home</a></p>
+                    <p class="text-center mt-2 small text-muted">
+                        <a href="terms.html" target="_blank" class="text-muted">Terms of Use</a> &nbsp;|&nbsp;
+                        <a href="privacy.html" target="_blank" class="text-muted">Privacy Policy</a>
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+    <script src="libs/bootstrap/js/bootstrap.bundle.min.js"></script>
+    <script src="auth.js"></script>
+<script>
+    const existing = getCurrentUser();
+    if (existing) redirectToDashboard(existing.role);
+
+    // Default selection
+    selectRole('student');
+
+    function selectRole(role) {
+        document.getElementById('selectedRole').value = role;
+        document.getElementById('roleStudent').classList.toggle('selected', role === 'student');
+        document.getElementById('roleTutor').classList.toggle('selected', role === 'tutor');
+    }
+
+    function togglePwd(id) {
+        const el = document.getElementById(id);
+        el.type = el.type === 'password' ? 'text' : 'password';
+    }
+
+    document.getElementById('signupForm').addEventListener('submit', function(e) {
+        e.preventDefault();
+        const name = document.getElementById('signupName').value.trim();
+        const email = document.getElementById('signupEmail').value.trim();
+        const password = document.getElementById('signupPassword').value;
+        const role = document.getElementById('selectedRole').value;
+        handleSignup(name, email, password, role);
+    });
+</script>
+</body>
+</html>

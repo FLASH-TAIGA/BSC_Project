@@ -1,0 +1,497 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <script src="theme.js"></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="proj.css">
+    <link rel="stylesheet" href="theme.css">
+    <link href="libs/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="libs/fontawesome/css/all.min.css">
+    <title>FL - Admin Dashboard</title>
+    <style>
+        .sidebar{min-height:100vh;background:#212529;width:250px;position:fixed;top:0;left:0;z-index:100;}
+        .sidebar .brand{color:#ffc107;font-size:1.3rem;font-weight:700;padding:1.5rem;border-bottom:1px solid rgba(255,255,255,0.1);}
+        .sidebar .brand span{color:#FF5722;}
+        .sidebar .nav-link{color:rgba(255,255,255,0.75);padding:0.85rem 1.5rem;border-radius:0.5rem;margin:0.2rem 0.75rem;transition:all 0.2s;}
+        .sidebar .nav-link:hover,.sidebar .nav-link.active{background:rgba(255,193,7,0.15);color:#ffc107;}
+        .sidebar .nav-link i{width:20px;}
+        .main-content{margin-left:250px;min-height:100vh;background:#f4f6f9;}
+        .topbar{background:white;padding:1rem 1.5rem;border-bottom:1px solid #e9ecef;}
+        .stat-card{border-radius:1rem;border:none;box-shadow:0 4px 15px rgba(0,0,0,0.06);}
+        .stat-icon{width:55px;height:55px;border-radius:0.75rem;display:flex;align-items:center;justify-content:center;font-size:1.4rem;}
+        .chat-box{height:320px;overflow-y:auto;background:#f8f9fa;border-radius:0.75rem;padding:1rem;}
+        .msg-bubble{max-width:75%;padding:0.5rem 0.9rem;border-radius:1rem;margin-bottom:0.4rem;font-size:0.85rem;}
+        .msg-in{background:#e9ecef;color:#333;} .msg-out{background:#ffc107;color:#333;margin-left:auto;}
+        @media(max-width:768px){.sidebar{width:100%;min-height:auto;position:relative;}.main-content{margin-left:0;}}
+    </style>
+</head>
+<body>
+<div class="d-flex">
+    <!-- SIDEBAR -->
+    <div class="sidebar">
+        <div class="brand"><span>~</span>FL<span>~</span> Admin</div>
+        <nav class="nav flex-column mt-3">
+            <a class="nav-link active" href="#" onclick="showSection('overview',this)"><i class="fas fa-th-large me-2"></i>Overview</a>
+            <a class="nav-link" href="#" onclick="showSection('users',this)"><i class="fas fa-users me-2"></i>Manage Users</a>
+            <a class="nav-link" href="#" onclick="showSection('tutors',this)"><i class="fas fa-chalkboard-teacher me-2"></i>Tutors</a>
+            <a class="nav-link" href="#" onclick="showSection('sessions',this)"><i class="fas fa-calendar-alt me-2"></i>All Sessions</a>
+            <a class="nav-link" href="#" onclick="showSection('materials',this)"><i class="fas fa-file-alt me-2"></i>Materials</a>
+            <a class="nav-link" href="#" onclick="showSection('chat',this)"><i class="fas fa-comments me-2"></i>Chat</a>
+            <a class="nav-link" href="#" onclick="showSection('reports',this)"><i class="fas fa-chart-bar me-2"></i>Reports</a>
+            <a class="nav-link" href="#" onclick="showSection('revenue',this)"><i class="fas fa-coins me-2"></i>Revenue</a>
+            <a class="nav-link" href="#" onclick="showSection('settings',this)"><i class="fas fa-cog me-2"></i>Settings</a>
+            <hr style="border-color:rgba(255,255,255,0.1);margin:0.5rem 1rem;">
+            <a class="nav-link" href="home.html"><i class="fas fa-globe me-2"></i>View Site</a>
+            <a class="nav-link text-danger" href="#" onclick="logout()"><i class="fas fa-sign-out-alt me-2"></i>Logout</a>
+            <div class="px-3 pb-3 mt-2" style="font-size:0.7rem;">
+                <a href="terms.html" target="_blank" class="text-white-50 text-decoration-none me-2">Terms</a>
+                <a href="privacy.html" target="_blank" class="text-white-50 text-decoration-none">Privacy</a>
+            </div>
+        </nav>
+    </div>
+    <!-- MAIN CONTENT -->
+    <div class="main-content flex-grow-1">
+        <!-- TOPBAR -->
+        <div class="topbar d-flex justify-content-between align-items-center">
+            <button class="theme-toggle" onclick="toggleTheme()" title="Toggle dark/light mode"><i class="fas fa-moon icon-moon"></i><i class="fas fa-sun icon-sun"></i></button>
+            <h5 class="mb-0 fw-bold" id="pageTitle">Admin Overview</h5>
+            <div class="d-flex align-items-center gap-3">
+                <span class="badge bg-danger px-3 py-2">Administrator</span>
+                <div class="rounded-circle bg-warning text-dark d-flex align-items-center justify-content-center" style="width:38px;height:38px;font-weight:700;">A</div>
+            </div>
+        </div>
+        <div class="p-4">
+
+        <!-- SECTION: OVERVIEW -->
+        <div id="section-overview">
+            <div class="row g-4 mb-4">
+                <div class="col-6 col-md-3"><div class="stat-card card p-3"><div class="d-flex align-items-center gap-3"><div class="stat-icon bg-primary bg-opacity-10 text-primary"><i class="fas fa-user-graduate"></i></div><div><div class="fw-bold fs-4" id="totalStudents">0</div><div class="text-muted small">Total Students</div></div></div></div></div>
+                <div class="col-6 col-md-3"><div class="stat-card card p-3"><div class="d-flex align-items-center gap-3"><div class="stat-icon bg-success bg-opacity-10 text-success"><i class="fas fa-chalkboard-teacher"></i></div><div><div class="fw-bold fs-4" id="totalTutors">0</div><div class="text-muted small">Total Tutors</div></div></div></div></div>
+                <div class="col-6 col-md-3"><div class="stat-card card p-3"><div class="d-flex align-items-center gap-3"><div class="stat-icon bg-warning bg-opacity-10 text-warning"><i class="fas fa-calendar-check"></i></div><div><div class="fw-bold fs-4" id="totalSessionsMonth">—</div><div class="text-muted small">Sessions This Month</div></div></div></div></div>
+                <div class="col-6 col-md-3"><div class="stat-card card p-3"><div class="d-flex align-items-center gap-3"><div class="stat-icon bg-danger bg-opacity-10 text-danger"><i class="fas fa-comments"></i></div><div><div class="fw-bold fs-4" id="totalMessages">0</div><div class="text-muted small">Total Messages</div></div></div></div></div>
+            </div>
+            <div class="row g-4">
+                <div class="col-md-8">
+                    <div class="card border-0 shadow-sm rounded-3 p-4">
+                        <h6 class="fw-bold mb-3">Recent Registrations</h6>
+                        <div class="table-responsive">
+                            <table class="table table-hover">
+                                <thead class="table-light"><tr><th>Name</th><th>Email</th><th>Role</th><th>Action</th></tr></thead>
+                                <tbody id="recentUsersBody"><tr><td colspan="4" class="text-center text-muted">No users yet</td></tr></tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="card border-0 shadow-sm rounded-3 p-4">
+                        <h6 class="fw-bold mb-3">Platform Health</h6>
+                        <div class="d-flex justify-content-between mb-2"><span class="small">Server Status</span><span class="badge bg-success">Online</span></div>
+                        <div class="d-flex justify-content-between mb-2"><span class="small">Total Sessions</span><span class="badge bg-info" id="totalSessionsAll">—</span></div>
+                        <div class="d-flex justify-content-between mb-2"><span class="small">Active Sessions Today</span><span class="badge bg-primary" id="sessionsToday">—</span></div>
+                        <div class="d-flex justify-content-between mb-2"><span class="small">Pending Sessions</span><span class="badge bg-warning text-dark" id="sessionsPending">—</span></div>
+                        <div class="d-flex justify-content-between"><span class="small">Pending Approvals</span><span class="badge bg-warning text-dark" id="pendingApprovals">...</span></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- SECTION: USERS -->
+        <div id="section-users" class="d-none">
+            <div class="card border-0 shadow-sm rounded-3 p-4">
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <h6 class="fw-bold mb-0">All Registered Users</h6>
+                    <select class="form-select form-select-sm" style="width:160px;" id="roleFilter" onchange="filterUsers()">
+                        <option value="all">All Roles</option>
+                        <option value="student">Students</option>
+                        <option value="tutor">Tutors</option>
+                    </select>
+                </div>
+                <div class="table-responsive">
+                    <table class="table table-hover">
+                        <thead class="table-dark"><tr><th>#</th><th>Name</th><th>Email</th><th>Role</th><th>Joined</th><th>Actions</th></tr></thead>
+                        <tbody id="allUsersBody"><tr><td colspan="6" class="text-center text-muted">No users yet</td></tr></tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- SECTION: TUTORS -->
+        <div id="section-tutors" class="d-none">
+            <div class="card border-0 shadow-sm rounded-3 p-4">
+                <h6 class="fw-bold mb-3">Tutor Profiles &amp; Approval</h6>
+                <div class="table-responsive">
+                    <table class="table table-hover">
+                        <thead class="table-dark"><tr><th>Name</th><th>Qualification</th><th>Subjects</th><th>Rate (XAF/hr)</th><th>Approved</th><th>Actions</th></tr></thead>
+                        <tbody id="tutorProfilesBody"><tr><td colspan="6" class="text-center text-muted">No tutors yet</td></tr></tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- SECTION: SESSIONS -->
+        <div id="section-sessions" class="d-none">
+            <div class="card border-0 shadow-sm rounded-3 p-4">
+                <h6 class="fw-bold mb-3">All Platform Sessions</h6>
+                <div class="table-responsive">
+                    <table class="table table-hover">
+                        <thead class="table-dark"><tr><th>Student</th><th>Tutor</th><th>Subject</th><th>Date/Time</th><th>Mode</th><th>Platform</th><th>Amount</th><th>Status</th><th>Actions</th></tr></thead>
+                        <tbody id="allSessionsBody"><tr><td colspan="9" class="text-center text-muted">No sessions yet</td></tr></tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- SECTION: MATERIALS -->
+        <div id="section-materials" class="d-none">
+            <div class="card border-0 shadow-sm rounded-3 p-4">
+                <h6 class="fw-bold mb-3">Uploaded Study Materials</h6>
+                <div class="table-responsive">
+                    <table class="table table-hover">
+                        <thead class="table-dark"><tr><th>Title</th><th>Subject</th><th>Type</th><th>Uploaded By</th><th>Actions</th></tr></thead>
+                        <tbody id="materialsBody"><tr><td colspan="5" class="text-center text-muted">No materials yet</td></tr></tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- SECTION: CHAT -->
+        <div id="section-chat" class="d-none">
+            <div class="card border-0 shadow-sm rounded-3 p-4">
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <h6 class="fw-bold mb-0">Message Monitor</h6>
+                    <button class="btn btn-sm btn-outline-secondary" onclick="loadAllMessages()"><i class="fas fa-sync-alt me-1"></i>Refresh</button>
+                </div>
+                <div class="table-responsive">
+                    <table class="table table-hover">
+                        <thead class="table-dark"><tr><th>From</th><th>To</th><th>Message</th><th>Time</th><th>Action</th></tr></thead>
+                        <tbody id="allMsgsBody"><tr><td colspan="5" class="text-center text-muted">No messages yet</td></tr></tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- SECTION: REPORTS -->
+        <div id="section-reports" class="d-none">
+            <div class="row g-4">
+                <div class="col-md-6">
+                    <div class="card border-0 shadow-sm rounded-3 p-4">
+                        <h6 class="fw-bold mb-3">Sessions by Subject</h6>
+                        <div class="d-flex justify-content-between mb-2"><span>Mathematics</span><span class="fw-bold">35%</span></div>
+                        <div class="progress mb-3" style="height:10px;"><div class="progress-bar bg-primary" style="width:35%"></div></div>
+                        <div class="d-flex justify-content-between mb-2"><span>Physics</span><span class="fw-bold">25%</span></div>
+                        <div class="progress mb-3" style="height:10px;"><div class="progress-bar bg-success" style="width:25%"></div></div>
+                        <div class="d-flex justify-content-between mb-2"><span>Computer Science</span><span class="fw-bold">30%</span></div>
+                        <div class="progress mb-3" style="height:10px;"><div class="progress-bar bg-warning" style="width:30%"></div></div>
+                        <div class="d-flex justify-content-between mb-2"><span>Other</span><span class="fw-bold">10%</span></div>
+                        <div class="progress" style="height:10px;"><div class="progress-bar bg-danger" style="width:10%"></div></div>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="card border-0 shadow-sm rounded-3 p-4">
+                        <h6 class="fw-bold mb-3">Platform Summary</h6>
+                        <ul class="list-group list-group-flush">
+                            <li class="list-group-item d-flex justify-content-between"><span>Total Sessions Held</span><strong>124</strong></li>
+                            <li class="list-group-item d-flex justify-content-between"><span>Online Sessions</span><strong>89</strong></li>
+                            <li class="list-group-item d-flex justify-content-between"><span>Onsite Sessions</span><strong>35</strong></li>
+                            <li class="list-group-item d-flex justify-content-between"><span>Avg. Session Rating</span><strong>4.7 / 5</strong></li>
+                            <li class="list-group-item d-flex justify-content-between"><span>Materials Downloaded</span><strong>312</strong></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- SECTION: REVENUE -->
+        <div id="section-revenue" class="d-none">
+            <div class="row g-4 mb-4">
+                <div class="col-6 col-md-3"><div class="stat-card card p-3"><div class="d-flex align-items-center gap-3"><div class="stat-icon bg-success bg-opacity-10 text-success"><i class="fas fa-coins"></i></div><div><div class="fw-bold fs-5" id="revGross">—</div><div class="text-muted small">Gross Revenue (XAF)</div></div></div></div></div>
+                <div class="col-6 col-md-3"><div class="stat-card card p-3"><div class="d-flex align-items-center gap-3"><div class="stat-icon bg-warning bg-opacity-10 text-warning"><i class="fas fa-university"></i></div><div><div class="fw-bold fs-5" id="revPlatform">—</div><div class="text-muted small">Platform Revenue (15%)</div></div></div></div></div>
+                <div class="col-6 col-md-3"><div class="stat-card card p-3"><div class="d-flex align-items-center gap-3"><div class="stat-icon bg-primary bg-opacity-10 text-primary"><i class="fas fa-chalkboard-teacher"></i></div><div><div class="fw-bold fs-5" id="revTutors">—</div><div class="text-muted small">Tutor Payouts (85%)</div></div></div></div></div>
+                <div class="col-6 col-md-3"><div class="stat-card card p-3"><div class="d-flex align-items-center gap-3"><div class="stat-icon bg-danger bg-opacity-10 text-danger"><i class="fas fa-hourglass-half"></i></div><div><div class="fw-bold fs-5" id="revPending">—</div><div class="text-muted small">Pending Revenue</div></div></div></div></div>
+            </div>
+            <div class="alert alert-success py-2 small"><i class="fas fa-percent me-2"></i>Flash Learning retains <strong>15%</strong> of every session payment as a platform service fee. Tutors receive the remaining <strong>85%</strong>.</div>
+            <div class="card border-0 shadow-sm rounded-3 p-4">
+                <h6 class="fw-bold mb-3">Revenue by Tutor</h6>
+                <div class="table-responsive">
+                    <table class="table table-hover">
+                        <thead class="table-dark"><tr><th>Tutor</th><th>Sessions</th><th>Gross (XAF)</th><th>Platform Fee 15% (XAF)</th><th>Tutor Payout 85% (XAF)</th></tr></thead>
+                        <tbody id="revenueByTutorBody"><tr><td colspan="5" class="text-center text-muted">Loading...</td></tr></tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- SECTION: SETTINGS -->
+        <div id="section-settings" class="d-none">
+            <div class="row justify-content-center">
+                <div class="col-md-7">
+                    <div class="card border-0 shadow-sm rounded-3 p-4">
+                        <h6 class="fw-bold mb-4">Platform Settings</h6>
+                        <div class="mb-3"><label class="form-label">Platform Name</label><input type="text" class="form-control" value="Flash Learning"></div>
+                        <div class="mb-3"><label class="form-label">Support Email</label><input type="email" class="form-control" value="support@flashlearn.edu"></div>
+                        <div class="mb-3"><label class="form-label">Contact Phone</label><input type="text" class="form-control" value="+237-689 476 283"></div>
+                        <div class="row mb-3">
+                            <div class="col"><label class="form-label">Min Session Rate (XAF)</label><input type="number" class="form-control" id="minRate" value="3000"></div>
+                            <div class="col"><label class="form-label">Max Session Rate (XAF)</label><input type="number" class="form-control" id="maxRate" value="10000"></div>
+                        </div>
+                        <div class="mb-4 form-check form-switch"><input class="form-check-input" type="checkbox" id="maintenanceMode"><label class="form-check-label" for="maintenanceMode">Maintenance Mode</label></div>
+                        <button class="btn btn-warning w-100 fw-bold" onclick="alert('Settings saved!')">Save Settings</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        </div><!-- /p-4 -->
+    </div><!-- /main-content -->
+</div><!-- /d-flex -->
+
+<script src="libs/bootstrap/js/bootstrap.bundle.min.js"></script>
+<script src="auth.js"></script>
+<script>
+requireAuth('admin');
+
+const SECTIONS = ['overview','users','tutors','sessions','materials','chat','reports','revenue','settings'];
+
+function showSection(id, el) {
+    SECTIONS.forEach(s => {
+        const el2 = document.getElementById('section-'+s);
+        if (el2) el2.classList.add('d-none');
+    });
+    const target = document.getElementById('section-'+id);
+    if (target) target.classList.remove('d-none');
+    document.querySelectorAll('.sidebar .nav-link').forEach(l => l.classList.remove('active'));
+    if (el) el.classList.add('active');
+    const titles = {
+        overview:'Admin Overview', users:'Manage Users', tutors:'Tutor Profiles',
+        sessions:'All Sessions', materials:'Materials', chat:'Message Monitor',
+        reports:'Reports', revenue:'Revenue', settings:'Settings'
+    };
+    document.getElementById('pageTitle').textContent = titles[id] || id;
+    if (id==='overview' || id==='users') loadUsers();
+    if (id==='tutors')    loadTutorProfiles();
+    if (id==='sessions')  loadSessions();
+    if (id==='materials') loadMaterials();
+    if (id==='chat')      loadAllMessages();
+    if (id==='revenue')   loadRevenue();
+}
+
+// ── Users ─────────────────────────────────────────────────
+async function loadUsers() {
+    const users = await getUsers();
+    const students = users.filter(u => u.role === 'student');
+    const tutors   = users.filter(u => u.role === 'tutor');
+    const el1 = document.getElementById('totalStudents');
+    const el2 = document.getElementById('totalTutors');
+    if (el1) el1.textContent = students.length;
+    if (el2) el2.textContent = tutors.length;
+
+    try {
+        const sr = await fetch('api/stats.php');
+        const sd = await sr.json();
+        if (sd.success) {
+            const el = document.getElementById('totalSessionsAll');
+            if (el) el.textContent = sd.sessions;
+        }
+    } catch {}
+
+    try {
+        const allSessions = await getSessions();
+        const today     = new Date().toISOString().slice(0,10);
+        const thisMonth = today.slice(0,7);
+        const elM = document.getElementById('totalSessionsMonth');
+        const elT = document.getElementById('sessionsToday');
+        const elP = document.getElementById('sessionsPending');
+        if (elM) elM.textContent = allSessions.filter(s => s.session_date && s.session_date.startsWith(thisMonth)).length;
+        if (elT) elT.textContent = allSessions.filter(s => s.session_date === today && s.status !== 'cancelled').length;
+        if (elP) elP.textContent = allSessions.filter(s => s.status === 'pending').length;
+    } catch {}
+
+    try {
+        const tr = await fetch('api/tutors.php?all=1');
+        const td = await tr.json();
+        const pending = (td.tutors||[]).filter(t => t.is_approved == '0').length;
+        const pel = document.getElementById('pendingApprovals');
+        if (pel) pel.textContent = pending;
+    } catch {}
+
+    const recentBody = document.getElementById('recentUsersBody');
+    const allBody    = document.getElementById('allUsersBody');
+    if (recentBody) recentBody.innerHTML = users.length === 0
+        ? '<tr><td colspan="4" class="text-center text-muted">No users yet</td></tr>'
+        : users.slice(0,5).map(u => `<tr>
+            <td>${u.name}</td><td>${u.email}</td>
+            <td><span class="badge ${u.role==='tutor'?'bg-danger':'bg-primary'}">${u.role}</span></td>
+            <td><button class="btn btn-sm btn-outline-danger" onclick="deleteUser(${u.id})">Remove</button></td>
+          </tr>`).join('');
+    if (allBody) allBody.innerHTML = users.length === 0
+        ? '<tr><td colspan="6" class="text-center text-muted">No users yet</td></tr>'
+        : users.map((u,i) => `<tr>
+            <td>${i+1}</td><td>${u.name}</td><td>${u.email}</td>
+            <td><span class="badge ${u.role==='tutor'?'bg-danger':'bg-primary'}">${u.role}</span></td>
+            <td>${u.created_at||'—'}</td>
+            <td><button class="btn btn-sm btn-outline-danger" onclick="deleteUser(${u.id})">Remove</button></td>
+          </tr>`).join('');
+}
+
+async function filterUsers() {
+    const role = document.getElementById('roleFilter').value;
+    const all  = await getUsers();
+    const users = role === 'all' ? all : all.filter(u => u.role === role);
+    const allBody = document.getElementById('allUsersBody');
+    allBody.innerHTML = users.length === 0
+        ? '<tr><td colspan="6" class="text-center text-muted">No users found</td></tr>'
+        : users.map((u,i) => `<tr>
+            <td>${i+1}</td><td>${u.name}</td><td>${u.email}</td>
+            <td><span class="badge ${u.role==='tutor'?'bg-danger':'bg-primary'}">${u.role}</span></td>
+            <td>${u.created_at||'—'}</td>
+            <td><button class="btn btn-sm btn-outline-danger" onclick="deleteUser(${u.id})">Remove</button></td>
+          </tr>`).join('');
+}
+
+// ── Tutors ────────────────────────────────────────────────
+async function loadTutorProfiles() {
+    const r      = await fetch('api/tutors.php?all=1');
+    const d      = await r.json();
+    const tutors = d.success ? d.tutors : [];
+    const tbody  = document.getElementById('tutorProfilesBody');
+    tbody.innerHTML = tutors.length === 0
+        ? '<tr><td colspan="6" class="text-center text-muted">No tutors yet</td></tr>'
+        : tutors.map(t => `<tr>
+            <td>${t.name}</td>
+            <td>${t.qualification||'—'}</td>
+            <td>${t.subjects||'—'}</td>
+            <td><strong>${parseInt(t.hourly_rate||5000).toLocaleString()} XAF</strong></td>
+            <td>${t.is_approved=='1'
+                ? '<span class="badge bg-success">Approved</span>'
+                : '<span class="badge bg-warning text-dark">Pending</span>'}</td>
+            <td>
+              <button class="btn btn-sm ${t.is_approved=='1'?'btn-outline-warning':'btn-outline-success'} me-1"
+                onclick="toggleApprove(${t.id},${t.is_approved=='1'?0:1})">
+                ${t.is_approved=='1'?'Revoke':'Approve'}
+              </button>
+              <button class="btn btn-sm btn-outline-primary" onclick="setRate(${t.id})">Set Rate</button>
+            </td>
+          </tr>`).join('');
+}
+
+async function toggleApprove(userId, val) {
+    await adminProfileAction({action:'approve', user_id:userId, approved:val});
+    loadTutorProfiles();
+}
+
+async function setRate(userId) {
+    const rate = prompt('Enter new hourly rate (3000 - 10000 XAF):');
+    if (!rate) return;
+    const r = parseInt(rate);
+    if (isNaN(r) || r < 3000 || r > 10000) { alert('Rate must be between 3,000 and 10,000 XAF.'); return; }
+    await adminProfileAction({action:'set_rate', user_id:userId, hourly_rate:r});
+    loadTutorProfiles();
+}
+
+// ── Sessions ──────────────────────────────────────────────
+async function loadSessions() {
+    const sessions = await getSessions();
+    const tbody = document.getElementById('allSessionsBody');
+    const PLAT = {zoom:'🎥 Zoom', google_meet:'📹 Meet', whatsapp:'💬 WhatsApp', telegram:'✈️ Telegram', other:'🔗 Other'};
+    tbody.innerHTML = sessions.length === 0
+        ? '<tr><td colspan="9" class="text-center text-muted">No sessions yet</td></tr>'
+        : sessions.map(s => `<tr>
+            <td>${s.student_name||'—'}</td>
+            <td>${s.tutor_name||'—'}</td>
+            <td>${s.subject}</td>
+            <td>${s.session_date} ${s.session_time}</td>
+            <td><span class="badge ${s.mode==='online'?'bg-primary':'bg-warning text-dark'}">${s.mode}</span></td>
+            <td>${s.mode==='online' ? (s.online_platform ? PLAT[s.online_platform]||s.online_platform : '—') : '—'}</td>
+            <td>${parseInt(s.amount_paid).toLocaleString()} XAF</td>
+            <td><span class="badge ${s.status==='confirmed'?'bg-success':s.status==='pending'?'bg-warning text-dark':s.status==='completed'?'bg-secondary':'bg-danger'}">${s.status}</span></td>
+            <td>
+              <select class="form-select form-select-sm d-inline-block" id="sts_${s.id}" style="width:110px;">
+                <option ${s.status==='pending'?'selected':''}>pending</option>
+                <option ${s.status==='confirmed'?'selected':''}>confirmed</option>
+                <option ${s.status==='completed'?'selected':''}>completed</option>
+                <option ${s.status==='cancelled'?'selected':''}>cancelled</option>
+              </select>
+              <button class="btn btn-sm btn-outline-primary ms-1" onclick="adminUpdateSession(${s.id})">Update</button>
+            </td>
+          </tr>`).join('');
+}
+
+async function adminUpdateSession(id) {
+    const status = document.getElementById('sts_'+id).value;
+    await updateSessionStatus(id, status, '');
+    loadSessions();
+}
+
+// ── Materials ─────────────────────────────────────────────
+async function loadMaterials() {
+    const mats  = await getMaterials();
+    const tbody = document.getElementById('materialsBody');
+    tbody.innerHTML = mats.length === 0
+        ? '<tr><td colspan="5" class="text-center text-muted">No materials yet</td></tr>'
+        : mats.map(m => `<tr>
+            <td>${m.title}</td><td>${m.subject}</td><td>${m.type}</td>
+            <td>${m.uploaded_by}</td>
+            <td><button class="btn btn-sm btn-outline-danger" onclick="removeMaterial(${m.id})">Delete</button></td>
+          </tr>`).join('');
+}
+
+async function removeMaterial(id) {
+    const r = await deleteMaterial(id);
+    if (r.success) loadMaterials();
+}
+
+// ── Messages ──────────────────────────────────────────────
+async function loadAllMessages() {
+    const msgs  = await getAllMessages();
+    const tbody = document.getElementById('allMsgsBody');
+    const el = document.getElementById('totalMessages');
+    if (el) el.textContent = msgs.length;
+    tbody.innerHTML = msgs.length === 0
+        ? '<tr><td colspan="5" class="text-center text-muted">No messages yet</td></tr>'
+        : msgs.map(m => `<tr>
+            <td>${m.sender_name}</td><td>${m.receiver_name}</td>
+            <td>${m.message.substring(0,60)}${m.message.length>60?'...':''}</td>
+            <td>${new Date(m.created_at).toLocaleString()}</td>
+            <td><button class="btn btn-sm btn-outline-danger" onclick="adminDeleteMsg(${m.id})">Delete</button></td>
+          </tr>`).join('');
+}
+
+async function adminDeleteMsg(id) {
+    if (!confirm('Delete this message?')) return;
+    try {
+        const r = await fetch('api/messages.php', {method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify({action:'delete', id})});
+        const d = await r.json();
+        if (d.success) loadAllMessages();
+    } catch {}
+}
+
+// ── Revenue ───────────────────────────────────────────────
+async function loadRevenue() {
+    try {
+        const r = await fetch('api/earnings.php?admin=1');
+        const d = await r.json();
+        if (!d.success) return;
+        const s = d.summary;
+        document.getElementById('revGross').textContent    = parseInt(s.gross_revenue||0).toLocaleString() + ' XAF';
+        document.getElementById('revPlatform').textContent = parseInt(s.platform_revenue||0).toLocaleString() + ' XAF';
+        document.getElementById('revTutors').textContent   = parseInt(s.tutor_payouts||0).toLocaleString() + ' XAF';
+        document.getElementById('revPending').textContent  = parseInt(s.pending_revenue||0).toLocaleString() + ' XAF';
+        const tbody = document.getElementById('revenueByTutorBody');
+        tbody.innerHTML = (d.by_tutor||[]).length === 0
+            ? '<tr><td colspan="5" class="text-center text-muted">No sessions yet</td></tr>'
+            : d.by_tutor.map(t => `<tr>
+                <td>${t.tutor_name}</td>
+                <td>${t.sessions}</td>
+                <td>${parseInt(t.gross||0).toLocaleString()} XAF</td>
+                <td class="text-warning fw-bold">${parseInt(t.fee||0).toLocaleString()} XAF</td>
+                <td class="text-success fw-bold">${parseInt(t.payout||0).toLocaleString()} XAF</td>
+              </tr>`).join('');
+    } catch {}
+}
+
+// ── Init ──────────────────────────────────────────────────
+loadUsers();
+</script>
+</body>
+</html>

@@ -1,0 +1,187 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <script src="theme.js"></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="proj.css">
+    <link rel="stylesheet" href="theme.css">
+    <link href="libs/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="libs/fontawesome/css/all.min.css">
+    <title>FL - Privacy Policy</title>
+    <style>
+        .terms-section{border-left:4px solid #4CAF50;padding-left:1.25rem;margin-bottom:2rem;}
+        .highlight-box{background:linear-gradient(135deg,#fff3cd,#fff8e1);border:1px solid #ffc107;border-radius:1rem;padding:1.5rem;}
+        .fee-box{background:linear-gradient(135deg,#e8f5e9,#f1f8e9);border:2px solid #4CAF50;border-radius:1rem;padding:1.5rem;}
+        .pay-logo{width:120px;height:auto;object-fit:contain;}
+        .mtn-badge{background:#ffcc00;color:#333;font-weight:700;border-radius:0.5rem;padding:0.4rem 1rem;}
+        .orange-badge{background:#ff6600;color:#fff;font-weight:700;border-radius:0.5rem;padding:0.4rem 1rem;}
+    </style>
+</head>
+<body>
+    <div class="top-announcement bg-light py-2 d-none d-md-block">
+        <div class="container"><p class="mb-0 small"><i class="fas fa-bell text-danger me-2"></i>THIS IS STRICTLY FOR LEARNING PURPOSES.</p></div>
+    </div>
+    <nav class="navbar navbar-expand-lg bg-white sticky-top py-3">
+        <div class="container-fluid px-4">
+            <a class="navbar-brand moodle-logo" href="home.html"><span class="moodle-tilde">~</span>FLASH<br>LEARNING<span class="moodle-tilde">~</span></a>
+            <img style="width:70px;height:auto;border-radius:50%;" src="image/fl5.jpg" alt="FL Logo">
+            <button class="navbar-toggler ms-2" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"><span class="navbar-toggler-icon"></span></button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                    <li class="nav-item"><a class="nav-link" href="home.html">Home</a></li>
+                    <li class="nav-item dropdown"><a class="nav-link dropdown-toggle" href="#" data-bs-toggle="dropdown">Learn</a>
+                        <ul class="dropdown-menu">
+                            <li><a class="dropdown-item" href="questions.html"><i class="fas fa-book-open me-2 text-primary"></i>Study Notes</a></li>
+                            <li><a class="dropdown-item" href="solutions.html"><i class="fas fa-question-circle me-2 text-success"></i>Q&amp;A Bank</a></li>
+                        </ul>
+                    </li>
+                    <li class="nav-item"><a class="nav-link active" href="about.html">About</a></li>
+                    <li class="nav-item"><a class="nav-link" href="contact.html">Contact</a></li>
+                </ul>
+                <form class="d-flex me-2" onsubmit="globalSearch(event)">
+                    <div class="input-group" style="width:240px;">
+                        <input type="text" class="form-control form-control-sm" id="globalSearchInput" placeholder="Search subjects, tutors...">
+                        <button class="btn btn-success btn-sm" type="submit"><i class="fas fa-search"></i></button>
+                    </div>
+                </form>
+                <div class="d-flex align-items-center gap-2" id="navAuthArea">
+                    <button class="theme-toggle" onclick="toggleTheme()" title="Toggle dark/light mode"><i class="fas fa-moon icon-moon"></i><i class="fas fa-sun icon-sun"></i></button>
+                    <a href="login.html" class="btn btn-outline-success rounded-pill px-3">Log In</a>
+                    <a href="signup.html" class="btn moodle-btn-primary rounded-pill px-3">Sign Up</a>
+                </div>
+            </div>
+        </div>
+    </nav>
+<div class="container py-5" style="max-width:860px;">
+  <div class="text-center mb-5">
+    <h1 class="fw-bold display-5">Privacy Policy</h1>
+    <p class="text-muted">Last updated: April 2026 | Flash Learning Platform</p>
+    <p class="text-muted">Your privacy matters to us. This policy explains what data we collect, how we use it, and your rights.</p>
+  </div>
+  <div class="card border-0 shadow-sm rounded-3 p-4 mb-5">
+    <h6 class="fw-bold mb-3"><i class="fas fa-list me-2 text-success"></i>Contents</h6>
+    <div class="row g-1 small">
+      <div class="col-md-6"><a href="#p1" class="text-decoration-none text-muted">1. Who We Are</a></div>
+      <div class="col-md-6"><a href="#p2" class="text-decoration-none text-muted">2. Data We Collect</a></div>
+      <div class="col-md-6"><a href="#p3" class="text-decoration-none text-muted">3. How We Use Your Data</a></div>
+      <div class="col-md-6"><a href="#p4" class="text-decoration-none text-muted">4. Data Storage and Security</a></div>
+      <div class="col-md-6"><a href="#p5" class="text-decoration-none text-muted">5. Sharing Your Data</a></div>
+      <div class="col-md-6"><a href="#p6" class="text-decoration-none text-muted">6. Cookies</a></div>
+      <div class="col-md-6"><a href="#p7" class="text-decoration-none text-muted">7. Your Rights</a></div>
+      <div class="col-md-6"><a href="#p8" class="text-decoration-none text-muted">8. Children's Privacy</a></div>
+      <div class="col-md-6"><a href="#p9" class="text-decoration-none text-muted">9. Changes to This Policy</a></div>
+      <div class="col-md-6"><a href="#p10" class="text-decoration-none text-muted">10. Contact Us</a></div>
+    </div>
+  </div>
+  <div class="terms-section" id="p1">
+    <h5 class="fw-bold">1. Who We Are</h5>
+    <p class="text-muted">Flash Learning is a peer-to-peer academic tutoring platform based in Cameroon. We connect students with qualified tutors for online and onsite learning sessions. When you use our platform, you trust us with your information. This Privacy Policy is meant to help you understand what data we collect, why we collect it, and how you can manage it.</p>
+    <p class="text-muted">Contact: <a href="mailto:support@flashlearn.edu" class="text-success">support@flashlearn.edu</a> | +237-689 476 283</p>
+  </div>
+  <div class="terms-section" id="p2">
+    <h5 class="fw-bold">2. Data We Collect</h5>
+    <p class="text-muted">We collect the following categories of personal data:</p>
+    <ul class="text-muted">
+      <li><strong>Account data:</strong> Full name, email address, password (stored as a secure hash), and role (student or tutor).</li>
+      <li><strong>Profile data:</strong> Date of birth, profile photo, subjects of interest or expertise, qualifications, and bio.</li>
+      <li><strong>Session data:</strong> Booked sessions including subject, date, time, mode (online or onsite), platform used, and amount paid.</li>
+      <li><strong>Payment data:</strong> Mobile Money payment method (MTN MoMo or Orange Money) and phone number used for payment. We do not store full payment credentials.</li>
+      <li><strong>Message data:</strong> In-platform messages exchanged between students and tutors.</li>
+      <li><strong>Usage data:</strong> Pages visited, actions taken, and time spent on the platform (for improving the service).</li>
+    </ul>
+  </div>
+  <div class="terms-section" id="p3">
+    <h5 class="fw-bold">3. How We Use Your Data</h5>
+    <p class="text-muted">We use your data for the following purposes:</p>
+    <ul class="text-muted">
+      <li>To create and manage your account on the platform.</li>
+      <li>To match students with suitable tutors based on subjects and preferences.</li>
+      <li>To process session bookings and payments.</li>
+      <li>To calculate and display earnings for tutors (85% of session fee) and platform revenue (15% service fee).</li>
+      <li>To enable in-platform messaging between students and tutors.</li>
+      <li>To send important notifications about your account or sessions.</li>
+      <li>To improve the platform based on usage patterns and feedback.</li>
+      <li>To enforce our Terms of Use and prevent misuse.</li>
+    </ul>
+  </div>
+  <div class="terms-section" id="p4">
+    <h5 class="fw-bold">4. Data Storage and Security</h5>
+    <p class="text-muted">Your data is stored on a secure MySQL database hosted on our server. We implement the following security measures:</p>
+    <ul class="text-muted">
+      <li>Passwords are hashed using bcrypt and are never stored in plain text.</li>
+      <li>All API endpoints use prepared statements to prevent SQL injection.</li>
+      <li>Session authentication is managed via secure browser session storage.</li>
+      <li>Profile photos and uploaded materials are stored in a protected server directory.</li>
+    </ul>
+    <p class="text-muted">While we take reasonable precautions, no system is 100% secure. We encourage you to use a strong, unique password and to log out after each session.</p>
+  </div>
+  <div class="terms-section" id="p5">
+    <h5 class="fw-bold">5. Sharing Your Data</h5>
+    <p class="text-muted">We do <strong>not</strong> sell, rent, or trade your personal data to third parties. Your data may be shared in the following limited circumstances:</p>
+    <ul class="text-muted">
+      <li><strong>Between users:</strong> Your name and profile information are visible to other users on the platform (e.g. students can see tutor profiles).</li>
+      <li><strong>With administrators:</strong> Platform administrators can view user accounts, sessions, and messages for moderation and support purposes.</li>
+      <li><strong>Legal requirements:</strong> We may disclose data if required by law or in response to a valid legal request from authorities in Cameroon.</li>
+    </ul>
+  </div>
+  <div class="terms-section" id="p6">
+    <h5 class="fw-bold">6. Cookies</h5>
+    <p class="text-muted">Flash Learning uses browser session storage (not traditional cookies) to maintain your login session. This data is cleared automatically when you close your browser or log out. We do not use tracking cookies or third-party advertising cookies. The platform may use Bootstrap and FontAwesome libraries loaded from local files, which do not set any cookies.</p>
+  </div>
+  <div class="terms-section" id="p7">
+    <h5 class="fw-bold">7. Your Rights</h5>
+    <p class="text-muted">You have the following rights regarding your personal data:</p>
+    <ul class="text-muted">
+      <li><strong>Access:</strong> You can view your profile and session history at any time from your dashboard.</li>
+      <li><strong>Correction:</strong> You can update your profile information at any time from the My Profile section.</li>
+      <li><strong>Deletion:</strong> You may request deletion of your account and all associated data by contacting us. Note that session records may be retained for financial reporting purposes.</li>
+      <li><strong>Portability:</strong> You may request a copy of your personal data in a readable format by contacting support.</li>
+      <li><strong>Objection:</strong> You may object to certain uses of your data by contacting us directly.</li>
+    </ul>
+    <p class="text-muted">To exercise any of these rights, contact us at <a href="mailto:support@flashlearn.edu" class="text-success">support@flashlearn.edu</a>.</p>
+  </div>
+  <div class="terms-section" id="p8">
+    <h5 class="fw-bold">8. Children's Privacy</h5>
+    <p class="text-muted">Flash Learning is intended for users aged 16 and above. We do not knowingly collect personal data from children under the age of 16. If you believe a child under 16 has registered on our platform, please contact us immediately and we will remove the account and associated data promptly.</p>
+  </div>
+  <div class="terms-section" id="p9">
+    <h5 class="fw-bold">9. Changes to This Policy</h5>
+    <p class="text-muted">We may update this Privacy Policy from time to time to reflect changes in our practices or legal requirements. When we do, we will update the Last updated date at the top of this page. We encourage you to review this policy periodically. Continued use of the platform after changes are posted constitutes your acceptance of the updated policy.</p>
+  </div>
+  <div class="terms-section" id="p10">
+    <h5 class="fw-bold">10. Contact Us</h5>
+    <p class="text-muted">If you have any questions or concerns about this Privacy Policy or how your data is handled, please contact us:</p>
+    <ul class="text-muted">
+      <li>Email: <a href="mailto:support@flashlearn.edu" class="text-success">support@flashlearn.edu</a></li>
+      <li>Phone: +237-689 476 283</li>
+      <li>Online: <a href="contact.html" class="text-success">Contact page</a></li>
+    </ul>
+    <p class="text-muted">We aim to respond to all privacy-related enquiries within 2 business days.</p>
+  </div>
+  <div class="text-center mt-5 pt-4 border-top">
+    <p class="text-muted small mb-4">Also read our <a href="terms.html" class="text-success fw-semibold">Terms of Use</a></p>
+    <a href="home.html" class="btn moodle-btn-primary px-5 py-3 rounded-pill fs-6">Back to Home</a>
+    <a href="signup.html" class="btn btn-outline-success px-4 py-3 rounded-pill fs-6 ms-2">Create Account</a>
+  </div>
+</div>
+<footer class="bg-dark text-white py-4 mt-5">
+  <div class="container text-center small text-white-50">&copy; 2026 Flash Learning Platform. All Rights Reserved. | <a href="terms.html" class="text-white-50">Terms of Use</a> | <a href="privacy.html" class="text-white-50">Privacy Policy</a></div>
+</footer>
+<script src="libs/bootstrap/js/bootstrap.bundle.min.js"></script>
+<script src="auth.js"></script>
+<script>
+  const u = getCurrentUser();
+  if (u) document.getElementById('navAuthArea').innerHTML = '<button class="theme-toggle" onclick="toggleTheme()"><i class="fas fa-moon icon-moon"></i><i class="fas fa-sun icon-sun"></i></button><a href="' + (u.role==='admin'?'dashboard-admin.html':u.role==='tutor'?'dashboard-tutor.html':'dashboard-student.html') + '" class="btn moodle-btn-primary rounded-pill px-3">Dashboard</a><button onclick="logout()" class="btn btn-outline-danger rounded-pill px-3">Logout</button>';
+  function globalSearch(e) {
+    e.preventDefault();
+    const q = document.getElementById('globalSearchInput').value.trim();
+    if (!q) return;
+    const uu = getCurrentUser();
+    if (uu && uu.role === 'student') { sessionStorage.setItem('fl_search_query', q); window.location.href = 'dashboard-student.html'; }
+    else if (uu) { window.location.href = 'dashboard-' + uu.role + '.html'; }
+    else { sessionStorage.setItem('fl_search_query', q); window.location.href = 'signup.html'; }
+  }
+</script>
+</body>
+</html>

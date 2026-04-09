@@ -1,0 +1,468 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8"><script src="theme.js"></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="proj.css"><link rel="stylesheet" href="theme.css">
+    <link href="libs/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="libs/fontawesome/css/all.min.css">
+    <title>FL - Tutor Dashboard</title>
+    <style>
+        .sidebar{min-height:100vh;background:#0f3460;width:250px;position:fixed;top:0;left:0;z-index:100;}
+        .sidebar .brand{color:#e94560;font-size:1.3rem;font-weight:700;padding:1.5rem;border-bottom:1px solid rgba(255,255,255,0.1);}
+        .sidebar .brand span{color:#4CAF50;}
+        .sidebar .nav-link{color:rgba(255,255,255,0.75);padding:0.85rem 1.5rem;border-radius:0.5rem;margin:0.2rem 0.75rem;transition:all 0.2s;}
+        .sidebar .nav-link:hover,.sidebar .nav-link.active{background:rgba(233,69,96,0.2);color:#e94560;}
+        .sidebar .nav-link i{width:20px;}
+        .main-content{margin-left:250px;min-height:100vh;background:#f4f6f9;}
+        .topbar{background:white;padding:1rem 1.5rem;border-bottom:1px solid #e9ecef;}
+        .stat-card{border-radius:1rem;border:none;box-shadow:0 4px 15px rgba(0,0,0,0.06);}
+        .stat-icon{width:55px;height:55px;border-radius:0.75rem;display:flex;align-items:center;justify-content:center;font-size:1.4rem;}
+        .chat-box{height:360px;overflow-y:auto;background:#f8f9fa;border-radius:0.75rem;padding:1rem;}
+        .msg-bubble{max-width:70%;padding:0.6rem 1rem;border-radius:1rem;margin-bottom:0.5rem;font-size:0.9rem;}
+        .msg-mine{background:#e94560;color:#fff;margin-left:auto;border-bottom-right-radius:0.2rem;}
+        .msg-other{background:#e9ecef;color:#333;border-bottom-left-radius:0.2rem;}
+        .msg-time{font-size:0.7rem;opacity:0.7;margin-top:2px;}
+        .contact-item{cursor:pointer;border-radius:0.5rem;padding:0.75rem;transition:background 0.15s;}
+        .contact-item:hover,.contact-item.active{background:#fce4ec;}
+        .rate-badge{background:linear-gradient(135deg,#e94560,#0f3460);color:#fff;border-radius:2rem;padding:0.3rem 0.9rem;font-size:0.85rem;font-weight:700;}
+        @media(max-width:768px){.sidebar{width:100%;min-height:auto;position:relative;}.main-content{margin-left:0;}}
+    </style>
+</head>
+<body>
+<div class="d-flex">
+  <div class="sidebar">
+    <div class="brand"><span>~</span>FL<span>~</span> Tutor</div>
+    <nav class="nav flex-column mt-3">
+      <a class="nav-link active" href="#" onclick="showSection('overview',this)"><i class="fas fa-th-large me-2"></i>Overview</a>
+      <a class="nav-link" href="#" onclick="showSection('profile',this)"><i class="fas fa-id-card me-2"></i>My Profile</a>
+      <a class="nav-link" href="#" onclick="showSection('schedule',this)"><i class="fas fa-calendar-alt me-2"></i>My Schedule</a>
+      <a class="nav-link" href="#" onclick="showSection('students',this)"><i class="fas fa-users me-2"></i>My Students</a>
+      <a class="nav-link" href="#" onclick="showSection('upload',this)"><i class="fas fa-upload me-2"></i>Upload Material</a>
+      <a class="nav-link" href="#" onclick="showSection('earnings',this)"><i class="fas fa-wallet me-2"></i>My Earnings</a>
+      <a class="nav-link" href="#" onclick="showSection('chat',this)"><i class="fas fa-comments me-2"></i>Messages</a>
+      <hr style="border-color:rgba(255,255,255,0.1);margin:0.5rem 1rem;">
+      <a class="nav-link" href="home.html"><i class="fas fa-globe me-2"></i>Back to Site</a>
+      <a class="nav-link text-danger" href="#" onclick="logout()"><i class="fas fa-sign-out-alt me-2"></i>Logout</a>
+      <div class="px-3 pb-3 mt-2" style="font-size:0.7rem;">
+        <a href="terms.html" target="_blank" class="text-white-50 text-decoration-none me-2">Terms</a>
+        <a href="privacy.html" target="_blank" class="text-white-50 text-decoration-none">Privacy</a>
+      </div>
+    </nav>
+  </div>
+  <div class="main-content flex-grow-1">
+    <div class="topbar d-flex justify-content-between align-items-center">
+      <button class="theme-toggle" onclick="toggleTheme()"><i class="fas fa-moon icon-moon"></i><i class="fas fa-sun icon-sun"></i></button>
+      <h5 class="mb-0 fw-bold" id="pageTitle">Overview</h5>
+      <div class="d-flex align-items-center gap-3">
+        <span class="text-muted small">Welcome, <strong id="userName"></strong></span>
+        <div class="rounded-circle bg-danger text-white d-flex align-items-center justify-content-center" style="width:38px;height:38px;font-weight:700;" id="userAvatar">T</div>
+      </div>
+    </div>
+    <div class="p-4">
+
+      <!-- OVERVIEW -->
+      <div id="section-overview">
+        <div class="row g-4 mb-4">
+          <div class="col-6 col-md-3"><div class="stat-card card p-3"><div class="d-flex align-items-center gap-3"><div class="stat-icon bg-primary bg-opacity-10 text-primary"><i class="fas fa-users"></i></div><div><div class="fw-bold fs-4" id="statStudents">0</div><div class="text-muted small">Active Students</div></div></div></div></div>
+          <div class="col-6 col-md-3"><div class="stat-card card p-3"><div class="d-flex align-items-center gap-3"><div class="stat-icon bg-success bg-opacity-10 text-success"><i class="fas fa-calendar-check"></i></div><div><div class="fw-bold fs-4" id="statSessions">0</div><div class="text-muted small">Total Sessions</div></div></div></div></div>
+          <div class="col-6 col-md-3"><div class="stat-card card p-3"><div class="d-flex align-items-center gap-3"><div class="stat-icon bg-warning bg-opacity-10 text-warning"><i class="fas fa-star"></i></div><div><div class="fw-bold fs-4" id="statRate"></div><div class="text-muted small">Hourly Rate (XAF)</div></div></div></div></div>
+          <div class="col-6 col-md-3"><div class="stat-card card p-3"><div class="d-flex align-items-center gap-3"><div class="stat-icon bg-info bg-opacity-10 text-info"><i class="fas fa-certificate"></i></div><div><div class="fw-bold fs-4" id="statQual"></div><div class="text-muted small">Qualification</div></div></div></div></div>
+        </div>
+        <div class="alert alert-warning d-none" id="profileAlert"><i class="fas fa-exclamation-triangle me-2"></i>Please <a href="#" onclick="showSection('profile',null)" class="fw-bold">complete your profile</a> so students can find and book you.</div>
+        <div class="alert alert-success d-none" id="newSessionAlert"></div>
+        <div class="card border-0 shadow-sm rounded-3 p-4"><h6 class="fw-bold mb-3">Upcoming Sessions</h6><div id="overviewSessions"><div class="text-muted text-center py-3">Loading...</div></div></div>
+      </div>
+
+      <!-- PROFILE -->
+      <div id="section-profile" class="d-none">
+        <div class="row justify-content-center"><div class="col-md-8"><div class="card border-0 shadow-sm rounded-3 p-4">
+          <div class="d-flex align-items-center gap-3 mb-4">
+            <div id="profilePhotoPreview" class="rounded-circle bg-danger bg-opacity-10 text-danger d-flex align-items-center justify-content-center" style="width:80px;height:80px;font-size:2rem;overflow:hidden;flex-shrink:0;"><i class="fas fa-user-tie"></i></div>
+            <div><h5 class="fw-bold mb-1" id="profileName"></h5><span class="rate-badge" id="profileRateBadge"> XAF/hr</span></div>
+          </div>
+          <form id="profileForm" enctype="multipart/form-data">
+            <div class="row g-3">
+              <div class="col-md-6"><label class="form-label fw-semibold">Date of Birth</label><input type="date" class="form-control" id="profDob" name="date_of_birth"></div>
+              <div class="col-md-6"><label class="form-label fw-semibold">Highest Qualification</label>
+                <select class="form-select" id="profQual" name="qualification" onchange="updateRatePreview()">
+                  <option value="Certificate">Certificate  3,000 XAF/hr</option>
+                  <option value="Diploma">Diploma  4,000 XAF/hr</option>
+                  <option value="Bachelor" selected>Bachelor's Degree  5,000 XAF/hr</option>
+                  <option value="Master">Master's Degree  7,000 XAF/hr</option>
+                  <option value="PhD">PhD / Doctorate  10,000 XAF/hr</option>
+                </select>
+              </div>
+              <div class="col-12"><label class="form-label fw-semibold">Subjects You Teach</label><input type="text" class="form-control" id="profSubjects" name="subjects" placeholder="e.g. Mathematics, Physics"><small class="text-muted">Separate with commas</small></div>
+              <div class="col-12"><label class="form-label fw-semibold">Short Bio</label><textarea class="form-control" id="profBio" name="bio" rows="3" placeholder="Tell students about your teaching style..."></textarea></div>
+              <div class="col-12"><label class="form-label fw-semibold">Profile Photo <span class="text-muted fw-normal">(optional)</span></label><input type="file" class="form-control" name="photo" accept="image/*" onchange="previewPhoto(this)"></div>
+            </div>
+            <div class="alert alert-info mt-3 mb-0"><i class="fas fa-info-circle me-2"></i>Rate is set automatically by qualification. Admin can adjust it.</div>
+            <button type="submit" class="btn moodle-btn-primary w-100 mt-3 py-3">Save Profile</button>
+          </form>
+          <div id="profileMsg" class="mt-3"></div>
+        </div></div></div>
+      </div>
+
+      <!-- SCHEDULE -->
+      <div id="section-schedule" class="d-none">
+        <div class="card border-0 shadow-sm rounded-3 p-4"><h6 class="fw-bold mb-3">My Teaching Schedule</h6>
+          <div class="table-responsive"><table class="table table-hover">
+            <thead class="table-light"><tr><th>Student</th><th>Subject</th><th>Date &amp; Time</th><th>Mode</th><th>Platform</th><th>Amount</th><th>Status</th><th>Action</th></tr></thead>
+            <tbody id="scheduleBody"><tr><td colspan="8" class="text-center text-muted">Loading...</td></tr></tbody>
+          </table></div>
+        </div>
+      </div>
+
+      <!-- STUDENTS -->
+      <div id="section-students" class="d-none">
+        <div class="card border-0 shadow-sm rounded-3 p-4"><h6 class="fw-bold mb-3">My Students</h6><div id="studentsList"><div class="text-muted text-center py-3">Loading...</div></div></div>
+      </div>
+
+      <!-- UPLOAD -->
+      <div id="section-upload" class="d-none">
+        <div class="row justify-content-center"><div class="col-md-7"><div class="card border-0 shadow-sm rounded-3 p-4">
+          <h6 class="fw-bold mb-4">Upload Study Material</h6>
+          <form onsubmit="uploadMaterial(event)">
+            <div class="mb-3"><label class="form-label">Title</label><input type="text" name="title" class="form-control" required></div>
+            <div class="mb-3"><label class="form-label">Subject</label><select name="subject" class="form-select">
+              <optgroup label="Mathematics"><option>Calculus</option><option>Linear Algebra</option><option>Differential Equations</option><option>Real Analysis</option><option>Numerical Methods</option><option>Statistics &amp; Probability</option><option>Discrete Mathematics</option></optgroup>
+              <optgroup label="Physics"><option>Classical Mechanics</option><option>Electromagnetism</option><option>Thermodynamics</option><option>Quantum Mechanics</option><option>Optics</option><option>Nuclear Physics</option><option>Fluid Mechanics</option></optgroup>
+              <optgroup label="Chemistry"><option>Organic Chemistry</option><option>Inorganic Chemistry</option><option>Physical Chemistry</option><option>Analytical Chemistry</option><option>Biochemistry</option><option>Chemical Engineering</option></optgroup>
+              <optgroup label="Computer Science &amp; IT"><option>Introduction to Programming</option><option>Data Structures &amp; Algorithms</option><option>Python</option><option>Java</option><option>C++</option><option>Web Development</option><option>Database Systems</option><option>Operating Systems</option><option>Computer Networks</option><option>Software Engineering</option><option>Machine Learning Fundamentals</option><option>Cybersecurity</option></optgroup>
+              <optgroup label="Biology &amp; Health Sciences"><option>Cell Biology</option><option>Molecular Biology</option><option>Genetics</option><option>Microbiology</option><option>Immunology</option><option>Anatomy &amp; Physiology</option><option>Ecology</option><option>Pharmacology</option><option>Pathophysiology</option><option>Public Health</option><option>Epidemiology</option><option>Nursing</option></optgroup>
+              <optgroup label="Engineering"><option>Circuit Analysis</option><option>Digital Electronics</option><option>Signal Processing</option><option>Control Systems</option><option>Telecommunications</option><option>Embedded Systems</option><option>Structural Analysis</option><option>Soil Mechanics</option><option>Construction Management</option><option>Engineering Mathematics</option></optgroup>
+              <optgroup label="Economics &amp; Business"><option>Microeconomics</option><option>Macroeconomics</option><option>Econometrics</option><option>Development Economics</option><option>International Trade</option><option>Public Finance</option><option>Financial Accounting</option><option>Management Accounting</option><option>Auditing</option><option>Taxation</option><option>Corporate Finance</option><option>Entrepreneurship</option><option>Business Law</option></optgroup>
+              <optgroup label="Law"><option>Constitutional Law</option><option>Contract Law</option><option>Criminal Law</option><option>Human Rights Law</option><option>Commercial Law</option><option>Legal Research &amp; Writing</option></optgroup>
+              <optgroup label="Social Sciences"><option>History</option><option>Geography</option><option>Political Science</option><option>International Relations</option><option>Philosophy</option><option>Sociology</option><option>Anthropology</option><option>Psychology</option></optgroup>
+              <optgroup label="Languages"><option>French Language</option><option>French Literature</option><option>English Language</option><option>Literature in English</option><option>Linguistics</option><option>Academic Writing</option><option>IELTS &amp; TOEFL Preparation</option><option>Public Speaking</option></optgroup>
+              <optgroup label="Research &amp; Data"><option>Research Methods</option><option>Data Analysis</option><option>SPSS</option><option>R Programming</option><option>Health Research Methods</option></optgroup>
+            </select></div>
+            <div class="mb-3"><label class="form-label">Type</label><select name="type" class="form-select"><option>Study Notes</option><option>Past Paper</option><option>Practice Exercises</option></select></div>
+            <div class="mb-4"><label class="form-label">Upload PDF</label><input type="file" name="file" class="form-control" accept=".pdf" required></div>
+            <button type="submit" class="btn moodle-btn-primary w-100">Upload</button>
+          </form>
+        </div></div></div>
+      </div>
+
+      <!-- EARNINGS -->
+      <div id="section-earnings" class="d-none">
+        <div class="row g-4 mb-4">
+          <div class="col-6 col-md-3"><div class="stat-card card p-3"><div class="d-flex align-items-center gap-3"><div class="stat-icon bg-success bg-opacity-10 text-success"><i class="fas fa-wallet"></i></div><div><div class="fw-bold fs-5" id="earnTotal">—</div><div class="text-muted small">Total Earned (XAF)</div></div></div></div></div>
+          <div class="col-6 col-md-3"><div class="stat-card card p-3"><div class="d-flex align-items-center gap-3"><div class="stat-icon bg-primary bg-opacity-10 text-primary"><i class="fas fa-check-circle"></i></div><div><div class="fw-bold fs-5" id="earnConfirmed">—</div><div class="text-muted small">From Completed</div></div></div></div></div>
+          <div class="col-6 col-md-3"><div class="stat-card card p-3"><div class="d-flex align-items-center gap-3"><div class="stat-icon bg-warning bg-opacity-10 text-warning"><i class="fas fa-clock"></i></div><div><div class="fw-bold fs-5" id="earnPending">—</div><div class="text-muted small">Pending Sessions</div></div></div></div></div>
+          <div class="col-6 col-md-3"><div class="stat-card card p-3"><div class="d-flex align-items-center gap-3"><div class="stat-icon bg-danger bg-opacity-10 text-danger"><i class="fas fa-percent"></i></div><div><div class="fw-bold fs-5" id="earnFee">—</div><div class="text-muted small">Platform Fee Paid</div></div></div></div></div>
+        </div>
+        <div class="alert alert-info py-2 small"><i class="fas fa-info-circle me-2"></i>Flash Learning deducts a <strong>15% platform service fee</strong> from each session. You receive <strong>85%</strong> of the amount paid by the student. <a href="terms.html" target="_blank" class="fw-bold">View Terms</a></div>
+        <div class="card border-0 shadow-sm rounded-3 p-4">
+          <h6 class="fw-bold mb-3">Earnings Breakdown — Last 20 Sessions</h6>
+          <div class="table-responsive">
+            <table class="table table-hover">
+              <thead class="table-light"><tr><th>Subject</th><th>Student</th><th>Date</th><th>Student Paid</th><th>Platform Fee (15%)</th><th>Your Earnings (85%)</th><th>Status</th></tr></thead>
+              <tbody id="earningsBody"><tr><td colspan="7" class="text-center text-muted">Loading...</td></tr></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- CHAT -->
+      <div id="section-chat" class="d-none">
+        <div class="row g-3">
+          <div class="col-md-4"><div class="card border-0 shadow-sm rounded-3 p-3">
+            <h6 class="fw-bold mb-3">Conversations</h6>
+            <div id="contactList"><div class="text-muted small text-center py-3">No conversations yet</div></div>
+          </div></div>
+          <div class="col-md-8"><div class="card border-0 shadow-sm rounded-3 p-3">
+            <div class="d-flex align-items-center gap-2 mb-3 pb-2 border-bottom">
+              <div class="rounded-circle bg-primary bg-opacity-10 text-primary d-flex align-items-center justify-content-center" style="width:36px;height:36px;"><i class="fas fa-user"></i></div>
+              <strong id="chatWithName">Select a conversation</strong>
+            </div>
+            <div class="chat-box" id="chatBox"><div class="text-muted text-center pt-5 small">Select a student to start chatting</div></div>
+            <div class="input-group mt-3">
+              <input type="text" class="form-control" id="chatInputReal" placeholder="Type a message..." onkeydown="if(event.key==='Enter')sendMsg()">
+              <button class="btn btn-danger" onclick="sendMsg()"><i class="fas fa-paper-plane"></i></button>
+            </div>
+          </div></div>
+        </div>
+      </div>
+
+    </div></div></div>
+
+<script src="libs/bootstrap/js/bootstrap.bundle.min.js"></script>
+<script src="auth.js"></script>
+<script>
+const user = requireAuth('tutor');
+if (user) {
+    document.getElementById('userName').textContent = user.name;
+    document.getElementById('userAvatar').textContent = user.name.charAt(0).toUpperCase();
+    document.getElementById('profileName').textContent = user.name;
+}
+
+const SECTIONS = ['overview','profile','schedule','students','upload','earnings','chat'];
+function showSection(id, el) {
+    SECTIONS.forEach(s => document.getElementById('section-'+s).classList.add('d-none'));
+    document.getElementById('section-'+id).classList.remove('d-none');
+    document.querySelectorAll('.sidebar .nav-link').forEach(l => l.classList.remove('active'));
+    if (el) el.classList.add('active');
+    const titles = {overview:'Overview',profile:'My Profile',schedule:'My Schedule',students:'My Students',upload:'Upload Material',earnings:'My Earnings',chat:'Messages'};
+    document.getElementById('pageTitle').textContent = titles[id] || id;
+    if (id === 'overview')  loadOverview();
+    if (id === 'profile')   loadTutorProfile();
+    if (id === 'schedule')  loadSchedule();
+    if (id === 'students')  loadStudents();
+    if (id === 'earnings')  loadEarnings();
+    if (id === 'chat')      loadContacts();
+}
+
+// ── Overview ──────────────────────────────────────────────
+async function loadOverview() {
+    const profile = await getTutorProfile(user.id);
+    if (profile) {
+        document.getElementById('statRate').textContent = (profile.hourly_rate||5000).toLocaleString();
+        document.getElementById('statQual').textContent = profile.qualification || '—';
+        document.getElementById('profileRateBadge').textContent = (profile.hourly_rate||5000).toLocaleString() + ' XAF/hr';
+        document.getElementById('profileAlert').classList.toggle('d-none', !!(profile.qualification && profile.subjects));
+    } else {
+        document.getElementById('profileAlert').classList.remove('d-none');
+    }
+    const sessions = await getSessions(null, user.id);
+    const uniqueStudents = new Set(sessions.map(s => s.student_id));
+    const pending  = sessions.filter(s => s.status === 'pending');
+    const upcoming = sessions.filter(s => s.status !== 'completed' && s.status !== 'cancelled');
+    const totalEarned = sessions.filter(s => s.status === 'completed')
+        .reduce((a, s) => a + parseInt(s.tutor_earnings || s.amount_paid * 0.85 || 0), 0);
+
+    document.getElementById('statStudents').textContent = uniqueStudents.size;
+    document.getElementById('statSessions').textContent = sessions.length;
+
+    // Show pending sessions alert
+    const alertEl = document.getElementById('newSessionAlert');
+    if (alertEl) {
+        if (pending.length > 0) {
+            alertEl.innerHTML = `<i class="fas fa-bell me-2"></i>You have <strong>${pending.length}</strong> new pending session${pending.length>1?'s':''} awaiting your confirmation. <a href="#" onclick="showSection('schedule',null)" class="fw-bold">View Schedule</a>`;
+            alertEl.classList.remove('d-none');
+        } else {
+            alertEl.classList.add('d-none');
+        }
+    }
+
+    document.getElementById('overviewSessions').innerHTML = upcoming.length === 0
+        ? '<div class="text-muted text-center py-3">No upcoming sessions</div>'
+        : upcoming.slice(0,3).map(s => `
+            <div class="card p-3 mb-2 border-0 bg-light">
+              <div class="d-flex justify-content-between align-items-center">
+                <div><strong>${s.subject}</strong><br>
+                  <small class="text-muted"><i class="fas fa-user me-1"></i>${s.student_name}
+                  &nbsp;<i class="fas fa-clock me-1"></i>${s.session_date} ${s.session_time}</small>
+                </div>
+                <div class="text-end">
+                  <span class="badge ${s.status==='confirmed'?'bg-success':s.status==='pending'?'bg-warning text-dark':'bg-secondary'}">${s.status}</span><br>
+                  <small class="text-success fw-bold">${parseInt(s.tutor_earnings||Math.round(s.amount_paid*0.85)).toLocaleString()} XAF</small>
+                </div>
+              </div>
+            </div>`).join('');
+}
+
+// ── Profile ───────────────────────────────────────────────
+async function loadTutorProfile() {
+    const profile = await getTutorProfile(user.id);
+    if (!profile) return;
+    document.getElementById('profDob').value      = profile.date_of_birth || '';
+    document.getElementById('profQual').value     = profile.qualification || 'Bachelor';
+    document.getElementById('profSubjects').value = profile.subjects || '';
+    document.getElementById('profBio').value      = profile.bio || '';
+    document.getElementById('profileRateBadge').textContent = (profile.hourly_rate||5000).toLocaleString() + ' XAF/hr';
+    if (profile.photo_filename) {
+        document.getElementById('profilePhotoPreview').innerHTML =
+            `<img src="image/${profile.photo_filename}" style="width:80px;height:80px;border-radius:50%;object-fit:cover;">`;
+    }
+}
+
+function updateRatePreview() {
+    const RATES = {Certificate:3000,Diploma:4000,Bachelor:5000,Master:7000,PhD:10000};
+    const qual  = document.getElementById('profQual').value;
+    const rate  = RATES[qual] || 5000;
+    document.getElementById('profileRateBadge').textContent = rate.toLocaleString() + ' XAF/hr';
+}
+
+function previewPhoto(input) {
+    if (input.files && input.files[0]) {
+        const reader = new FileReader();
+        reader.onload = e => {
+            document.getElementById('profilePhotoPreview').innerHTML =
+                `<img src="${e.target.result}" style="width:80px;height:80px;border-radius:50%;object-fit:cover;">`;
+        };
+        reader.readAsDataURL(input.files[0]);
+    }
+}
+
+document.getElementById('profileForm').addEventListener('submit', async function(e) {
+    e.preventDefault();
+    const msgEl = document.getElementById('profileMsg');
+    msgEl.innerHTML = '<div class="text-muted small">Saving...</div>';
+    const fd = new FormData(this);
+    fd.append('user_id', user.id);
+    const result = await saveTutorProfile(fd);
+    if (result.success) {
+        msgEl.innerHTML = '<div class="alert alert-success py-2">Profile saved successfully.</div>';
+        loadOverview();
+    } else {
+        msgEl.innerHTML = `<div class="alert alert-danger py-2">${result.message || 'Save failed.'}</div>`;
+    }
+});
+
+// ── Schedule ──────────────────────────────────────────────
+const PLATFORM_LABELS = {zoom:'🎥 Zoom',google_meet:'📹 Google Meet',whatsapp:'💬 WhatsApp',telegram:'✈️ Telegram',other:'🔗 Other'};
+async function loadSchedule() {
+    const sessions = await getSessions(null, user.id);
+    document.getElementById('scheduleBody').innerHTML = sessions.length === 0
+        ? '<tr><td colspan="8" class="text-center text-muted">No sessions yet</td></tr>'
+        : sessions.map(s => `<tr>
+            <td>${s.student_name}</td><td>${s.subject}</td>
+            <td>${s.session_date} ${s.session_time}</td>
+            <td><span class="badge ${s.mode==='online'?'bg-primary':'bg-warning text-dark'}">${s.mode}</span></td>
+            <td>${s.mode==='online'?(s.online_platform?PLATFORM_LABELS[s.online_platform]||s.online_platform:'—'):'—'}</td>
+            <td>${parseInt(s.amount_paid).toLocaleString()} XAF</td>
+            <td><span class="badge ${s.status==='confirmed'?'bg-success':s.status==='pending'?'bg-warning text-dark':s.status==='completed'?'bg-secondary':'bg-danger'}">${s.status}</span></td>
+            <td>
+              <select class="form-select form-select-sm d-inline-block" id="sts_${s.id}" style="width:110px;">
+                <option ${s.status==='pending'?'selected':''}>pending</option>
+                <option ${s.status==='confirmed'?'selected':''}>confirmed</option>
+                <option ${s.status==='completed'?'selected':''}>completed</option>
+                <option ${s.status==='cancelled'?'selected':''}>cancelled</option>
+              </select>
+              <button class="btn btn-sm btn-outline-primary ms-1" onclick="updateStatus(${s.id})">Update</button>
+            </td></tr>`).join('');
+}
+
+async function updateStatus(id) {
+    const status = document.getElementById('sts_'+id).value;
+    const link   = prompt('Platform link (leave blank to keep existing):', '') || '';
+    await updateSessionStatus(id, status, link);
+    loadSchedule();
+}
+
+// ── Students ──────────────────────────────────────────────
+async function loadStudents() {
+    const sessions = await getSessions(null, user.id);
+    const seen = new Set();
+    const students = sessions.filter(s => { if (seen.has(s.student_id)) return false; seen.add(s.student_id); return true; });
+    document.getElementById('studentsList').innerHTML = students.length === 0
+        ? '<div class="text-muted text-center py-3">No students yet</div>'
+        : `<div class="row g-3">${students.map(s => `
+            <div class="col-md-4">
+              <div class="card border-0 shadow-sm p-3 d-flex flex-row align-items-center gap-3">
+                <div class="rounded-circle bg-primary bg-opacity-10 text-primary d-flex align-items-center justify-content-center" style="width:44px;height:44px;font-size:1.2rem;flex-shrink:0;">${s.student_name.charAt(0)}</div>
+                <div>
+                  <div class="fw-semibold">${s.student_name}</div>
+                  <div class="text-muted small">${sessions.filter(x=>x.student_id===s.student_id).length} session(s)</div>
+                </div>
+              </div>
+            </div>`).join('')}</div>`;
+}
+
+// ── Upload Material ───────────────────────────────────────
+async function uploadMaterial(e) {
+    e.preventDefault();
+    const form  = e.target;
+    const msgEl = document.createElement('div');
+    form.appendChild(msgEl);
+    msgEl.innerHTML = '<div class="text-muted small mt-2">Uploading...</div>';
+    const fd = new FormData(form);
+    fd.append('uploaded_by', user.name);
+    try {
+        const r = await fetch('api/materials.php', {method:'POST', body:fd});
+        const d = await r.json();
+        if (d.success) {
+            msgEl.innerHTML = '<div class="alert alert-success py-2 mt-2">Material uploaded successfully.</div>';
+            form.reset();
+        } else {
+            msgEl.innerHTML = `<div class="alert alert-danger py-2 mt-2">${d.message || 'Upload failed.'}</div>`;
+        }
+    } catch {
+        msgEl.innerHTML = '<div class="alert alert-danger py-2 mt-2">Cannot reach server.</div>';
+    }
+    setTimeout(() => msgEl.remove(), 4000);
+}
+
+// ── Earnings ──────────────────────────────────────────────
+async function loadEarnings() {
+    try {
+        const r = await fetch(`api/earnings.php?tutor_id=${user.id}`);
+        const d = await r.json();
+        if (!d.success) return;
+        const s = d.summary;
+        document.getElementById('earnTotal').textContent     = parseInt(s.total_earned||0).toLocaleString() + ' XAF';
+        document.getElementById('earnConfirmed').textContent = parseInt(s.confirmed_earned||0).toLocaleString() + ' XAF';
+        document.getElementById('earnPending').textContent   = parseInt(s.pending_earned||0).toLocaleString() + ' XAF';
+        document.getElementById('earnFee').textContent       = parseInt(s.total_fee_paid||0).toLocaleString() + ' XAF';
+        document.getElementById('earningsBody').innerHTML = d.sessions.length === 0
+            ? '<tr><td colspan="7" class="text-center text-muted">No sessions yet</td></tr>'
+            : d.sessions.map(s => `<tr>
+                <td>${s.subject}</td>
+                <td>${s.student_name}</td>
+                <td>${s.session_date}</td>
+                <td>${parseInt(s.amount_paid).toLocaleString()} XAF</td>
+                <td class="text-danger">-${parseInt(s.platform_fee).toLocaleString()} XAF</td>
+                <td class="text-success fw-bold">${parseInt(s.tutor_earnings).toLocaleString()} XAF</td>
+                <td><span class="badge ${s.status==='completed'?'bg-success':s.status==='confirmed'?'bg-primary':s.status==='pending'?'bg-warning text-dark':'bg-danger'}">${s.status}</span></td>
+              </tr>`).join('');
+    } catch { document.getElementById('earningsBody').innerHTML = '<tr><td colspan="7" class="text-center text-danger">Could not load earnings.</td></tr>'; }
+}
+
+// ── Chat ──────────────────────────────────────────────────
+let chatPartnerId = null, chatInterval = null;
+
+async function loadContacts() {
+    const convos = await getConversations(user.id);
+    document.getElementById('contactList').innerHTML = convos.length === 0
+        ? '<div class="text-muted small text-center py-2">No conversations yet</div>'
+        : convos.map(c => {
+            const otherId = c.sender_id==user.id ? c.receiver_id : c.sender_id;
+            return `<div class="contact-item d-flex align-items-center gap-2" onclick="openChatWith(${otherId},'${c.other_name}')">
+              <div class="rounded-circle bg-danger bg-opacity-10 text-danger d-flex align-items-center justify-content-center" style="width:34px;height:34px;flex-shrink:0;">${c.other_name.charAt(0)}</div>
+              <div class="flex-grow-1 overflow-hidden">
+                <div class="fw-semibold small">${c.other_name}</div>
+                <div class="text-muted" style="font-size:0.72rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${c.message}</div>
+              </div>
+              ${c.unread>0?`<span class="badge bg-danger">${c.unread}</span>`:''}
+            </div>`;
+          }).join('');
+}
+
+function openChatWith(id, name) {
+    chatPartnerId = id;
+    document.getElementById('chatWithName').textContent = name;
+    if (chatInterval) clearInterval(chatInterval);
+    loadMessages();
+    chatInterval = setInterval(loadMessages, 3000);
+}
+
+async function loadMessages() {
+    if (!chatPartnerId) return;
+    const msgs = await getConversation(user.id, chatPartnerId);
+    const box  = document.getElementById('chatBox');
+    box.innerHTML = msgs.length === 0
+        ? '<div class="text-muted text-center pt-5 small">No messages yet. Say hello!</div>'
+        : msgs.map(m => `
+            <div class="d-flex flex-column ${m.sender_id==user.id?'align-items-end':'align-items-start'}">
+              <div class="msg-bubble ${m.sender_id==user.id?'msg-mine':'msg-other'}">${m.message}</div>
+              <div class="msg-time px-1">${new Date(m.created_at).toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'})}</div>
+            </div>`).join('');
+    box.scrollTop = box.scrollHeight;
+}
+
+async function sendMsg() {
+    const input = document.getElementById('chatInputReal');
+    const text  = input.value.trim();
+    if (!text || !chatPartnerId) return;
+    input.value = '';
+    await sendMessage(user.id, chatPartnerId, text);
+    loadMessages();
+}
+
+// Init
+loadOverview();
+</script>
+</body>
+</html>

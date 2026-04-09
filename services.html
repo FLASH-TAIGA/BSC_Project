@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <script src="theme.js"></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="proj.css">
+    <link rel="stylesheet" href="theme.css">
+    <link href="libs/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="libs/fontawesome/css/all.min.css">
+    <title>FL-Services</title>
+</head>
+<body>
+        <div class="top-announcement bg-light py-2 d-none d-md-block"><div class="container"><p class="mb-0 small"><i class="fas fa-bell text-danger me-2"></i>THIS IS STRICTLY FOR LEARNING PURPOSES.</p></div></div>
+    <nav class="navbar navbar-expand-lg bg-white sticky-top py-3">
+        <div class="container-fluid px-4">
+            <a class="navbar-brand moodle-logo" href="home.html"><span class="moodle-tilde">~</span>FLASH<br>LEARNING<span class="moodle-tilde">~</span></a>
+            <img style="width:70px;height:auto;border-radius:50%;" src="image/fl5.jpg" alt="FL Logo">
+            <button class="navbar-toggler ms-2" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"><span class="navbar-toggler-icon"></span></button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                    <li class="nav-item"><a class="nav-link" href="home.html">Home</a></li>
+                    <li class="nav-item dropdown"><a class="nav-link dropdown-toggle active" href="#" data-bs-toggle="dropdown">Learn</a><ul class="dropdown-menu"><li><a class="dropdown-item" href="questions.html"><i class="fas fa-book-open me-2 text-primary"></i>Study Notes</a></li><li><a class="dropdown-item" href="solutions.html"><i class="fas fa-question-circle me-2 text-success"></i>Q&amp;A Bank</a></li></ul></li>
+                    <li class="nav-item"><a class="nav-link" href="about.html">About</a></li>
+                    <li class="nav-item"><a class="nav-link" href="contact.html">Contact</a></li>
+                </ul>
+                <div class="d-flex align-items-center gap-2" id="navAuthArea">
+                    <button class="theme-toggle" onclick="toggleTheme()" title="Toggle dark/light mode"><i class="fas fa-moon icon-moon"></i><i class="fas fa-sun icon-sun"></i></button><a href="login.html" class="btn btn-outline-success rounded-pill px-3">Log In</a><a href="signup.html" class="btn moodle-btn-primary rounded-pill px-3">Sign Up</a></div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Use the same Head/Nav from index.html -->
+<div class="container mt-5">
+    <div class="row">
+        <!-- Subject List -->
+        <div class="col-md-6">
+            <h3>Available Subjects</h3>
+            <div class="list-group mt-3">
+                <button class="list-group-item list-group-item-action"><i class="fas fa-calculator me-2"></i> Mathematics (Calculus & Algebra)</button>
+                <button class="list-group-item list-group-item-action"><i class="fas fa-flask me-2"></i> Chemistry (Organic & Inorganic)</button>
+                <button class="list-group-item list-group-item-action"><i class="fas fa-microchip me-2"></i> Computer Science (Java, C++, Python)</button>
+                <button class="list-group-item list-group-item-action"><i class="fas fa-book me-2"></i> Literature & Composition</button>
+            </div>
+        </div>
+        <!-- Booking Form -->
+        <div class="col-md-6">
+            <div class="card shadow p-4">
+                <h3>Schedule a Session</h3>
+                <form>
+                    <div class="mb-3">
+                        <label class="form-label">Select Date</label>
+                        <input type="date" class="form-control">
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Select Time</label>
+                        <input type="time" class="form-control">
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Learning Mode</label>
+                        <select class="form-select">
+                            <option value="online">Online (Zoom/Meet)</option>
+                            <option value="onsite">Onsite (Campus Library)</option>
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Specific Meeting Spot (If Onsite)</label>
+                        <input type="text" class="form-control" placeholder="e.g. Hall B, Table 4">
+                    </div>
+                    <button type="submit" class="btn btn-success w-100">Confirm Plan</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Use the same Footer from index.html -->
+
+
+    <!-- Footer -->
+    <footer class="bg-dark text-white pt-5 pb-3 mt-5">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-4 mb-4">
+                    <h5 class="text-warning mb-4">FLASH LEARNING</h5>
+                    <p>Empowering students through accessible, high-quality tutoring and resources. Join our community of learners today.</p>
+                    <div class="mt-3">
+                        <a href="#" class="text-white me-3"><i class="fab fa-facebook fa-lg"></i></a>
+                        <a href="#" class="text-white me-3"><i class="fab fa-twitter fa-lg"></i></a>
+                        <a href="#" class="text-white"><i class="fab fa-instagram fa-lg"></i></a>
+                    </div>
+                </div>
+                <div class="col-md-2 mb-4">
+                    <h5>Quick Links</h5>
+                    <ul class="list-unstyled mt-3">
+                        <li><a href="questions.html" class="text-white-50 text-decoration-none">Study Notes</a></li>
+                        <li><a href="solutions.html" class="text-white-50 text-decoration-none">Q&amp;A Bank</a></li>
+                        <li><a href="contact.html" class="text-white-50 text-decoration-none">Contact</a></li>
+                    </ul>
+                </div>
+                <div class="col-md-3 mb-4">
+                    <h5>Legal</h5>
+                    <ul class="list-unstyled mt-3">
+                        <li><a href="privacy.html" class="text-white-50 text-decoration-none">Privacy Policy</a></li>
+                        <li><a href="terms.html" class="text-white-50 text-decoration-none">Terms of Use</a></li>
+                        <li><a href="#" class="text-white-50 text-decoration-none">Rules</a></li>
+                    </ul>
+                </div>
+                <div class="col-md-3 mb-4">
+                    <h5>Newsletter</h5>
+                    <p class="small">Get updates on new study materials.</p>
+                    <div class="input-group mb-3">
+                        <input type="text" class="form-control" placeholder="Email">
+                        <button class="btn btn-warning" type="button">Join</button>
+                    </div>
+                </div>
+            </div>
+            <hr class="bg-secondary">
+            <div class="text-center small text-white-50">
+                &copy; 2023 Flash Learning Platform. All Rights Reserved.
+            </div>
+        </div>
+    </footer>
+    <script src="libs/bootstrap/js/bootstrap.bundle.min.js"></script>
+    <script src="auth.js"></script>
+    <script>const u=getCurrentUser();if(u)document.getElementById('navAuthArea').innerHTML=`<a href="${u.role==='admin'?'dashboard-admin.html':u.role==='tutor'?'dashboard-tutor.html':'dashboard-student.html'}" class="btn moodle-btn-primary rounded-pill px-3">Dashboard</a><button onclick="logout()" class="btn btn-outline-danger rounded-pill px-3">Logout</button>`;</script>
+</body>
+</html>

@@ -1,0 +1,249 @@
+
+================================================================
+        FLASH LEARNING — HOW THE WEBSITE WORKS
+================================================================
+
+
+----------------------------------------------------------------
+ WHAT IS FLASH LEARNING?
+----------------------------------------------------------------
+
+Flash Learning is an online peer-to-peer tutoring platform built
+for university and high school students in Cameroon. It connects
+students who need academic help with qualified tutors who can
+teach them — either online or in person on campus. Payments are
+made via Mobile Money (MTN MoMo or Orange Money).
+
+
+----------------------------------------------------------------
+ THE THREE USER ROLES
+----------------------------------------------------------------
+
+  STUDENT
+    A student signs up, sets up their profile, browses tutors,
+    books sessions, accesses study materials, and chats with
+    tutors. They pay for sessions through Mobile Money.
+
+  TUTOR
+    A tutor signs up, fills in their profile (qualification,
+    subjects, bio, photo), and waits for admin approval. Once
+    approved, students can see them, book sessions with them,
+    and message them. Tutors can also upload study materials
+    (PDFs) for students to access.
+
+  ADMIN
+    The admin is a single hardcoded account:
+      Email    : admin@flashlearn.edu
+      Password : Admin@FL2024
+    The admin approves tutors, manages all users, monitors
+    sessions, views platform revenue, and can delete messages
+    or materials.
+
+
+----------------------------------------------------------------
+ HOW A STUDENT USES THE SITE
+----------------------------------------------------------------
+
+  1.  Goes to index.html (splash page) and clicks Sign Up
+  2.  Fills in name, email, password, selects "Student" role
+  3.  Gets redirected to dashboard-student.html
+  4.  Sets up their profile — date of birth, optional photo,
+      and subjects they need help with
+  5.  The overview page shows recommended tutors based on
+      those subjects
+  6.  To book a session:
+        - Clicks "Book Session" in the sidebar
+        - Searches for a tutor by name or subject
+        - Selects a tutor
+        - Fills in subject, date, time, and mode
+          (online or onsite)
+        - Chooses payment method (MTN MoMo or Orange Money)
+        - Enters their phone number
+        - Payment is processed → booking is confirmed
+  7.  The booked session appears in "My Sessions" with status
+      "pending" until the tutor confirms it
+  8.  Students can access study notes and past papers in the
+      "Study Notes" and "Q&A Bank" sections
+  9.  Students can message any tutor directly through the
+      "Messages" section
+
+
+----------------------------------------------------------------
+ HOW A TUTOR USES THE SITE
+----------------------------------------------------------------
+
+  1.  Goes to index.html → clicks Sign Up → selects "Tutor"
+  2.  Gets redirected to dashboard-tutor.html
+  3.  A basic profile is auto-created immediately so they
+      appear in the system right away
+  4.  They fill in their full profile:
+        - Date of birth
+        - Qualification (Certificate / Diploma / Bachelor /
+          Master / PhD)
+        - Subjects they teach
+        - Bio and optional photo
+  5.  Hourly rate is set automatically by qualification:
+
+        Certificate  →  3,000 XAF/hr
+        Diploma      →  4,000 XAF/hr
+        Bachelor     →  5,000 XAF/hr
+        Master       →  7,000 XAF/hr
+        PhD          → 10,000 XAF/hr
+
+  6.  Admin must approve their profile before students can
+      book them (students can still message them immediately)
+  7.  When a student books a session, it appears in the
+      tutor's "My Schedule" with status "pending"
+  8.  The tutor can update the session status to:
+        confirmed / completed / cancelled
+  9.  Tutors can upload PDF study materials (notes, past
+      papers, exercises) for students to access
+  10. Tutors can view their earnings in "My Earnings":
+        - Gross amount paid by student
+        - 15% platform fee deducted
+        - Their 85% net earnings per session
+
+
+----------------------------------------------------------------
+ HOW THE ADMIN USES THE SITE
+----------------------------------------------------------------
+
+  1.  Logs in at login.html with the hardcoded credentials
+  2.  Gets redirected to dashboard-admin.html
+
+  Dashboard sections:
+
+    Overview    — Live counts: students, tutors, sessions
+                  this month, messages, pending sessions,
+                  and pending tutor approvals
+
+    Users       — All registered users, filter by role,
+                  remove any user
+
+    Tutors      — All tutor profiles, approve or revoke
+                  approval, manually set hourly rate
+
+    Sessions    — Every session on the platform, update
+                  any session's status
+
+    Materials   — All uploaded study materials, delete any
+
+    Chat        — Monitor all messages, delete any message
+
+    Revenue     — Total gross revenue, platform's 15% cut,
+                  total tutor payouts, breakdown per tutor
+
+    Settings    — Platform name, support email, phone,
+                  min/max session rates, maintenance mode
+
+
+----------------------------------------------------------------
+ THE PAYMENT SYSTEM
+----------------------------------------------------------------
+
+  When a student books a session and pays (e.g. 5,000 XAF):
+
+    Full amount paid by student  →  5,000 XAF
+    Platform fee (15%)           →    750 XAF  (to admin)
+    Tutor receives (85%)         →  4,250 XAF
+
+  - The split is calculated and stored in the database at
+    the moment of booking
+  - Tutors see their net earnings in their dashboard
+  - The admin sees total platform revenue in the Revenue
+    section
+  - Full details are in the Terms of Use page (terms.html)
+
+
+----------------------------------------------------------------
+ THE DATABASE
+----------------------------------------------------------------
+
+  Database name: flashlearn
+
+  Table               What it stores
+  ----------------    ----------------------------------------
+  users               All accounts — name, email, hashed
+                      password, role
+  tutor_profiles      Tutor details — qualification, subjects,
+                      rate, approval status
+  student_profiles    Student details — DOB, subjects needing
+                      help, photo
+  sessions            All booked sessions — student, tutor,
+                      subject, date, amount, fee split, status
+  messages            All in-platform chat messages
+  materials           All uploaded PDFs — title, subject,
+                      type, filename
+
+
+----------------------------------------------------------------
+ THE API (BACKEND)
+----------------------------------------------------------------
+
+  All data is handled by PHP files in the /api/ folder:
+
+  File                  What it does
+  ------------------    --------------------------------------
+  login.php             Checks credentials, returns user data
+  signup.php            Creates new account (auto-creates
+                        tutor profile if role is tutor)
+  tutors.php            Returns tutor list — approved only,
+                        all, or all for chat
+  profile.php           Gets or saves a tutor's profile
+  student_profile.php   Gets or saves a student's profile
+  sessions.php          Gets sessions and creates/updates them
+  materials.php         Lists materials, handles uploads and
+                        deletes
+  messages.php          Gets conversations, sends/deletes msgs
+  users.php             Lists all users, handles deletion
+  earnings.php          Earnings breakdown for tutor or admin
+  stats.php             Live platform stats (counts)
+
+
+----------------------------------------------------------------
+ KEY PAGES
+----------------------------------------------------------------
+
+  Page                      Purpose
+  ------------------------  ----------------------------------
+  index.html                Splash page — login or sign up
+  home.html                 Public homepage
+  about.html                About page — live stats, tutors
+  contact.html              Contact form and map
+  login.html                Login form
+  signup.html               Registration form
+  dashboard-student.html    Full student dashboard
+  dashboard-tutor.html      Full tutor dashboard
+  dashboard-admin.html      Full admin dashboard
+  terms.html                Terms of Use (13 sections)
+  privacy.html              Privacy Policy (10 sections)
+
+
+----------------------------------------------------------------
+ IMPORTANT NOTES
+----------------------------------------------------------------
+
+  - The site runs on XAMPP (Apache + MySQL). Both Apache and
+    MySQL must be running for the site to work.
+
+  - The admin account is hardcoded — it does not exist in the
+    database. It is checked directly in login.php.
+
+  - Tutor profiles are auto-created on signup so new tutors
+    are immediately visible for messaging, even before admin
+    approval.
+
+  - Unapproved tutors show a "Pending Approval" badge in the
+    booking section and cannot be booked until approved.
+
+  - All background images, uploaded photos, and PDFs are
+    stored in the /image/ folder.
+
+  - Dark/light mode is handled by theme.js and theme.css and
+    persists across pages using localStorage.
+
+  - Session authentication uses sessionStorage — logging out
+    or closing the browser clears the login session.
+
+
+================================================================

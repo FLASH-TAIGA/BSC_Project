@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <script src="theme.js"></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="proj.css">
+    <link rel="stylesheet" href="theme.css">
+    <link href="libs/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="libs/fontawesome/css/all.min.css">
+    <title>FL - Login</title>
+    <style>
+        .auth-wrapper { min-height: 100vh; background: linear-gradient(135deg, #1a2a4b 0%, #4CAF50 100%); display: flex; align-items: center; }
+        .auth-card { border-radius: 1.5rem; box-shadow: 0 20px 60px rgba(0,0,0,0.2); }
+        .auth-logo { font-size: 2rem; font-weight: 700; color: #4CAF50; }
+        .auth-logo span { color: #FF5722; }
+    </style>
+</head>
+<body>
+<div class="auth-wrapper">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-md-5">
+                <div class="auth-card card p-4 p-md-5">
+                    <div class="text-end mb-2"><button class="theme-toggle" onclick="toggleTheme()" title="Toggle dark/light mode"><i class="fas fa-moon icon-moon"></i><i class="fas fa-sun icon-sun"></i></button></div>
+                    <div class="text-center mb-4">
+                        <a href="index.html" class="auth-logo text-decoration-none"><span>~</span>FLASH LEARNING<span>~</span></a>
+                        <p class="text-muted mt-2">Sign in to your account</p>
+                    </div>
+                    <div id="loginError" class="alert alert-danger d-none">Invalid email or password.</div>
+                    <form id="loginForm">
+                        <div class="mb-3">
+                            <label class="form-label fw-semibold">Email Address</label>
+                            <input type="email" id="loginEmail" class="form-control form-control-lg" placeholder="you@example.com" required>
+                        </div>
+                        <div class="mb-4">
+                            <label class="form-label fw-semibold">Password</label>
+                            <div class="input-group">
+                                <input type="password" id="loginPassword" class="form-control form-control-lg" placeholder="••••••••" required>
+                                <button class="btn btn-outline-secondary" type="button" onclick="togglePwd('loginPassword')"><i class="fas fa-eye"></i></button>
+                            </div>
+                        </div>
+                        <button type="submit" class="btn moodle-btn-primary w-100 py-3 fs-5">Log In</button>
+                    </form>
+                    <hr class="my-4">
+                    <p class="text-center mb-0">Don't have an account? <a href="signup.html" class="text-success fw-semibold">Sign Up</a></p>
+                    <p class="text-center mt-2"><a href="index.html" class="text-muted small"><i class="fas fa-arrow-left me-1"></i>Back to Home</a></p>
+                    <p class="text-center mt-2 small text-muted">
+                        <a href="terms.html" target="_blank" class="text-muted">Terms of Use</a> &nbsp;|&nbsp;
+                        <a href="privacy.html" target="_blank" class="text-muted">Privacy Policy</a>
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+    <script src="libs/bootstrap/js/bootstrap.bundle.min.js"></script>
+    <script src="auth.js"></script>
+<script>
+    // Redirect if already logged in
+    const existing = getCurrentUser();
+    if (existing) redirectToDashboard(existing.role);
+
+    document.getElementById('loginForm').addEventListener('submit', function(e) {
+        e.preventDefault();
+        const email = document.getElementById('loginEmail').value.trim();
+        const password = document.getElementById('loginPassword').value;
+        handleLogin(email, password);
+    });
+
+    function togglePwd(id) {
+        const el = document.getElementById(id);
+        el.type = el.type === 'password' ? 'text' : 'password';
+    }
+</script>
+</body>
+</html>

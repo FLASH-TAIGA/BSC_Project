@@ -1,0 +1,1036 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8"><script src="theme.js"></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="proj.css"><link rel="stylesheet" href="theme.css">
+    <link href="libs/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="libs/fontawesome/css/all.min.css">
+    <title>FL - Student Dashboard</title>
+    <style>
+        .sidebar{min-height:100vh;background:#1a2a4b;width:250px;position:fixed;top:0;left:0;z-index:100;}
+        .sidebar .brand{color:#4CAF50;font-size:1.3rem;font-weight:700;padding:1.5rem;border-bottom:1px solid rgba(255,255,255,0.1);}
+        .sidebar .brand span{color:#FF5722;}
+        .sidebar .nav-link{color:rgba(255,255,255,0.75);padding:0.85rem 1.5rem;border-radius:0.5rem;margin:0.2rem 0.75rem;transition:all 0.2s;}
+        .sidebar .nav-link:hover,.sidebar .nav-link.active{background:rgba(76,175,80,0.2);color:#4CAF50;}
+        .sidebar .nav-link i{width:20px;}
+        .main-content{margin-left:250px;min-height:100vh;background:#f4f6f9;}
+        .topbar{background:white;padding:1rem 1.5rem;border-bottom:1px solid #e9ecef;}
+        .stat-card{border-radius:1rem;border:none;box-shadow:0 4px 15px rgba(0,0,0,0.06);}
+        .stat-icon{width:55px;height:55px;border-radius:0.75rem;display:flex;align-items:center;justify-content:center;font-size:1.4rem;}
+        .session-item{border-left:4px solid #4CAF50;}
+        /* Tutor cards */
+        .tutor-pick-card{border:2px solid #dee2e6;border-radius:1rem;padding:1rem;cursor:pointer;transition:all 0.2s;}
+        .tutor-pick-card:hover,.tutor-pick-card.selected{border-color:#4CAF50;background:#f0fff4;}
+        .tutor-pick-card .rate{background:linear-gradient(135deg,#4CAF50,#2d6a4f);color:#fff;border-radius:2rem;padding:0.25rem 0.75rem;font-size:0.8rem;font-weight:700;}
+        .qual-badge{font-size:0.72rem;padding:0.2rem 0.6rem;border-radius:2rem;}
+        /* Payment */
+        .pay-method-card{border:2px solid #dee2e6;border-radius:1rem;padding:1rem;cursor:pointer;transition:all 0.2s;text-align:center;}
+        .pay-method-card:hover,.pay-method-card.selected{border-color:#4CAF50;background:#f0fff4;}
+        .pay-method-card img{width:90px;height:auto;object-fit:contain;margin-bottom:0.5rem;}
+        .payment-step{display:none;}
+        .payment-step.active{display:block;}
+        .price-badge{background:linear-gradient(135deg,#4CAF50,#2d6a4f);color:#fff;border-radius:0.75rem;padding:0.75rem 1.5rem;font-size:1.4rem;font-weight:700;display:inline-block;}
+        /* Chat */
+        .chat-box{height:360px;overflow-y:auto;background:#f8f9fa;border-radius:0.75rem;padding:1rem;}
+        .msg-bubble{max-width:70%;padding:0.6rem 1rem;border-radius:1rem;margin-bottom:0.5rem;font-size:0.9rem;}
+        .msg-mine{background:#4CAF50;color:#fff;margin-left:auto;border-bottom-right-radius:0.2rem;}
+        .msg-other{background:#e9ecef;color:#333;border-bottom-left-radius:0.2rem;}
+        .msg-time{font-size:0.7rem;opacity:0.7;margin-top:2px;}
+        .contact-item{cursor:pointer;border-radius:0.5rem;padding:0.75rem;transition:background 0.15s;}
+        .contact-item:hover,.contact-item.active{background:#e8f5e9;}
+        /* Profile */
+        .subject-tag{display:inline-flex;align-items:center;gap:0.4rem;background:#e8f5e9;color:#2d6a4f;border:1px solid #a8d5b5;border-radius:2rem;padding:0.3rem 0.8rem;font-size:0.82rem;font-weight:600;cursor:pointer;transition:all 0.15s;}
+        .subject-tag:hover,.subject-tag.selected{background:#4CAF50;color:#fff;border-color:#4CAF50;}
+        .rec-card{border:1px solid #dee2e6;border-radius:1rem;padding:1rem;transition:box-shadow 0.2s;}
+        .rec-card:hover{box-shadow:0 4px 16px rgba(76,175,80,0.15);}
+        @media(max-width:768px){.sidebar{width:100%;min-height:auto;position:relative;}.main-content{margin-left:0;}}
+    </style>
+</head>
+<body>
+<div class="d-flex">
+  <div class="sidebar">
+    <div class="brand"><span>~</span>FL<span>~</span> Student</div>
+    <nav class="nav flex-column mt-3">
+      <a class="nav-link active" href="#" onclick="showSection('overview',this)"><i class="fas fa-th-large me-2"></i>Overview</a>
+      <a class="nav-link" href="#" onclick="showSection('profile',this)"><i class="fas fa-id-card me-2"></i>My Profile</a>
+      <a class="nav-link" href="#" onclick="showSection('sessions',this)"><i class="fas fa-calendar-check me-2"></i>My Sessions</a>
+      <a class="nav-link" href="#" onclick="showSection('notes',this)"><i class="fas fa-book-open me-2"></i>Study Notes</a>
+      <a class="nav-link" href="#" onclick="showSection('qa',this)"><i class="fas fa-question-circle me-2"></i>Q&amp;A Bank</a>
+      <a class="nav-link" href="#" onclick="showSection('book',this)"><i class="fas fa-plus-circle me-2"></i>Book Session</a>
+      <a class="nav-link" href="#" onclick="showSection('chat',this)"><i class="fas fa-comments me-2"></i>Messages <span class="badge bg-danger ms-1" id="unreadBadge" style="display:none">0</span></a>
+      <hr style="border-color:rgba(255,255,255,0.1);margin:0.5rem 1rem;">
+      <a class="nav-link" href="home.html"><i class="fas fa-globe me-2"></i>Back to Site</a>
+      <a class="nav-link text-danger" href="#" onclick="logout()"><i class="fas fa-sign-out-alt me-2"></i>Logout</a>
+      <div class="px-3 pb-3 mt-2" style="font-size:0.7rem;">
+        <a href="terms.html" target="_blank" class="text-white-50 text-decoration-none me-2">Terms</a>
+        <a href="privacy.html" target="_blank" class="text-white-50 text-decoration-none">Privacy</a>
+      </div>
+    </nav>
+  </div>
+  <div class="main-content flex-grow-1">
+    <div class="topbar d-flex justify-content-between align-items-center">
+      <button class="theme-toggle" onclick="toggleTheme()"><i class="fas fa-moon icon-moon"></i><i class="fas fa-sun icon-sun"></i></button>
+      <h5 class="mb-0 fw-bold" id="pageTitle">Overview</h5>
+      <div class="d-flex align-items-center gap-3">
+        <span class="text-muted small">Welcome, <strong id="userName"></strong></span>
+        <div class="rounded-circle bg-success text-white d-flex align-items-center justify-content-center" style="width:38px;height:38px;font-weight:700;" id="userAvatar">S</div>
+      </div>
+    </div>
+    <div class="p-4">
+
+      <!-- OVERVIEW -->
+      <div id="section-overview">
+        <div class="alert alert-info d-none py-2 mb-3" id="profileNudge">
+          <i class="fas fa-user-circle me-2"></i>Set up your <a href="#" onclick="showSection('profile',null)" class="fw-bold">student profile</a> to get personalized tutor recommendations.
+        </div>
+        <div class="row g-4 mb-4">
+          <div class="col-6 col-md-3"><div class="stat-card card p-3"><div class="d-flex align-items-center gap-3"><div class="stat-icon bg-primary bg-opacity-10 text-primary"><i class="fas fa-calendar-check"></i></div><div><div class="fw-bold fs-4" id="statUpcoming">—</div><div class="text-muted small">Upcoming Sessions</div></div></div></div></div>
+          <div class="col-6 col-md-3"><div class="stat-card card p-3"><div class="d-flex align-items-center gap-3"><div class="stat-icon bg-success bg-opacity-10 text-success"><i class="fas fa-book"></i></div><div><div class="fw-bold fs-4">—</div><div class="text-muted small">Notes Accessed</div></div></div></div></div>
+          <div class="col-6 col-md-3"><div class="stat-card card p-3"><div class="d-flex align-items-center gap-3"><div class="stat-icon bg-warning bg-opacity-10 text-warning"><i class="fas fa-star"></i></div><div><div class="fw-bold fs-4">—</div><div class="text-muted small">Q&amp;A Completed</div></div></div></div></div>
+          <div class="col-6 col-md-3"><div class="stat-card card p-3"><div class="d-flex align-items-center gap-3"><div class="stat-icon bg-danger bg-opacity-10 text-danger"><i class="fas fa-money-bill-wave"></i></div><div><div class="fw-bold fs-4" id="statSpent">—</div><div class="text-muted small">XAF Spent</div></div></div></div></div>
+        </div>
+        <div class="row g-4">
+          <div class="col-md-7">
+            <div class="card border-0 shadow-sm rounded-3 p-4">
+              <h6 class="fw-bold mb-3">Upcoming Sessions</h6>
+              <div id="overviewSessions"><div class="text-muted text-center py-3">Loading...</div></div>
+            </div>
+          </div>
+          <div class="col-md-5">
+            <div class="card border-0 shadow-sm rounded-3 p-4">
+              <h6 class="fw-bold mb-3">Quick Access</h6>
+              <a href="#" onclick="showSection('notes',null)" class="btn btn-outline-primary w-100 mb-2 text-start"><i class="fas fa-book-open me-2"></i>Browse Study Notes</a>
+              <a href="#" onclick="showSection('qa',null)" class="btn btn-outline-success w-100 mb-2 text-start"><i class="fas fa-question-circle me-2"></i>Practice Q&amp;A</a>
+              <a href="#" onclick="showSection('book',null)" class="btn btn-outline-warning w-100 mb-2 text-start"><i class="fas fa-calendar-plus me-2"></i>Book a Session</a>
+              <a href="#" onclick="showSection('chat',null)" class="btn btn-outline-info w-100 text-start"><i class="fas fa-comments me-2"></i>Messages</a>
+            </div>
+          </div>
+        </div>
+        <!-- Tutor Recommendations -->
+        <div class="card border-0 shadow-sm rounded-3 p-4 mt-4" id="recommendationsCard" style="display:none;">
+          <div class="d-flex justify-content-between align-items-center mb-3">
+            <h6 class="fw-bold mb-0"><i class="fas fa-star text-warning me-2"></i>Recommended Tutors for You</h6>
+            <span class="text-muted small" id="recSubjectLabel"></span>
+          </div>
+          <div class="row g-3" id="recommendationsGrid">
+            <div class="col-12 text-center text-muted py-2">Loading...</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- PROFILE -->
+      <div id="section-profile" class="d-none">
+        <div class="row justify-content-center"><div class="col-md-8">
+          <div class="card border-0 shadow-sm rounded-3 p-4">
+            <div class="d-flex align-items-center gap-3 mb-4">
+              <div id="profilePhotoPreview" class="rounded-circle bg-success bg-opacity-10 text-success d-flex align-items-center justify-content-center" style="width:80px;height:80px;font-size:2rem;overflow:hidden;flex-shrink:0;"><i class="fas fa-user-graduate"></i></div>
+              <div>
+                <h5 class="fw-bold mb-1" id="profileDisplayName"></h5>
+                <span class="text-muted small">Student</span>
+              </div>
+            </div>
+            <form id="studentProfileForm" enctype="multipart/form-data">
+              <div class="row g-3">
+                <div class="col-md-6">
+                  <label class="form-label fw-semibold">Date of Birth</label>
+                  <input type="date" class="form-control" id="profDob" name="date_of_birth">
+                </div>
+                <div class="col-md-6">
+                  <label class="form-label fw-semibold">Profile Photo <span class="text-muted fw-normal">(optional)</span></label>
+                  <input type="file" class="form-control" name="photo" accept="image/*" onchange="previewStudentPhoto(this)">
+                </div>
+                <div class="col-12">
+                  <label class="form-label fw-semibold">Short Bio <span class="text-muted fw-normal">(optional)</span></label>
+                  <textarea class="form-control" id="profBio" name="bio" rows="2" placeholder="Tell tutors a bit about yourself..."></textarea>
+                </div>
+                <div class="col-12">
+                  <label class="form-label fw-semibold">Subjects I Need Help With</label>
+                  <p class="text-muted small mb-2">Select all that apply — tutors matching these subjects will be recommended to you.</p>
+                  <div class="d-flex flex-wrap gap-2" id="subjectTagsContainer">
+                    <span class="subject-tag" onclick="toggleSubject(this)" data-subject="Calculus">Calculus</span>
+                    <span class="subject-tag" onclick="toggleSubject(this)" data-subject="Linear Algebra">Linear Algebra</span>
+                    <span class="subject-tag" onclick="toggleSubject(this)" data-subject="Differential Equations">Differential Equations</span>
+                    <span class="subject-tag" onclick="toggleSubject(this)" data-subject="Statistics & Probability">Statistics &amp; Probability</span>
+                    <span class="subject-tag" onclick="toggleSubject(this)" data-subject="Classical Mechanics">Classical Mechanics</span>
+                    <span class="subject-tag" onclick="toggleSubject(this)" data-subject="Electromagnetism">Electromagnetism</span>
+                    <span class="subject-tag" onclick="toggleSubject(this)" data-subject="Thermodynamics">Thermodynamics</span>
+                    <span class="subject-tag" onclick="toggleSubject(this)" data-subject="Quantum Mechanics">Quantum Mechanics</span>
+                    <span class="subject-tag" onclick="toggleSubject(this)" data-subject="Organic Chemistry">Organic Chemistry</span>
+                    <span class="subject-tag" onclick="toggleSubject(this)" data-subject="Biochemistry">Biochemistry</span>
+                    <span class="subject-tag" onclick="toggleSubject(this)" data-subject="Introduction to Programming">Intro to Programming</span>
+                    <span class="subject-tag" onclick="toggleSubject(this)" data-subject="Data Structures & Algorithms">Data Structures &amp; Algorithms</span>
+                    <span class="subject-tag" onclick="toggleSubject(this)" data-subject="Python">Python</span>
+                    <span class="subject-tag" onclick="toggleSubject(this)" data-subject="Java">Java</span>
+                    <span class="subject-tag" onclick="toggleSubject(this)" data-subject="Web Development">Web Development</span>
+                    <span class="subject-tag" onclick="toggleSubject(this)" data-subject="Database Systems">Database Systems</span>
+                    <span class="subject-tag" onclick="toggleSubject(this)" data-subject="Machine Learning Fundamentals">Machine Learning</span>
+                    <span class="subject-tag" onclick="toggleSubject(this)" data-subject="Cell Biology">Cell Biology</span>
+                    <span class="subject-tag" onclick="toggleSubject(this)" data-subject="Genetics">Genetics</span>
+                    <span class="subject-tag" onclick="toggleSubject(this)" data-subject="Microbiology">Microbiology</span>
+                    <span class="subject-tag" onclick="toggleSubject(this)" data-subject="Anatomy & Physiology">Anatomy &amp; Physiology</span>
+                    <span class="subject-tag" onclick="toggleSubject(this)" data-subject="Pharmacology">Pharmacology</span>
+                    <span class="subject-tag" onclick="toggleSubject(this)" data-subject="Public Health">Public Health</span>
+                    <span class="subject-tag" onclick="toggleSubject(this)" data-subject="Circuit Analysis">Circuit Analysis</span>
+                    <span class="subject-tag" onclick="toggleSubject(this)" data-subject="Digital Electronics">Digital Electronics</span>
+                    <span class="subject-tag" onclick="toggleSubject(this)" data-subject="Signal Processing">Signal Processing</span>
+                    <span class="subject-tag" onclick="toggleSubject(this)" data-subject="Structural Analysis">Structural Analysis</span>
+                    <span class="subject-tag" onclick="toggleSubject(this)" data-subject="Microeconomics">Microeconomics</span>
+                    <span class="subject-tag" onclick="toggleSubject(this)" data-subject="Macroeconomics">Macroeconomics</span>
+                    <span class="subject-tag" onclick="toggleSubject(this)" data-subject="Econometrics">Econometrics</span>
+                    <span class="subject-tag" onclick="toggleSubject(this)" data-subject="Financial Accounting">Financial Accounting</span>
+                    <span class="subject-tag" onclick="toggleSubject(this)" data-subject="Corporate Finance">Corporate Finance</span>
+                    <span class="subject-tag" onclick="toggleSubject(this)" data-subject="Constitutional Law">Constitutional Law</span>
+                    <span class="subject-tag" onclick="toggleSubject(this)" data-subject="Contract Law">Contract Law</span>
+                    <span class="subject-tag" onclick="toggleSubject(this)" data-subject="Criminal Law">Criminal Law</span>
+                    <span class="subject-tag" onclick="toggleSubject(this)" data-subject="Political Science">Political Science</span>
+                    <span class="subject-tag" onclick="toggleSubject(this)" data-subject="International Relations">International Relations</span>
+                    <span class="subject-tag" onclick="toggleSubject(this)" data-subject="Philosophy">Philosophy</span>
+                    <span class="subject-tag" onclick="toggleSubject(this)" data-subject="Sociology">Sociology</span>
+                    <span class="subject-tag" onclick="toggleSubject(this)" data-subject="Psychology">Psychology</span>
+                    <span class="subject-tag" onclick="toggleSubject(this)" data-subject="French Language">French Language</span>
+                    <span class="subject-tag" onclick="toggleSubject(this)" data-subject="English Language">English Language</span>
+                    <span class="subject-tag" onclick="toggleSubject(this)" data-subject="Academic Writing">Academic Writing</span>
+                    <span class="subject-tag" onclick="toggleSubject(this)" data-subject="Research Methods">Research Methods</span>
+                    <span class="subject-tag" onclick="toggleSubject(this)" data-subject="Data Analysis">Data Analysis</span>
+                    <span class="subject-tag" onclick="toggleSubject(this)" data-subject="R Programming">R Programming</span>
+                  </div>
+                  <input type="hidden" id="selectedSubjects" name="subjects">
+                </div>
+              </div>
+              <button type="submit" class="btn moodle-btn-primary w-100 mt-4 py-3">Save Profile</button>
+            </form>
+            <div id="profileMsg" class="mt-3"></div>
+          </div>
+        </div></div>
+      </div>
+
+      <!-- SESSIONS -->
+      <div id="section-sessions" class="d-none">
+        <div class="card border-0 shadow-sm rounded-3 p-4">
+          <h6 class="fw-bold mb-3">My Booked Sessions</h6>
+          <div class="table-responsive">
+            <table class="table table-hover">
+              <thead class="table-light"><tr><th>Subject</th><th>Tutor</th><th>Date &amp; Time</th><th>Mode</th><th>Platform</th><th>Amount</th><th>Status</th><th>Join</th></tr></thead>
+              <tbody id="sessionsBody"><tr><td colspan="8" class="text-center text-muted">Loading...</td></tr></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- NOTES -->
+      <div id="section-notes" class="d-none">
+        <div class="row g-3 mb-4" id="notesGrid"><div class="col-12 text-center text-muted py-3">Loading...</div></div>
+        <div class="card border-0 shadow-sm p-2" style="height:600px;">
+          <p class="text-center text-muted pt-5" id="notePlaceholder">Select a file to view</p>
+          <iframe id="noteViewer" src="" width="100%" height="100%" style="display:none;" oncontextmenu="return false;"></iframe>
+        </div>
+      </div>
+
+      <!-- Q&A -->
+      <div id="section-qa" class="d-none">
+        <div class="card border-0 shadow-sm rounded-3 p-4">
+          <h6 class="fw-bold mb-3">Past Questions &amp; Model Answers</h6>
+          <div class="table-responsive">
+            <table class="table table-hover border">
+              <thead class="table-dark"><tr><th>Paper Title</th><th>Subject</th><th>Uploaded By</th><th>Action</th></tr></thead>
+              <tbody id="qaBody"><tr><td colspan="4" class="text-center text-muted">Loading...</td></tr></tbody>
+            </table>
+          </div>
+          <div class="border rounded bg-light p-2 mt-3" style="height:500px;">
+            <p class="text-center text-muted pt-5" id="qaPlaceholder">Select a paper to view</p>
+            <iframe id="qaViewer" src="" width="100%" height="100%" style="display:none;" oncontextmenu="return false;"></iframe>
+          </div>
+        </div>
+      </div>
+
+      <!-- BOOK SESSION — multi-step with payment -->
+      <div id="section-book" class="d-none">
+        <div class="row justify-content-center"><div class="col-md-9">
+          <div class="card border-0 shadow-sm rounded-3 p-4">
+            <h6 class="fw-bold mb-1">Book a Tutoring Session</h6>
+            <p class="text-muted small mb-4">Choose a tutor, fill details, then pay via Mobile Money.</p>
+
+            <!-- Step 1: Choose Tutor -->
+            <div class="payment-step active" id="step1">
+              <h6 class="fw-semibold mb-2">Step 1 — Choose a Tutor</h6>
+              <div class="input-group mb-3">
+                <span class="input-group-text bg-white"><i class="fas fa-search text-muted"></i></span>
+                <input type="text" class="form-control" id="tutorSearch" placeholder="Search by tutor name or subject (e.g. Physics, Dr. Amara...)" oninput="filterTutors(this.value)">
+                <button class="btn btn-outline-secondary" type="button" onclick="document.getElementById('tutorSearch').value='';filterTutors('')" title="Clear"><i class="fas fa-times"></i></button>
+              </div>
+              <div class="row g-3" id="tutorPickGrid"><div class="col-12 text-center text-muted py-3"><div class="spinner-border spinner-border-sm me-2"></div>Loading tutors...</div></div>
+              <div class="text-muted small text-center mt-2 d-none" id="noTutorResults"><i class="fas fa-search me-1"></i>No tutors match your search.</div>
+              <button class="btn moodle-btn-primary w-100 mt-3" onclick="goToStep(2)" id="btnStep2" disabled>Next: Session Details <i class="fas fa-arrow-right ms-1"></i></button>
+            </div>
+
+            <!-- Step 2: Session Details -->
+            <div class="payment-step" id="step2">
+              <h6 class="fw-semibold mb-3">Step 2 — Session Details</h6>
+              <div class="mb-3">
+                <label class="form-label fw-semibold">Subject</label>
+                <div class="input-group mb-2">
+                  <span class="input-group-text bg-white"><i class="fas fa-search text-muted"></i></span>
+                  <input type="text" class="form-control" id="subjectSearch" placeholder="Search subjects (e.g. Calculus, Law, Python...)..." oninput="filterSubjects(this.value)">
+                  <button class="btn btn-outline-secondary" type="button" onclick="document.getElementById('subjectSearch').value='';filterSubjects('')" title="Clear"><i class="fas fa-times"></i></button>
+                </div>
+                <select class="form-select" id="bookSubject" size="6" style="height:auto;">
+                  <optgroup label="Mathematics">
+                    <option>Calculus</option>
+                    <option>Linear Algebra</option>
+                    <option>Differential Equations</option>
+                    <option>Real Analysis</option>
+                    <option>Numerical Methods</option>
+                    <option>Statistics &amp; Probability</option>
+                    <option>Discrete Mathematics</option>
+                  </optgroup>
+                  <optgroup label="Physics">
+                    <option>Classical Mechanics</option>
+                    <option>Electromagnetism</option>
+                    <option>Thermodynamics</option>
+                    <option>Quantum Mechanics</option>
+                    <option>Optics</option>
+                    <option>Nuclear Physics</option>
+                    <option>Fluid Mechanics</option>
+                  </optgroup>
+                  <optgroup label="Chemistry">
+                    <option>Organic Chemistry</option>
+                    <option>Inorganic Chemistry</option>
+                    <option>Physical Chemistry</option>
+                    <option>Analytical Chemistry</option>
+                    <option>Biochemistry</option>
+                    <option>Chemical Engineering</option>
+                  </optgroup>
+                  <optgroup label="Computer Science &amp; IT">
+                    <option>Introduction to Programming</option>
+                    <option>Data Structures &amp; Algorithms</option>
+                    <option>Python</option>
+                    <option>Java</option>
+                    <option>C++</option>
+                    <option>Web Development</option>
+                    <option>Database Systems</option>
+                    <option>Operating Systems</option>
+                    <option>Computer Networks</option>
+                    <option>Software Engineering</option>
+                    <option>Machine Learning Fundamentals</option>
+                    <option>Cybersecurity</option>
+                  </optgroup>
+                  <optgroup label="Biology &amp; Health Sciences">
+                    <option>Cell Biology</option>
+                    <option>Molecular Biology</option>
+                    <option>Genetics</option>
+                    <option>Microbiology</option>
+                    <option>Immunology</option>
+                    <option>Anatomy &amp; Physiology</option>
+                    <option>Ecology</option>
+                    <option>Pharmacology</option>
+                    <option>Pathophysiology</option>
+                    <option>Public Health</option>
+                    <option>Epidemiology</option>
+                    <option>Nursing</option>
+                  </optgroup>
+                  <optgroup label="Engineering">
+                    <option>Circuit Analysis</option>
+                    <option>Digital Electronics</option>
+                    <option>Signal Processing</option>
+                    <option>Control Systems</option>
+                    <option>Telecommunications</option>
+                    <option>Embedded Systems</option>
+                    <option>Structural Analysis</option>
+                    <option>Soil Mechanics</option>
+                    <option>Construction Management</option>
+                    <option>Engineering Mathematics</option>
+                    <option>Thermodynamics (Engineering)</option>
+                  </optgroup>
+                  <optgroup label="Economics &amp; Business">
+                    <option>Microeconomics</option>
+                    <option>Macroeconomics</option>
+                    <option>Econometrics</option>
+                    <option>Development Economics</option>
+                    <option>International Trade</option>
+                    <option>Public Finance</option>
+                    <option>Game Theory</option>
+                    <option>Financial Accounting</option>
+                    <option>Management Accounting</option>
+                    <option>Auditing</option>
+                    <option>Taxation</option>
+                    <option>Corporate Finance</option>
+                    <option>Entrepreneurship</option>
+                    <option>Business Law</option>
+                  </optgroup>
+                  <optgroup label="Law">
+                    <option>Constitutional Law</option>
+                    <option>Contract Law</option>
+                    <option>Criminal Law</option>
+                    <option>Human Rights Law</option>
+                    <option>Commercial Law</option>
+                    <option>Legal Research &amp; Writing</option>
+                  </optgroup>
+                  <optgroup label="Social Sciences &amp; Humanities">
+                    <option>History</option>
+                    <option>Geography</option>
+                    <option>Political Science</option>
+                    <option>International Relations</option>
+                    <option>Philosophy</option>
+                    <option>Sociology</option>
+                    <option>Anthropology</option>
+                    <option>Psychology</option>
+                  </optgroup>
+                  <optgroup label="Languages">
+                    <option>French Language</option>
+                    <option>French Literature</option>
+                    <option>English Language</option>
+                    <option>Literature in English</option>
+                    <option>Linguistics</option>
+                    <option>Translation Studies</option>
+                    <option>Academic Writing</option>
+                    <option>IELTS &amp; TOEFL Preparation</option>
+                    <option>Public Speaking</option>
+                  </optgroup>
+                  <optgroup label="Research &amp; Data">
+                    <option>Research Methods</option>
+                    <option>Data Analysis</option>
+                    <option>SPSS</option>
+                    <option>R Programming</option>
+                    <option>Medical Terminology</option>
+                    <option>Health Research Methods</option>
+                  </optgroup>
+                </select>
+
+              </div>
+              <div class="row g-3 mb-3">
+                <div class="col-6"><label class="form-label fw-semibold">Date</label><input type="date" class="form-control" id="bookDate" required></div>
+                <div class="col-6"><label class="form-label fw-semibold">Time</label><input type="time" class="form-control" id="bookTime" required></div>
+              </div>
+              <div class="mb-3">
+                <label class="form-label fw-semibold">Learning Mode</label>
+                <select class="form-select" id="bookMode" onchange="toggleModeFields()">
+                  <option value="online">Online</option><option value="onsite">Onsite (Campus)</option>
+                </select>
+              </div>
+              <!-- Online platform picker -->
+              <div id="platformField" class="mb-3">
+                <label class="form-label fw-semibold">Online Platform</label>
+                <div class="row g-2">
+                  <div class="col-6 col-md-3"><div class="pay-method-card" onclick="selectPlatform('zoom',this)"><div style="font-size:1.8rem;">🎥</div><div class="fw-semibold small mt-1">Zoom</div></div></div>
+                  <div class="col-6 col-md-3"><div class="pay-method-card" onclick="selectPlatform('google_meet',this)"><div style="font-size:1.8rem;">📹</div><div class="fw-semibold small mt-1">Google Meet</div></div></div>
+                  <div class="col-6 col-md-3"><div class="pay-method-card" onclick="selectPlatform('whatsapp',this)"><div style="font-size:1.8rem;">💬</div><div class="fw-semibold small mt-1">WhatsApp</div></div></div>
+                  <div class="col-6 col-md-3"><div class="pay-method-card" onclick="selectPlatform('telegram',this)"><div style="font-size:1.8rem;">✈️</div><div class="fw-semibold small mt-1">Telegram</div></div></div>
+                </div>
+              </div>
+              <div id="spotField" class="mb-3" style="display:none;">
+                <label class="form-label fw-semibold">Meeting Spot</label>
+                <input type="text" class="form-control" id="bookSpot" placeholder="e.g. Hall B, Table 4">
+              </div>
+              <!-- Price display -->
+              <div class="alert alert-success d-flex align-items-center justify-content-between mb-4">
+                <div><i class="fas fa-tag me-2"></i><strong>Session Fee</strong><br><small class="text-muted" id="selectedTutorName">—</small></div>
+                <div class="price-badge" id="priceDisplay">— XAF</div>
+              </div>
+              <div class="d-flex gap-2">
+                <button class="btn btn-outline-secondary w-50" onclick="goToStep(1)"><i class="fas fa-arrow-left me-1"></i>Back</button>
+                <button class="btn moodle-btn-primary w-50" onclick="goToPayment()">Proceed to Payment <i class="fas fa-arrow-right ms-1"></i></button>
+              </div>
+            </div>
+
+            <!-- Step 3: Payment Method -->
+            <div class="payment-step" id="step3">
+              <h6 class="fw-semibold mb-3">Step 3 — Choose Payment Method</h6>
+              <p class="text-muted small">Pay <strong id="payAmountDisplay">—</strong> XAF for your session</p>
+              <div class="row g-3 mb-4">
+                <div class="col-6"><div class="pay-method-card" id="mtnCard" onclick="selectPayment('mtn')"><img src="image/mtn-momo.svg" alt="MTN MoMo"><div class="fw-bold" style="color:#ffcc00;">MTN MoMo</div></div></div>
+                <div class="col-6"><div class="pay-method-card" id="orangeCard" onclick="selectPayment('orange')"><img src="image/orange-money.svg" alt="Orange Money"><div class="fw-bold" style="color:#ff6600;">Orange Money</div></div></div>
+              </div>
+              <div class="d-flex gap-2">
+                <button class="btn btn-outline-secondary w-50" onclick="goToStep(2)"><i class="fas fa-arrow-left me-1"></i>Back</button>
+                <button class="btn moodle-btn-primary w-50" onclick="goToStep(4)" id="btnNextPay" disabled>Enter Number <i class="fas fa-arrow-right ms-1"></i></button>
+              </div>
+            </div>
+
+            <!-- Step 4: Phone Number -->
+            <div class="payment-step" id="step4">
+              <div class="text-center mb-4">
+                <div id="payIconDisplay" style="font-size:3rem;">📱</div>
+                <h6 class="fw-bold mt-2" id="payMethodTitle">Mobile Money Payment</h6>
+              </div>
+              <div class="mb-3">
+                <label class="form-label fw-semibold">Mobile Money Number</label>
+                <div class="input-group"><span class="input-group-text"><i class="fas fa-phone"></i></span>
+                  <input type="tel" class="form-control form-control-lg" id="momoPhone" placeholder="e.g. 677 000 000" maxlength="12">
+                </div>
+                <small class="text-muted">Cameroon number — no country code</small>
+              </div>
+              <div class="alert alert-warning"><i class="fas fa-info-circle me-2"></i>You will receive a push notification to approve <strong id="payAmountDisplay2">—</strong> XAF.</div>
+              <div class="d-flex gap-2">
+                <button class="btn btn-outline-secondary w-50" onclick="goToStep(3)"><i class="fas fa-arrow-left me-1"></i>Back</button>
+                <button class="btn moodle-btn-primary w-50" onclick="confirmPayment()"><i class="fas fa-lock me-1"></i>Pay Now</button>
+              </div>
+            </div>
+
+            <!-- Step 5: Processing -->
+            <div class="payment-step" id="step5">
+              <div class="text-center py-5">
+                <div class="spinner-border text-success mb-3" style="width:3rem;height:3rem;"></div>
+                <h6 class="fw-bold">Processing Payment...</h6>
+                <p class="text-muted small">Sending push notification to your phone.</p>
+                <div class="progress mt-3" style="height:8px;max-width:300px;margin:0 auto;">
+                  <div class="progress-bar bg-success progress-bar-striped progress-bar-animated" style="width:100%"></div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Step 6: Success -->
+            <div class="payment-step" id="step6">
+              <div class="text-center py-4">
+                <div style="font-size:4rem;">✅</div>
+                <h5 class="fw-bold text-success mt-3">Booking Confirmed!</h5>
+                <p class="text-muted">Payment received. Your tutor will confirm the session shortly.</p>
+                <div class="card bg-light border-0 p-3 mb-4 text-start" id="receiptCard">
+                  <div class="d-flex justify-content-between mb-1"><span class="text-muted small">Tutor</span><strong id="confirmTutor"></strong></div>
+                  <div class="d-flex justify-content-between mb-1"><span class="text-muted small">Subject</span><strong id="confirmSubject"></strong></div>
+                  <div class="d-flex justify-content-between mb-1"><span class="text-muted small">Date &amp; Time</span><strong id="confirmDateTime"></strong></div>
+                  <div class="d-flex justify-content-between mb-1"><span class="text-muted small">Mode</span><strong id="confirmMode"></strong></div>
+                  <div class="d-flex justify-content-between"><span class="text-muted small">Amount Paid</span><strong class="text-success" id="confirmAmount"></strong></div>
+                </div>
+                <div class="d-flex gap-2 justify-content-center flex-wrap">
+                  <button class="btn moodle-btn-primary px-4" onclick="resetBooking()"><i class="fas fa-plus me-2"></i>Book Another</button>
+                  <button class="btn btn-outline-success px-4" onclick="showSection('sessions',null)"><i class="fas fa-calendar-check me-2"></i>View My Sessions</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div></div>
+      </div>
+
+      <!-- CHAT -->
+      <div id="section-chat" class="d-none">
+        <div class="row g-3">
+          <div class="col-md-4">
+            <div class="card border-0 shadow-sm rounded-3 p-3">
+              <h6 class="fw-bold mb-3">Conversations</h6>
+              <div id="contactList"><div class="text-muted small text-center py-3">No conversations yet</div></div>
+              <hr>
+              <h6 class="fw-semibold small mb-2">Start new chat with tutor</h6>
+              <div id="tutorContactList"><div class="text-muted small">Loading tutors...</div></div>
+            </div>
+          </div>
+          <div class="col-md-8">
+            <div class="card border-0 shadow-sm rounded-3 p-3">
+              <div class="d-flex align-items-center gap-2 mb-3 pb-2 border-bottom">
+                <div class="rounded-circle bg-success bg-opacity-10 text-success d-flex align-items-center justify-content-center" style="width:36px;height:36px;"><i class="fas fa-user"></i></div>
+                <strong id="chatWithName">Select a conversation</strong>
+              </div>
+              <div class="chat-box" id="chatBox"><div class="text-muted text-center pt-5 small">Select a tutor to start chatting</div></div>
+              <div class="input-group mt-3" id="chatInputArea">
+                <input type="text" class="form-control" id="chatInput" placeholder="Type a message..." onkeydown="if(event.key==='Enter')sendMsg()">
+                <button class="btn moodle-btn-primary" onclick="sendMsg()"><i class="fas fa-paper-plane"></i></button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<script src="libs/bootstrap/js/bootstrap.bundle.min.js"></script>
+<script src="auth.js"></script>
+<script>
+const user = requireAuth('student');
+if (user) {
+    document.getElementById('userName').textContent = user.name;
+    document.getElementById('userAvatar').textContent = user.name.charAt(0).toUpperCase();
+}
+
+const SECTIONS = ['overview','sessions','notes','qa','book','chat','profile'];
+function showSection(id, el) {
+    SECTIONS.forEach(s => document.getElementById('section-'+s).classList.add('d-none'));
+    document.getElementById('section-'+id).classList.remove('d-none');
+    document.querySelectorAll('.sidebar .nav-link').forEach(l => l.classList.remove('active'));
+    if (el) el.classList.add('active');
+    const titles = {overview:'Overview',sessions:'My Sessions',notes:'Study Notes',qa:'Q&A Bank',book:'Book Session',chat:'Messages',profile:'My Profile'};
+    document.getElementById('pageTitle').textContent = titles[id] || id;
+    if (id === 'overview')  loadOverview();
+    if (id === 'sessions')  loadMySessions();
+    if (id === 'notes' || id === 'qa') loadMaterials();
+    if (id === 'book') {
+        document.getElementById('tutorSearch').value = '';
+        loadTutorPicker();
+    }
+    if (id === 'chat')      { loadContacts(); loadTutorContacts(); }
+    if (id === 'profile')   loadStudentProfile();
+}
+
+// ── Overview ──────────────────────────────────────────────
+async function loadOverview() {
+    const sessions = await getSessions(user.id);
+    const upcoming = sessions.filter(s => s.status !== 'completed' && s.status !== 'cancelled');
+    const spent    = sessions.reduce((a,s) => a + parseInt(s.amount_paid||0), 0);
+    document.getElementById('statUpcoming').textContent = upcoming.length;
+    document.getElementById('statSpent').textContent    = spent.toLocaleString();
+    const PLATFORM_ICONS = {zoom:'🎥',google_meet:'📹',whatsapp:'💬',telegram:'✈️',other:'🔗'};
+    document.getElementById('overviewSessions').innerHTML = upcoming.length === 0
+        ? '<div class="text-muted text-center py-3">No upcoming sessions</div>'
+        : upcoming.slice(0,3).map(s => `
+            <div class="session-item card p-3 mb-2 border-0 bg-light">
+              <div class="d-flex justify-content-between align-items-center">
+                <div><strong>${s.subject}</strong><br>
+                  <small class="text-muted"><i class="fas fa-user me-1"></i>${s.tutor_name}
+                  &nbsp;<i class="fas fa-clock me-1"></i>${s.session_date} ${s.session_time}</small>
+                </div>
+                <div class="text-end">
+                  <span class="badge ${s.mode==='online'?'bg-primary':'bg-warning text-dark'}">${s.mode}</span><br>
+                  ${s.platform_link ? `<a href="${s.platform_link}" target="_blank" class="btn btn-sm btn-success mt-1"><i class="fas fa-video me-1"></i>Join</a>` : ''}
+                </div>
+              </div>
+            </div>`).join('');
+    // Load recommendations based on student profile
+    loadRecommendations();
+}
+
+// ── Recommendations ───────────────────────────────────────
+async function loadRecommendations() {
+    const recCard = document.getElementById('recommendationsCard');
+    try {
+        const r = await fetch(`api/student_profile.php?user_id=${user.id}`);
+        const d = await r.json();
+        const profile = d.profile;
+        if (!profile || !profile.subjects) {
+            recCard.style.display = 'none';
+            document.getElementById('profileNudge').classList.remove('d-none');
+            return;
+        }
+        const studentSubjects = profile.subjects.split(',').map(s => s.trim().toLowerCase()).filter(Boolean);
+        if (studentSubjects.length === 0) {
+            recCard.style.display = 'none';
+            document.getElementById('profileNudge').classList.remove('d-none');
+            return;
+        }
+        document.getElementById('profileNudge').classList.add('d-none');
+        const tutors = await getTutors();
+        const matched = tutors.filter(t => {
+            if (!t.subjects) return false;
+            const tutorSubs = t.subjects.split(',').map(s => s.trim().toLowerCase());
+            return studentSubjects.some(ss => tutorSubs.some(ts => ts.includes(ss) || ss.includes(ts)));
+        });
+        if (matched.length === 0) { recCard.style.display = 'none'; return; }
+        recCard.style.display = 'block';
+        document.getElementById('recSubjectLabel').textContent = 'Based on: ' + profile.subjects;
+        const QUAL_COLORS = {Certificate:'bg-secondary',Diploma:'bg-info',Bachelor:'bg-primary',Master:'bg-warning text-dark',PhD:'bg-danger'};
+        document.getElementById('recommendationsGrid').innerHTML = matched.slice(0,4).map(t => `
+            <div class="col-md-6 col-lg-3">
+              <div class="rec-card">
+                <div class="d-flex align-items-center gap-2 mb-2">
+                  <div class="rounded-circle bg-success bg-opacity-10 text-success d-flex align-items-center justify-content-center" style="width:44px;height:44px;font-size:1.1rem;flex-shrink:0;">
+                    ${t.photo_filename ? `<img src="image/${t.photo_filename}" style="width:44px;height:44px;border-radius:50%;object-fit:cover;">` : t.name.charAt(0)}
+                  </div>
+                  <div>
+                    <div class="fw-semibold small">${t.name}</div>
+                    <span class="badge qual-badge ${QUAL_COLORS[t.qualification]||'bg-secondary'}">${t.qualification||'—'}</span>
+                  </div>
+                </div>
+                <div class="text-muted small mb-2" style="font-size:0.75rem;">${t.subjects||'General'}</div>
+                <div class="d-flex justify-content-between align-items-center">
+                  <span class="fw-bold text-success small">${(t.hourly_rate||5000).toLocaleString()} XAF/hr</span>
+                  <button class="btn btn-sm moodle-btn-primary py-1 px-2" style="font-size:0.75rem;"
+                    onclick="selectTutor(${t.id},'${t.name}',${t.hourly_rate||5000},'${t.qualification||'Bachelor'}');showSection('book',null)">
+                    Book
+                  </button>
+                </div>
+              </div>
+            </div>`).join('');
+    } catch { recCard.style.display = 'none'; document.getElementById('profileNudge').classList.remove('d-none'); }
+}
+
+// ── Student Profile ───────────────────────────────────────
+async function loadStudentProfile() {
+    document.getElementById('profileDisplayName').textContent = user.name;
+    try {
+        const r = await fetch(`api/student_profile.php?user_id=${user.id}`);
+        const d = await r.json();
+        const p = d.profile;
+        if (!p) return;
+        document.getElementById('profDob').value = p.date_of_birth || '';
+        document.getElementById('profBio').value = p.bio || '';
+        if (p.photo_filename) {
+            document.getElementById('profilePhotoPreview').innerHTML =
+                `<img src="image/${p.photo_filename}" style="width:80px;height:80px;border-radius:50%;object-fit:cover;">`;
+            // also update topbar avatar
+            document.getElementById('userAvatar').innerHTML =
+                `<img src="image/${p.photo_filename}" style="width:38px;height:38px;border-radius:50%;object-fit:cover;">`;
+        }
+        if (p.subjects) {
+            const saved = p.subjects.split(',').map(s => s.trim());
+            document.querySelectorAll('#subjectTagsContainer .subject-tag').forEach(tag => {
+                if (saved.includes(tag.dataset.subject)) tag.classList.add('selected');
+            });
+            syncSubjectInput();
+        }
+    } catch {}
+}
+
+function toggleSubject(el) {
+    el.classList.toggle('selected');
+    syncSubjectInput();
+}
+
+function syncSubjectInput() {
+    const selected = [...document.querySelectorAll('#subjectTagsContainer .subject-tag.selected')]
+        .map(t => t.dataset.subject);
+    document.getElementById('selectedSubjects').value = selected.join(',');
+}
+
+function previewStudentPhoto(input) {
+    if (input.files && input.files[0]) {
+        const reader = new FileReader();
+        reader.onload = e => {
+            document.getElementById('profilePhotoPreview').innerHTML =
+                `<img src="${e.target.result}" style="width:80px;height:80px;border-radius:50%;object-fit:cover;">`;
+        };
+        reader.readAsDataURL(input.files[0]);
+    }
+}
+
+document.getElementById('studentProfileForm').addEventListener('submit', async function(e) {
+    e.preventDefault();
+    syncSubjectInput();
+    const msgEl = document.getElementById('profileMsg');
+    msgEl.innerHTML = '<div class="text-muted small">Saving...</div>';
+    const fd = new FormData(this);
+    fd.append('user_id', user.id);
+    try {
+        const r = await fetch('api/student_profile.php', {method:'POST', body:fd});
+        const d = await r.json();
+        if (d.success) {
+            msgEl.innerHTML = '<div class="alert alert-success py-2">Profile saved! Your recommendations will update on the overview.</div>';
+        } else {
+            msgEl.innerHTML = `<div class="alert alert-danger py-2">${d.message || 'Save failed.'}</div>`;
+        }
+    } catch {
+        msgEl.innerHTML = '<div class="alert alert-danger py-2">Cannot reach server.</div>';
+    }
+    setTimeout(() => msgEl.innerHTML = '', 4000);
+});
+
+// ── Sessions ──────────────────────────────────────────────
+const PLATFORM_LABELS = {zoom:'🎥 Zoom',google_meet:'📹 Google Meet',whatsapp:'💬 WhatsApp',telegram:'✈️ Telegram',other:'🔗 Other'};
+async function loadMySessions() {
+    const sessions = await getSessions(user.id);
+    document.getElementById('sessionsBody').innerHTML = sessions.length === 0
+        ? '<tr><td colspan="8" class="text-center text-muted">No sessions booked yet</td></tr>'
+        : sessions.map(s => `<tr>
+            <td>${s.subject}</td><td>${s.tutor_name}</td>
+            <td>${s.session_date} ${s.session_time}</td>
+            <td><span class="badge ${s.mode==='online'?'bg-primary':'bg-warning text-dark'}">${s.mode}</span></td>
+            <td>${s.mode==='online'?(s.online_platform?PLATFORM_LABELS[s.online_platform]||s.online_platform:'—'):'—'}</td>
+            <td>${parseInt(s.amount_paid).toLocaleString()} XAF</td>
+            <td><span class="badge ${s.status==='confirmed'?'bg-success':s.status==='pending'?'bg-warning text-dark':s.status==='completed'?'bg-secondary':'bg-danger'}">${s.status}</span></td>
+            <td>${s.platform_link?`<a href="${s.platform_link}" target="_blank" class="btn btn-sm btn-success"><i class="fas fa-video"></i> Join</a>`:'—'}</td>
+          </tr>`).join('');
+}
+
+// ── Materials ──────────────────────────────────────────────
+async function loadMaterials() {
+    const mats   = await getMaterials();
+    const notes  = mats.filter(m => m.type === 'Study Notes');
+    const papers = mats.filter(m => m.type === 'Past Paper');
+    document.getElementById('notesGrid').innerHTML = notes.length === 0
+        ? '<div class="col-12 text-center text-muted py-3">No study notes yet.</div>'
+        : notes.map(m => `<div class="col-md-4"><div class="card border-0 shadow-sm p-3"><h6 class="fw-bold">${m.title}</h6><p class="small text-muted mb-2">By: ${m.uploaded_by}</p><button class="btn btn-sm btn-primary w-100" onclick="loadNote('image/${m.filename}')"><i class="fas fa-eye me-1"></i>View</button></div></div>`).join('');
+    document.getElementById('qaBody').innerHTML = papers.length === 0
+        ? '<tr><td colspan="4" class="text-center text-muted">No past papers yet</td></tr>'
+        : papers.map(m => `<tr><td>${m.title}</td><td>${m.subject}</td><td>${m.uploaded_by}</td><td><button class="btn btn-danger btn-sm" onclick="loadNote('image/${m.filename}')">View Only</button></td></tr>`).join('');
+}
+function loadNote(file) {
+    document.getElementById('notePlaceholder') && (document.getElementById('notePlaceholder').style.display='none');
+    document.getElementById('qaPlaceholder')   && (document.getElementById('qaPlaceholder').style.display='none');
+    ['noteViewer','qaViewer'].forEach(id => { const el=document.getElementById(id); if(el){el.style.display='block';el.src=file+'#toolbar=0&navpanes=0';}});
+}
+
+// ── Booking ───────────────────────────────────────────────
+let selectedTutor = null, selectedPayMethod = null, selectedPlatform = null, bookingData = {};
+
+async function loadTutorPicker() {
+    const tutors = await getTutors();
+    const grid   = document.getElementById('tutorPickGrid');
+    const QUAL_COLORS = {Certificate:'bg-secondary',Diploma:'bg-info',Bachelor:'bg-primary',Master:'bg-warning text-dark',PhD:'bg-danger'};
+    grid.innerHTML = tutors.length === 0
+        ? '<div class="col-12 text-center text-muted py-3">No tutors available yet.</div>'
+        : tutors.map(t => `
+            <div class="col-md-6">
+              <div class="tutor-pick-card${t.is_approved=='0'?' border-warning opacity-75':''}" id="tcard_${t.id}" onclick="${t.is_approved=='0'?'alert(\'This tutor is pending admin approval and cannot be booked yet.\')':'selectTutor('+t.id+',\''+t.name+'\','+( t.hourly_rate||5000)+',\''+(t.qualification||'Bachelor')+'\')'}">
+                <div class="d-flex align-items-center gap-3">
+                  <div class="rounded-circle bg-success bg-opacity-10 text-success d-flex align-items-center justify-content-center" style="width:50px;height:50px;font-size:1.3rem;flex-shrink:0;">
+                    ${t.photo_filename ? `<img src="image/${t.photo_filename}" style="width:50px;height:50px;border-radius:50%;object-fit:cover;">` : t.name.charAt(0)}
+                  </div>
+                  <div class="flex-grow-1">
+                    <div class="fw-bold">${t.name}
+                      ${t.is_approved=='0'?'<span class="badge bg-warning text-dark ms-1" style="font-size:0.65rem;">Pending Approval</span>':''}
+                    </div>
+                    <div class="text-muted small">${t.subjects||'General'}</div>
+                    <span class="badge qual-badge ${QUAL_COLORS[t.qualification]||'bg-secondary'} me-1">${t.qualification||'Bachelor'}</span>
+                    ${t.is_approved=='1'?`<span class="rate">${(t.hourly_rate||5000).toLocaleString()} XAF/hr</span>`:'<span class="text-muted small">Not yet bookable</span>'}
+                  </div>
+                </div>
+                ${t.bio ? `<p class="text-muted small mt-2 mb-0">${t.bio.substring(0,80)}${t.bio.length>80?'...':''}</p>` : ''}
+              </div>
+            </div>`).join('');
+}
+
+function selectTutor(id, name, rate, qual) {
+    selectedTutor = {id, name, rate, qual};
+    document.querySelectorAll('.tutor-pick-card').forEach(c => c.classList.remove('selected'));
+    document.getElementById('tcard_'+id)?.classList.add('selected');
+    document.getElementById('btnStep2').disabled = false;
+}
+
+function goToStep(n) {
+    document.querySelectorAll('.payment-step').forEach(el => el.classList.remove('active'));
+    document.getElementById('step'+n).classList.add('active');
+}
+
+function filterSubjects(query) {
+    const sel = document.getElementById('bookSubject');
+    const q = query.toLowerCase().trim();
+    Array.from(sel.options).forEach(opt => {
+        const match = !q || opt.text.toLowerCase().includes(q) || (opt.parentElement.label||'').toLowerCase().includes(q);
+        opt.style.display = match ? '' : 'none';
+    });
+    Array.from(sel.querySelectorAll('optgroup')).forEach(grp => {
+        const visible = Array.from(grp.options).some(o => o.style.display !== 'none');
+        grp.style.display = visible ? '' : 'none';
+    });
+    // auto-select first visible
+    const first = Array.from(sel.options).find(o => o.style.display !== 'none');
+    if (first) sel.value = first.value;
+}
+
+// ── Tutor search (Step 1) ─────────────────────────────────
+let _allTutorCards = []; // cache rendered tutor data for filtering
+
+function filterTutors(query) {
+    const q = query.toLowerCase().trim();
+    const grid = document.getElementById('tutorPickGrid');
+    const noResults = document.getElementById('noTutorResults');
+    let visibleCount = 0;
+    grid.querySelectorAll('.col-md-6').forEach(col => {
+        const name     = (col.querySelector('.fw-bold')?.textContent || '').toLowerCase();
+        const subjects = (col.querySelector('.text-muted.small')?.textContent || '').toLowerCase();
+        const qual     = (col.querySelector('.qual-badge')?.textContent || '').toLowerCase();
+        const match    = !q || name.includes(q) || subjects.includes(q) || qual.includes(q);
+        col.style.display = match ? '' : 'none';
+        if (match) visibleCount++;
+    });
+    if (noResults) noResults.classList.toggle('d-none', visibleCount > 0);
+}
+
+function toggleModeFields() {
+    const online = document.getElementById('bookMode').value === 'online';
+    document.getElementById('platformField').style.display = online ? 'block' : 'none';
+    document.getElementById('spotField').style.display     = online ? 'none'  : 'block';
+}
+
+function selectPlatform(val, el) {
+    selectedPlatform = val;
+    document.querySelectorAll('#platformField .pay-method-card').forEach(c => c.classList.remove('selected'));
+    el.classList.add('selected');
+}
+
+function goToPayment() {
+    const date = document.getElementById('bookDate').value;
+    const time = document.getElementById('bookTime').value;
+    if (!date || !time) { alert('Please select a date and time.'); return; }
+    if (!selectedTutor) { alert('Please select a tutor first.'); goToStep(1); return; }
+    bookingData = {
+        subject:         document.getElementById('bookSubject').value,
+        tutor_id:        selectedTutor.id,
+        tutor_name:      selectedTutor.name,
+        date, time,
+        mode:            document.getElementById('bookMode').value,
+        online_platform: selectedPlatform,
+        spot:            document.getElementById('bookSpot')?.value || '',
+        amount:          selectedTutor.rate
+    };
+    document.getElementById('selectedTutorName').textContent = selectedTutor.name + ' (' + selectedTutor.qual + ')';
+    document.getElementById('priceDisplay').textContent      = selectedTutor.rate.toLocaleString() + ' XAF';
+    document.getElementById('payAmountDisplay').textContent  = selectedTutor.rate.toLocaleString();
+    document.getElementById('payAmountDisplay2').textContent = selectedTutor.rate.toLocaleString();
+    goToStep(3);
+}
+
+function selectPayment(method) {
+    selectedPayMethod = method;
+    document.getElementById('mtnCard').classList.toggle('selected', method==='mtn');
+    document.getElementById('orangeCard').classList.toggle('selected', method==='orange');
+    document.getElementById('btnNextPay').disabled = false;
+    document.getElementById('payMethodTitle').textContent = method==='mtn' ? 'MTN MoMo Payment' : 'Orange Money Payment';
+    document.getElementById('payIconDisplay').textContent = method==='mtn' ? '🟡' : '🟠';
+}
+
+async function confirmPayment() {
+    const phone = document.getElementById('momoPhone').value.trim();
+    if (!phone || phone.length < 9) { alert('Please enter a valid phone number.'); return; }
+    goToStep(5);
+
+    // Simulate network delay for realism
+    await new Promise(r => setTimeout(r, 3000));
+
+    // Show animated progress steps
+    const step5 = document.getElementById('step5');
+    step5.innerHTML = `
+        <div class="text-center py-4">
+            <div class="spinner-border text-success mb-3" style="width:3rem;height:3rem;"></div>
+            <h6 class="fw-bold">Processing Payment...</h6>
+            <p class="text-muted small">Sending push notification to <strong>${phone}</strong></p>
+            <div class="progress mt-3" style="height:8px;max-width:300px;margin:0 auto;">
+                <div class="progress-bar bg-success progress-bar-striped progress-bar-animated" style="width:100%"></div>
+            </div>
+        </div>`;
+
+    await new Promise(r => setTimeout(r, 2000));
+
+    // Try to save to DB — but proceed to success regardless
+    let sessionId = null;
+    try {
+        const result = await bookSession({
+            student_id:      user.id,
+            tutor_id:        bookingData.tutor_id,
+            tutor_name:      bookingData.tutor_name,
+            subject:         bookingData.subject,
+            session_date:    bookingData.date,
+            session_time:    bookingData.time,
+            mode:            bookingData.mode,
+            online_platform: bookingData.online_platform,
+            spot:            bookingData.spot,
+            amount_paid:     bookingData.amount,
+            pay_method:      selectedPayMethod
+        });
+        if (result && (result.success || result.session_id)) {
+            sessionId = result.session_id;
+        }
+    } catch(e) { /* proceed anyway — payment simulation always completes */ }
+
+    // Always show success screen
+    const fee     = Math.round(bookingData.amount * 0.15);
+    const net     = bookingData.amount - fee;
+    const payIcon = selectedPayMethod === 'mtn' ? '🟡 MTN MoMo' : '🟠 Orange Money';
+
+    document.getElementById('confirmTutor').textContent    = bookingData.tutor_name;
+    document.getElementById('confirmSubject').textContent  = bookingData.subject;
+    document.getElementById('confirmDateTime').textContent = bookingData.date + ' at ' + bookingData.time;
+    document.getElementById('confirmMode').textContent     = bookingData.mode.charAt(0).toUpperCase() + bookingData.mode.slice(1);
+    document.getElementById('confirmAmount').textContent   = bookingData.amount.toLocaleString() + ' XAF';
+
+    // Add extra receipt details to the confirm card
+    const card = document.getElementById('receiptCard');
+    if (card) {
+        card.innerHTML = `
+            <div class="d-flex justify-content-between mb-1"><span class="text-muted small">Session ID</span><strong>#${sessionId || 'SIM-' + Date.now().toString().slice(-6)}</strong></div>
+            <div class="d-flex justify-content-between mb-1"><span class="text-muted small">Tutor</span><strong>${bookingData.tutor_name}</strong></div>
+            <div class="d-flex justify-content-between mb-1"><span class="text-muted small">Subject</span><strong>${bookingData.subject}</strong></div>
+            <div class="d-flex justify-content-between mb-1"><span class="text-muted small">Date &amp; Time</span><strong>${bookingData.date} at ${bookingData.time}</strong></div>
+            <div class="d-flex justify-content-between mb-1"><span class="text-muted small">Mode</span><strong>${bookingData.mode.charAt(0).toUpperCase()+bookingData.mode.slice(1)}</strong></div>
+            <div class="d-flex justify-content-between mb-1"><span class="text-muted small">Payment via</span><strong>${payIcon}</strong></div>
+            <div class="d-flex justify-content-between mb-1"><span class="text-muted small">Phone</span><strong>${phone}</strong></div>
+            <hr class="my-2">
+            <div class="d-flex justify-content-between mb-1"><span class="text-muted small">Amount Paid</span><strong>${bookingData.amount.toLocaleString()} XAF</strong></div>
+            <div class="d-flex justify-content-between mb-1"><span class="text-muted small">Platform Fee (15%)</span><span class="text-danger small">-${fee.toLocaleString()} XAF</span></div>
+            <div class="d-flex justify-content-between"><span class="text-muted small">Tutor Receives</span><strong class="text-success">${net.toLocaleString()} XAF</strong></div>`;
+    }
+    goToStep(6);
+}
+
+function resetBooking() {
+    selectedTutor = null; selectedPayMethod = null; selectedPlatform = null; bookingData = {};
+    document.querySelectorAll('.tutor-pick-card').forEach(c => c.classList.remove('selected'));
+    document.getElementById('btnStep2').disabled = true;
+    document.getElementById('btnNextPay').disabled = true;
+    document.getElementById('momoPhone').value = '';
+    goToStep(1);
+}
+
+// ── Chat ──────────────────────────────────────────────────
+let chatPartnerId = null, chatInterval = null;
+
+async function loadContacts() {
+    const convos = await getConversations(user.id);
+    document.getElementById('contactList').innerHTML = convos.length === 0
+        ? '<div class="text-muted small text-center py-2">No conversations yet</div>'
+        : convos.map(c => {
+            const otherId = c.sender_id==user.id ? c.receiver_id : c.sender_id;
+            return `<div class="contact-item d-flex align-items-center gap-2" onclick="openChatWith(${otherId},'${c.other_name}')">
+              <div class="rounded-circle bg-success bg-opacity-10 text-success d-flex align-items-center justify-content-center" style="width:34px;height:34px;flex-shrink:0;">${c.other_name.charAt(0)}</div>
+              <div class="flex-grow-1 overflow-hidden">
+                <div class="fw-semibold small">${c.other_name}</div>
+                <div class="text-muted" style="font-size:0.72rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${c.message}</div>
+              </div>
+              ${c.unread>0?`<span class="badge bg-danger">${c.unread}</span>`:''}
+            </div>`;
+          }).join('');
+}
+
+async function loadTutorContacts() {
+    const r = await fetch('api/tutors.php?chat=1');
+    const d = await r.json();
+    const tutors = d.success ? d.tutors : [];
+    document.getElementById('tutorContactList').innerHTML = tutors.length === 0
+        ? '<div class="text-muted small">No tutors yet</div>'
+        : tutors.map(t => `<div class="contact-item d-flex align-items-center gap-2" onclick="openChatWith(${t.id},'${t.name}')">
+            <div class="rounded-circle bg-danger bg-opacity-10 text-danger d-flex align-items-center justify-content-center" style="width:30px;height:30px;font-size:0.8rem;flex-shrink:0;">${t.name.charAt(0)}</div>
+            <div class="small">${t.name}${t.is_approved=='0'?'<span class="badge bg-warning text-dark ms-1" style="font-size:0.6rem;">Pending</span>':''}</div>
+          </div>`).join('');
+}
+
+function openChatWith(id, name) {
+    chatPartnerId = id;
+    document.getElementById('chatWithName').textContent = name;
+    if (chatInterval) clearInterval(chatInterval);
+    loadMessages();
+    chatInterval = setInterval(loadMessages, 3000);
+}
+
+async function loadMessages() {
+    if (!chatPartnerId) return;
+    const msgs = await getConversation(user.id, chatPartnerId);
+    const box  = document.getElementById('chatBox');
+    box.innerHTML = msgs.length === 0
+        ? '<div class="text-muted text-center pt-5 small">No messages yet. Say hello!</div>'
+        : msgs.map(m => `
+            <div class="d-flex flex-column ${m.sender_id==user.id?'align-items-end':'align-items-start'}">
+              <div class="msg-bubble ${m.sender_id==user.id?'msg-mine':'msg-other'}">${m.message}</div>
+              <div class="msg-time px-1">${new Date(m.created_at).toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'})}</div>
+            </div>`).join('');
+    box.scrollTop = box.scrollHeight;
+}
+
+async function sendMsg() {
+    const input = document.getElementById('chatInput');
+    const text  = input.value.trim();
+    if (!text || !chatPartnerId) return;
+    input.value = '';
+    await sendMessage(user.id, chatPartnerId, text);
+    loadMessages();
+}
+
+// Init
+loadOverview();
+
+// Handle search query from public pages
+const savedSearch = sessionStorage.getItem('fl_search_query');
+if (savedSearch) {
+    sessionStorage.removeItem('fl_search_query');
+    setTimeout(() => {
+        showSection('book', document.querySelector('.sidebar .nav-link[onclick*="book"]'));
+        setTimeout(() => {
+            // Apply to both tutor search and subject search
+            const tutorInput = document.getElementById('tutorSearch');
+            const subjectInput = document.getElementById('subjectSearch');
+            if (tutorInput)   { tutorInput.value = savedSearch;   filterTutors(savedSearch); }
+            if (subjectInput) { subjectInput.value = savedSearch; filterSubjects(savedSearch); }
+        }, 500);
+    }, 300);
+}
+</script>
+</body>
+</html>

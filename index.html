@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <script src="theme.js"></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="libs/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="libs/fontawesome/css/all.min.css">
+    <link rel="stylesheet" href="proj.css">
+    <link rel="stylesheet" href="theme.css">
+    <title>Flash Learning - Welcome</title>
+    <style>
+        .splash-wrapper { min-height: 100vh; background: linear-gradient(135deg, #1a2a4b 0%, #2d6a4f 100%); display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; padding: 2rem; position: relative; }
+        .splash-logo { font-size: 3rem; font-weight: 700; color: #4CAF50; }
+        .splash-logo span { color: #FF5722; }
+        .splash-tagline { color: rgba(255,255,255,0.8); font-size: 1.2rem; max-width: 500px; margin: 1rem auto 2rem; }
+        .splash-img { width: 130px; height: 130px; border-radius: 50%; object-fit: cover; border: 4px solid #4CAF50; box-shadow: 0 0 30px rgba(76,175,80,0.4); margin-bottom: 1.5rem; }
+        .splash-card { background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.15); border-radius: 1.5rem; padding: 2rem 2.5rem; backdrop-filter: blur(10px); }
+    </style>
+</head>
+<body>
+<div class="splash-wrapper">
+    <div class="position-absolute top-0 end-0 p-3">
+        <button class="theme-toggle" onclick="toggleTheme()" title="Toggle dark/light mode"><i class="fas fa-moon icon-moon"></i><i class="fas fa-sun icon-sun"></i></button>
+    </div>
+    <img src="image/fl5.jpg" alt="Flash Learning" class="splash-img">
+    <div class="splash-logo"><span>~</span>FLASH LEARNING<span>~</span></div>
+    <p class="splash-tagline">Your one-stop destination for academic excellence. Learn smarter, not harder.</p>
+
+    <div class="splash-card">
+        <p class="text-white mb-4">New here? Create a free account to get started, or log in to continue.</p>
+        <div class="d-flex gap-3 justify-content-center flex-wrap">
+            <a href="login.html" class="btn btn-outline-light px-4 py-2 rounded-pill fs-6">
+                <i class="fas fa-sign-in-alt me-2"></i>Log In
+            </a>
+            <a href="signup.html" class="btn moodle-btn-primary px-4 py-2 rounded-pill fs-6">
+                <i class="fas fa-user-plus me-2"></i>Sign Up Free
+            </a>
+        </div>
+        <hr style="border-color:rgba(255,255,255,0.2);" class="my-3">
+        <a href="home.html" class="text-white-50 small text-decoration-none"><i class="fas fa-eye me-1"></i>Browse as guest</a>
+    </div>
+
+    <div class="mt-5 d-flex gap-4 text-white-50 small">
+        <span><i class="fas fa-user-graduate me-1"></i>10k+ Students</span>
+        <span><i class="fas fa-chalkboard-teacher me-1"></i>500+ Tutors</span>
+        <span><i class="fas fa-book me-1"></i>1000+ Resources</span>
+    </div>
+    <div class="mt-3 text-white-50 small">
+        <a href="terms.html" class="text-white-50 text-decoration-none me-3">Terms of Use</a>
+        <a href="privacy.html" class="text-white-50 text-decoration-none">Privacy Policy</a>
+    </div>
+</div>
+
+<script src="libs/bootstrap/js/bootstrap.bundle.min.js"></script>
+<script src="auth.js"></script>
+<script>
+    // Auto-redirect if already logged in
+    const user = getCurrentUser();
+    if (user) redirectToDashboard(user.role);
+</script>
+</body>
+</html>
