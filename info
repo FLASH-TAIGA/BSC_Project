@@ -245,5 +245,270 @@ made via Mobile Money (MTN MoMo or Orange Money).
   - Session authentication uses sessionStorage — logging out
     or closing the browser clears the login session.
 
+local host link to open on phone:  http://10.232.170.188/flashlearn/
+
+================================================================
+
+
+----------------------------------------------------------------
+ PDF SECURITY — HOW IT WAS DONE
+----------------------------------------------------------------
+
+  PDFs (study notes and past papers) are displayed inside the
+  platform but protected from easy downloading or printing.
+  Here is exactly what was done and how each step works:
+
+
+  STEP 1 — Display inside an iframe, not a direct link
+  -------------------------------------------------------
+  Instead of giving users a direct download link to the PDF
+  file, the PDF is loaded inside an HTML <iframe> element
+  embedded within the page. This means the user sees the
+  content inside the platform rather than opening the file
+  directly in a new tab or downloading it automatically.
+
+  Example:
+    <iframe id="pdfViewer" src="" width="100%" height="100%"
+            style="display:none;"
+            oncontextmenu="return false;">
+    </iframe>
+
+
+  STEP 2 — URL hash parameters to suppress browser PDF tools
+  -----------------------------------------------------------
+  When the PDF source is set, special hash parameters are
+  appended to the file URL. These are browser-level hints
+  that tell the built-in PDF viewer to hide its toolbar,
+  navigation panel, and scrollbar controls:
+
+    viewer.src = fileName + "#toolbar=0&navpanes=0&scrollbar=0";
+
+    #toolbar=0   — hides the top toolbar (which contains the
+                   download and print buttons in most browsers)
+    #navpanes=0  — hides the side navigation/bookmarks panel
+    #scrollbar=0 — hides the scrollbar UI in the PDF viewer
+
+  This works in Chrome, Edge, and Firefox's built-in PDF
+  viewers. It does not physically block downloading but
+  removes the obvious one-click download button from view.
+
+
+  STEP 3 — Right-click disabled on the iframe
+  --------------------------------------------
+  The oncontextmenu attribute is set to "return false" on
+  every PDF iframe. This disables the right-click context
+  menu on the viewer, preventing users from using the
+  browser's "Save as" or "Open in new tab" options that
+  would normally appear on right-click.
+
+    oncontextmenu="return false;"
+
+
+  STEP 4 — No direct download links in the UI
+  --------------------------------------------
+  In the Study Notes and Q&A Bank sections, buttons say
+  "View" or "View Only" — not "Download". The JavaScript
+  function that loads the PDF only sets the iframe src; it
+  never creates an anchor tag with a download attribute or
+  opens the file in a new window.
+
+
+  WHERE THIS IS APPLIED
+  ----------------------
+  - questions.html     (Study Notes public page)
+  - solutions.html     (Q&A Bank public page)
+  - dashboard-student.html  (Study Notes and Q&A Bank
+                             sections inside the dashboard)
+
+
+  IMPORTANT LIMITATION
+  ----------------------
+  These measures make downloading inconvenient but do not
+  make it technically impossible. A determined user could
+  still:
+    - Open browser developer tools and find the file URL
+    - Type the direct file path into the address bar
+    - Use browser extensions that bypass iframe restrictions
+
+  True PDF protection would require serving PDFs through a
+  PHP script that checks authentication before streaming the
+  file, and storing PDFs outside the public web root folder.
+  That level of protection was not implemented in this
+  version but can be added as a future improvement.
+
+----------------------------------------------------------------
+ GOOGLE MAPS — HOW IT WAS IMPLEMENTED
+----------------------------------------------------------------
+
+  The map appears on the Contact page (contact.html) under
+  the heading "Locate our Tutoring Hub". It shows the location
+  of the tutoring hub so students can find their scheduled
+  onsite meeting spot.
+
+
+  HOW IT WORKS
+  -------------
+  No Google Maps API key was used. The map was embedded using
+  Google Maps' free Embed URL feature, which generates a
+  shareable iframe link directly from Google Maps. This
+  requires no account, no billing, and no JavaScript SDK.
+
+
+  STEP 1 — Get the embed URL from Google Maps
+  --------------------------------------------
+  1. Go to maps.google.com
+  2. Search for the location you want to show
+  3. Click Share → Embed a map
+  4. Google generates a full <iframe> code with a src URL
+     in this format:
+       https://www.google.com/maps/embed?pb=!1m18!...
+  5. Copy that URL
+
+
+  STEP 2 — Place it inside a responsive container
+  ------------------------------------------------
+  Bootstrap's ratio utility class was used to make the map
+  responsive. The class "ratio ratio-21x9" forces the iframe
+  to maintain a 21:9 widescreen aspect ratio on all screen
+  sizes without needing fixed pixel heights.
+
+  The full HTML used:
+
+    <div class="ratio ratio-21x9 rounded-4 shadow overflow-hidden border">
+        <iframe
+            src="https://www.google.com/maps/embed?pb=..."
+            allowfullscreen=""
+            loading="lazy">
+        </iframe>
+    </div>
+
+  Breakdown of each attribute:
+
+    ratio ratio-21x9     — Bootstrap class that makes the
+                           iframe scale responsively at a
+                           21:9 aspect ratio
+
+    rounded-4            — Bootstrap class for rounded corners
+
+    shadow               — Bootstrap class for a drop shadow
+
+    overflow-hidden      — clips the map corners so they
+                           respect the border-radius
+
+    border               — adds a subtle border around the map
+
+    allowfullscreen=""   — lets the user expand the map to
+                           full screen if they want
+
+    loading="lazy"       — the map only loads when the user
+                           scrolls near it, improving page
+                           load speed
+
+
+  STEP 3 — Caption below the map
+  --------------------------------
+  A small instruction line was added below the map:
+
+    "Use the map to find your scheduled onsite meeting spot."
+
+  This tells students why the map is there — to help them
+  locate the physical location for onsite sessions.
+
+
+  WHERE IT APPEARS
+  -----------------
+  - contact.html  (the Contact page, in the lower section
+                   below the contact form and details)
+
+
+  IMPORTANT NOTE
+  ---------------
+  The current embed URL points to a placeholder location
+  (Envato in Melbourne, Australia) because the real campus
+  location was not provided during development. To update it
+  to the correct location:
+
+    1. Go to maps.google.com
+    2. Search for the actual tutoring hub address
+    3. Click Share → Embed a map → Copy the iframe src URL
+    4. Replace the src value in contact.html with the new URL
+
+
+======================
+================================================================
+
+----------------------------------------------------------------
+ GOOGLE MAPS — HOW IT WAS IMPLEMENTED
+----------------------------------------------------------------
+
+  The map is embedded on the Contact page (contact.html) and
+  shows the location of the Catholic University of Cameroon,
+  which is the physical tutoring hub for onsite sessions.
+
+
+  HOW IT WORKS
+  -------------
+  Google Maps was embedded using a free Google Maps Embed URL.
+  No API key is required for this method. The map is loaded
+  inside an HTML <iframe> element directly on the page.
+
+  The embed URL format used:
+    https://www.google.com/maps/embed?pb=[encoded location data]
+
+  The place identifier used to pin the exact location:
+    Place  : Catholic University of Cameroon
+    Place ID: 0x0:0x2366174a3388a463
+    Source : https://www.google.com/maps/place/
+             Catholic+University+of+Cameroon
+
+
+  THE HTML CODE USED
+  -------------------
+  A Bootstrap responsive ratio wrapper (ratio-21x9) is used
+  so the map scales correctly on all screen sizes:
+
+    <div class="ratio ratio-21x9 rounded-4 shadow
+                overflow-hidden border">
+        <iframe
+            src="https://www.google.com/maps/embed?pb=..."
+            allowfullscreen=""
+            loading="lazy"
+            referrerpolicy="no-referrer-when-downgrade">
+        </iframe>
+    </div>
+
+  Key attributes explained:
+
+    ratio ratio-21x9    — Bootstrap class that makes the
+                          iframe maintain a 21:9 aspect ratio
+                          and fill its container responsively
+
+    allowfullscreen     — lets the user expand the map to
+                          full screen inside the browser
+
+    loading="lazy"      — the map only loads when the user
+                          scrolls to it, improving page speed
+
+    referrerpolicy      — controls what information is sent
+    no-referrer-when    — to Google when the map loads
+    -downgrade
+
+
+  WHERE IT APPEARS
+  -----------------
+  - contact.html — under the heading "Locate our Tutoring Hub"
+  - A note below the map reads: "Use the map to find your
+    scheduled onsite meeting spot."
+
+
+  WHY NO API KEY?
+  ----------------
+  Google Maps offers a free embed option that does not require
+  an API key. You simply use the /maps/embed URL with the
+  place data encoded in the URL. This is suitable for simple
+  location display. An API key would only be needed if you
+  wanted interactive features like directions, custom markers,
+  or Street View integration.
+
 
 ================================================================

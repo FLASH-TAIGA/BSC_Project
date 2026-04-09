@@ -420,7 +420,21 @@
               </div>
               <div id="spotField" class="mb-3" style="display:none;">
                 <label class="form-label fw-semibold">Meeting Spot</label>
-                <input type="text" class="form-control" id="bookSpot" placeholder="e.g. Hall B, Table 4">
+                <input type="text" class="form-control mb-2" id="bookSpot" placeholder="e.g. Hall B, Table 4">
+                <div class="d-flex align-items-center gap-2 mb-2">
+                  <small class="text-muted">Campus map (optional) — find your meeting spot</small>
+                  <button type="button" class="btn btn-sm btn-outline-secondary py-0" onclick="toggleBookingMap()">
+                    <i class="fas fa-map-marker-alt me-1"></i>Show Map
+                  </button>
+                </div>
+                <div id="bookingMapContainer" style="display:none;" class="rounded-3 overflow-hidden border shadow-sm">
+                  <iframe
+                    src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3978.0!2d11.4955!3d6.3667!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x2366174a3388a463!2sCatholic%20University%20of%20Cameroon!5e0!3m2!1sen!2scm!4v1714000000000!5m2!1sen!2scm"
+                    width="100%" height="280" style="border:0;display:block;"
+                    allowfullscreen="" loading="lazy"
+                    referrerpolicy="no-referrer-when-downgrade">
+                  </iframe>
+                </div>
               </div>
               <!-- Price display -->
               <div class="alert alert-success d-flex align-items-center justify-content-between mb-4">
@@ -829,6 +843,22 @@ function toggleModeFields() {
     const online = document.getElementById('bookMode').value === 'online';
     document.getElementById('platformField').style.display = online ? 'block' : 'none';
     document.getElementById('spotField').style.display     = online ? 'none'  : 'block';
+    // hide map when switching back to online
+    if (online) {
+        document.getElementById('bookingMapContainer').style.display = 'none';
+    }
+}
+
+function toggleBookingMap() {
+    const container = document.getElementById('bookingMapContainer');
+    const btn = event.target.closest('button');
+    if (container.style.display === 'none') {
+        container.style.display = 'block';
+        btn.innerHTML = '<i class="fas fa-map-marker-alt me-1"></i>Hide Map';
+    } else {
+        container.style.display = 'none';
+        btn.innerHTML = '<i class="fas fa-map-marker-alt me-1"></i>Show Map';
+    }
 }
 
 function selectPlatform(val, el) {
