@@ -116,7 +116,7 @@ INSERT IGNORE INTO materials (title, subject, type, filename, uploaded_by) VALUE
 -- ============================================================
 INSERT IGNORE INTO users (id, name, email, password, role) VALUES
 (101, 'Dr. Amara Nkosi',      'amara.nkosi@flashlearn.edu',      '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', 'tutor'),
-(102, 'Prof. Jean-Paul Mbeki','jeanpaul.mbeki@flashlearn.edu',   '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', 'tutor'),
+(102, 'Prof. Jean-Paul Mbeki','how ',   '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', 'tutor'),
 (103, 'Dr. Fatima Ouedraogo', 'fatima.ouedraogo@flashlearn.edu', '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', 'tutor'),
 (104, 'Mr. Kwame Asante',     'kwame.asante@flashlearn.edu',     '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', 'tutor'),
 (105, 'Dr. Chioma Eze',       'chioma.eze@flashlearn.edu',       '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', 'tutor'),

@@ -1,4 +1,4 @@
-/* Custom Fonts */
+﻿/* Custom Fonts */
 body {
     font-family: 'Open Sans', sans-serif;
     color: #333;
@@ -528,4 +528,19 @@ body {
     .text-uppercase.fw-bold.text-muted.small {
         text-align: center;
     }
+}
+
+/* ── Animated Logo ─────────────────────────────────────── */
+.moodle-logo {
+    background: url('image/photo-1742869028491-7cc55dd8e213.avif') center/cover;
+    background-clip: text;
+    -webkit-background-clip: text;
+    color: transparent !important;
+    -webkit-text-fill-color: transparent !important;
+    animation: animateLogo 10s linear infinite;
+    font-weight: 700;
+    text-decoration: none;
+}
+@keyframes animateLogo {
+    to { background-position: -200px; }
 }
