@@ -3,7 +3,7 @@
 // Switch between LOCAL and PRODUCTION by changing the environment below
 // Set to 'local' for XAMPP, 'production' for InfinityFree
 
-$env = 'local'; // <-- change to 'production' when deploying
+$env = 'production'; // <-- change to 'local' for XAMPP testing
 
 if ($env === 'production') {
     define('DB_HOST', 'sql312.infinityfree.com');
@@ -32,9 +32,22 @@ function getDB() {
 
 // Set JSON response headers
 header('Content-Type: application/json');
-header('Access-Control-Allow-Origin: https://flash-learning.netlify.app');
+
+// Allow requests from Netlify frontend and InfinityFree itself
+$allowed = [
+    'https://flash-learning.netlify.app',
+    'https://flash-learning.gt.tc',
+    'http://flash-learning.gt.tc',
+];
+$origin = $_SERVER['HTTP_ORIGIN'] ?? '';
+if (in_array($origin, $allowed) || empty($origin)) {
+    header('Access-Control-Allow-Origin: ' . ($origin ?: '*'));
+} else {
+    header('Access-Control-Allow-Origin: *');
+}
 header('Access-Control-Allow-Methods: GET, POST, OPTIONS');
 header('Access-Control-Allow-Headers: Content-Type');
+header('Access-Control-Allow-Credentials: true');
 
 if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
     http_response_code(200);

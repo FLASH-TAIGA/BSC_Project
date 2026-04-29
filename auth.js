@@ -31,7 +31,7 @@ async function handleLogin(email, password) {
         catch { errEl.textContent = 'Server error: ' + text.substring(0, 200); errEl.classList.remove('d-none'); return; }
         if (data.success) { setCurrentUser(data.user); redirectToDashboard(data.user.role); }
         else { errEl.textContent = data.message || 'Invalid email or password.'; errEl.classList.remove('d-none'); }
-    } catch { errEl.textContent = 'Cannot reach server. Make sure XAMPP is running.'; errEl.classList.remove('d-none'); }
+    } catch { errEl.textContent = 'Cannot reach server. Please try again.'; errEl.classList.remove('d-none'); }
 }
 
 async function handleSignup(name, email, password, role) {
@@ -45,7 +45,7 @@ async function handleSignup(name, email, password, role) {
         catch { errEl.textContent = 'Server error: ' + text.substring(0, 200); errEl.classList.remove('d-none'); return; }
         if (data.success) { setCurrentUser(data.user); redirectToDashboard(data.user.role); }
         else { errEl.textContent = data.message || 'Registration failed.'; errEl.classList.remove('d-none'); }
-    } catch { errEl.textContent = 'Cannot reach server. Make sure XAMPP is running.'; errEl.classList.remove('d-none'); }
+    } catch { errEl.textContent = 'Cannot reach server. Please try again.'; errEl.classList.remove('d-none'); }
 }
 
 // ── Users ──────────────────────────────────────────────────
