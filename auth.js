@@ -1,6 +1,5 @@
 // Flash Learning — Auth & Session Management
-// Replace RAILWAY_URL with your actual Railway backend URL after deployment
-const API_BASE = 'https://RAILWAY_URL/api';
+const API_BASE = 'https://flashlearn-backend-production.up.railway.app/api';
 
 
 // ── Session ────────────────────────────────────────────────
