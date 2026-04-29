@@ -1,5 +1,5 @@
 // Flash Learning — Auth & Session Management
-const API_BASE = 'https://flashlearn-backend-production.up.railway.app/api';
+const API_BASE = 'https://flashlearn-backend-production.up.railway.app';
 
 
 // ── Session ────────────────────────────────────────────────
