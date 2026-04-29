@@ -18,11 +18,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
 // Automatically uses Railway env vars when deployed,
 // falls back to XAMPP localhost for local development.
 
-$db_host = getenv('MYSQLHOST')     ?: 'localhost';
+$db_host = getenv('MYSQLHOST')     ?: 'tramway.proxy.rlwy.net';
 $db_user = getenv('MYSQLUSER')     ?: 'root';
-$db_pass = getenv('MYSQLPASSWORD') ?: '';
-$db_name = getenv('MYSQLDATABASE') ?: 'flashlearn';
-$db_port = (int)(getenv('MYSQLPORT') ?: 3306);
+$db_pass = getenv('MYSQLPASSWORD') ?: 'OEiWzABkKVCoefbpSbJKxVixMdANqKAT';
+$db_name = getenv('MYSQLDATABASE') ?: 'railway';
+$db_port = (int)(getenv('MYSQLPORT') ?: 18495);
 
 define('DB_HOST', $db_host);
 define('DB_USER', $db_user);

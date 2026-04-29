@@ -9,11 +9,11 @@ echo "mysqli available: " . (extension_loaded('mysqli') ? 'YES' : 'NO') . "\n";
 echo "PDO available: " . (extension_loaded('pdo_mysql') ? 'YES' : 'NO') . "\n\n";
 
 // Use Railway environment variables
-$host = getenv('MYSQLHOST')     ?: 'localhost';
+$host = getenv('MYSQLHOST')     ?: 'tramway.proxy.rlwy.net';
 $user = getenv('MYSQLUSER')     ?: 'root';
-$pass = getenv('MYSQLPASSWORD') ?: '';
-$db   = getenv('MYSQLDATABASE') ?: 'flashlearn';
-$port = (int)(getenv('MYSQLPORT') ?: 3306);
+$pass = getenv('MYSQLPASSWORD') ?: 'OEiWzABkKVCoefbpSbJKxVixMdANqKAT';
+$db   = getenv('MYSQLDATABASE') ?: 'railway';
+$port = (int)(getenv('MYSQLPORT') ?: 18495);
 
 echo "Host: $host\n";
 echo "Port: $port\n";
