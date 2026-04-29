@@ -1,4 +1,20 @@
 <?php
+// 1. Allow the specific origin (your Netlify site)
+header("Access-Control-Allow-Origin: https://flash-learning.netlify.app");
+
+// 2. Allow the browser to send specific methods
+header("Access-Control-Allow-Methods: POST, GET, OPTIONS, PUT, DELETE");
+
+// 3. Allow the specific headers your frontend is sending (like Content-Type)
+header("Access-Control-Allow-Headers: Content-Type, Authorization, X-Requested-With");
+
+// 4. Handle the "Preflight" OPTIONS request
+if ($_SERVER['REQUEST_METHOD'] == 'OPTIONS') {
+    // If the browser is just "asking" for permission, tell it YES and stop here.
+    header("HTTP/1.1 200 OK");
+    exit();
+}
+
 require_once 'config.php';
 
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
