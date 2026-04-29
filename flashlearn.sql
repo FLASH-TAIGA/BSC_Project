@@ -183,8 +183,8 @@ INSERT IGNORE INTO tutor_profiles (user_id, date_of_birth, qualification, subjec
 -- Run this if your sessions table was created before this update
 -- ============================================================
 ALTER TABLE sessions
-    ADD COLUMN IF NOT EXISTS platform_fee   INT NOT NULL DEFAULT 0 AFTER amount_paid,
-    ADD COLUMN IF NOT EXISTS tutor_earnings INT NOT NULL DEFAULT 0 AFTER platform_fee;
+    ADD COLUMN platform_fee   INT NOT NULL DEFAULT 0 AFTER amount_paid,
+    ADD COLUMN tutor_earnings INT NOT NULL DEFAULT 0 AFTER platform_fee;
 
 -- Backfill existing rows
 UPDATE sessions SET
