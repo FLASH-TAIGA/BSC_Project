@@ -8,13 +8,20 @@ echo "PHP version: " . phpversion() . "\n";
 echo "mysqli available: " . (extension_loaded('mysqli') ? 'YES' : 'NO') . "\n";
 echo "PDO available: " . (extension_loaded('pdo_mysql') ? 'YES' : 'NO') . "\n\n";
 
-$host = 'sql312.infinityfree.com';
-$user = 'if0_41782169';
-$pass = 'McjRocks02';
-$db   = 'if0_41782169_flashlearning';
+// Use Railway environment variables
+$host = getenv('MYSQLHOST')     ?: 'localhost';
+$user = getenv('MYSQLUSER')     ?: 'root';
+$pass = getenv('MYSQLPASSWORD') ?: '';
+$db   = getenv('MYSQLDATABASE') ?: 'flashlearn';
+$port = (int)(getenv('MYSQLPORT') ?: 3306);
+
+echo "Host: $host\n";
+echo "Port: $port\n";
+echo "User: $user\n";
+echo "DB:   $db\n\n";
 
 echo "Attempting connection...\n";
-$conn = @new mysqli($host, $user, $pass, $db);
+$conn = @new mysqli($host, $user, $pass, $db, $port);
 
 if ($conn->connect_error) {
     echo "FAILED: " . $conn->connect_error . "\n";
