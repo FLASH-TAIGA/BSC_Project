@@ -1,16 +1,5 @@
 Options -Indexes
 
-# CORS headers
-Header always set Access-Control-Allow-Origin "*"
-Header always set Access-Control-Allow-Methods "GET, POST, OPTIONS"
-Header always set Access-Control-Allow-Headers "Content-Type, Authorization"
-
-# PHP settings for file uploads
-php_value upload_max_filesize 10M
-php_value post_max_size 10M
-php_value max_execution_time 60
-php_value memory_limit 128M
-
 # Handle OPTIONS preflight requests
 RewriteEngine On
 RewriteCond %{REQUEST_METHOD} OPTIONS
