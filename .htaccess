@@ -1,0 +1,19 @@
+Options -Indexes
+
+# Protect config file from direct access
+<Files "config.php">
+    Order allow,deny
+    Deny from all
+</Files>
+
+# Protect SQL file
+<Files "*.sql">
+    Order allow,deny
+    Deny from all
+</Files>
+
+# Protect info file
+<Files "info">
+    Order allow,deny
+    Deny from all
+</Files>

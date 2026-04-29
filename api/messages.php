@@ -44,9 +44,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
                     (SELECT COUNT(*) FROM messages m2
                      WHERE m2.sender_id = m.sender_id AND m2.receiver_id = ? AND m2.is_read = 0) AS unread
              FROM messages m
-             JOIN users u ON u.id = IF(m.sender_id=?, m.receiver_id, m.sender_id)
+             JOIN users u ON u.id = CASE WHEN m.sender_id=? THEN m.receiver_id ELSE m.sender_id END
              WHERE m.sender_id=? OR m.receiver_id=?
-             GROUP BY IF(m.sender_id=?, m.receiver_id, m.sender_id)
+             GROUP BY CASE WHEN m.sender_id=? THEN m.receiver_id ELSE m.sender_id END
              ORDER BY m.created_at DESC'
         );
         $stmt->bind_param('iiiii', $uid, $uid, $uid, $uid, $uid);

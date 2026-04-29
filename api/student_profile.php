@@ -36,7 +36,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
         if (in_array($_FILES['photo']['type'], $allowed)) {
             $ext      = pathinfo($_FILES['photo']['name'], PATHINFO_EXTENSION);
             $filename = 'student_' . $uid . '_' . time() . '.' . $ext;
-            move_uploaded_file($_FILES['photo']['tmp_name'], '../image/' . $filename);
+            move_uploaded_file($_FILES['photo']['tmp_name'], __DIR__ . '/../image/' . $filename);
             $photo_filename = $filename;
         }
     }

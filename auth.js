@@ -1,5 +1,6 @@
 // Flash Learning — Auth & Session Management
-const API_BASE = 'api';
+const API_BASE = 'https://flash-learning.gt.tc.infinityfreeapp.com/api';
+
 
 // ── Session ────────────────────────────────────────────────
 function getCurrentUser() { return JSON.parse(sessionStorage.getItem('fl_current_user') || 'null'); }

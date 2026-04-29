@@ -1,13 +1,21 @@
 <?php
 // Flash Learning — Database Configuration
-// XAMPP default credentials
-error_reporting(0);
-ini_set('display_errors', 0);
+// Switch between LOCAL and PRODUCTION by changing the environment below
+// Set to 'local' for XAMPP, 'production' for InfinityFree
 
-define('DB_HOST', 'localhost');
-define('DB_USER', 'root');
-define('DB_PASS', '');          // XAMPP default: empty password
-define('DB_NAME', 'flashlearn');
+$env = 'local'; // <-- change to 'production' when deploying
+
+if ($env === 'production') {
+    define('DB_HOST', 'sql312.infinityfree.com');
+    define('DB_USER', 'if0_41782169');
+    define('DB_PASS', 'McjRocks02');
+    define('DB_NAME', 'if0_41782169_flashlearning');
+} else {
+    define('DB_HOST', 'localhost');
+    define('DB_USER', 'root');
+    define('DB_PASS', '');
+    define('DB_NAME', 'flashlearn');
+}
 
 define('ADMIN_EMAIL',    'admin@flashlearn.edu');
 define('ADMIN_PASSWORD', 'Admin@FL2026');
@@ -24,7 +32,7 @@ function getDB() {
 
 // Set JSON response headers
 header('Content-Type: application/json');
-header('Access-Control-Allow-Origin: *');
+header('Access-Control-Allow-Origin: https://flash-learning.netlify.app');
 header('Access-Control-Allow-Methods: GET, POST, OPTIONS');
 header('Access-Control-Allow-Headers: Content-Type');
 

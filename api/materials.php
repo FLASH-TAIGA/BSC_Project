@@ -28,7 +28,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
             $db->close(); exit();
         }
 
-        $upload_dir = '../image/';
+        $upload_dir = __DIR__ . '/../image/';
         $filename   = time() . '_' . preg_replace('/[^a-zA-Z0-9._-]/', '_', basename($file['name']));
         $dest       = $upload_dir . $filename;
 
