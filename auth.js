@@ -1,5 +1,5 @@
 // Flash Learning — Auth & Session Management
-const API_BASE = 'https://flash-learning.gt.tc.infinityfreeapp.com/api';
+const API_BASE = 'https://flash-learning.gt.tc/api';
 
 
 // ── Session ────────────────────────────────────────────────
