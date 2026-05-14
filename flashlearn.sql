@@ -88,6 +88,31 @@ CREATE TABLE IF NOT EXISTS materials (
 );
 
 -- ============================================================
+-- BROADCASTS (admin messages to all users)
+-- ============================================================
+CREATE TABLE IF NOT EXISTS broadcasts (
+    id          INT AUTO_INCREMENT PRIMARY KEY,
+    title       VARCHAR(200)  NOT NULL,
+    message     TEXT          NOT NULL,
+    target_role ENUM('all','student','tutor') DEFAULT 'all',
+    sent_by     VARCHAR(100)  DEFAULT 'Administrator',
+    created_at  TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+-- ============================================================
+-- CONTACT MESSAGES (from public contact form)
+-- ============================================================
+CREATE TABLE IF NOT EXISTS contact_messages (
+    id          INT AUTO_INCREMENT PRIMARY KEY,
+    name        VARCHAR(100)  NOT NULL,
+    email       VARCHAR(150)  NOT NULL,
+    subject     VARCHAR(100)  NOT NULL,
+    message     TEXT          NOT NULL,
+    is_read     TINYINT(1)    DEFAULT 0,
+    created_at  TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+-- ============================================================
 -- STUDENT PROFILES
 -- ============================================================
 CREATE TABLE IF NOT EXISTS student_profiles (

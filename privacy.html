@@ -47,7 +47,7 @@
                     </div>
                 </form>
                 <div class="d-flex align-items-center gap-2" id="navAuthArea">
-                    <button class="theme-toggle" onclick="toggleTheme()" title="Toggle dark/light mode"><i class="fas fa-moon icon-moon"></i><i class="fas fa-sun icon-sun"></i></button>
+                    
                     <a href="login.html" class="btn btn-outline-success rounded-pill px-3">Log In</a>
                     <a href="signup.html" class="btn moodle-btn-primary rounded-pill px-3">Sign Up</a>
                 </div>
@@ -173,7 +173,7 @@
 <script src="auth.js"></script>
 <script>
   const u = getCurrentUser();
-  if (u) document.getElementById('navAuthArea').innerHTML = '<button class="theme-toggle" onclick="toggleTheme()"><i class="fas fa-moon icon-moon"></i><i class="fas fa-sun icon-sun"></i></button><a href="' + (u.role==='admin'?'dashboard-admin.html':u.role==='tutor'?'dashboard-tutor.html':'dashboard-student.html') + '" class="btn moodle-btn-primary rounded-pill px-3">Dashboard</a><button onclick="logout()" class="btn btn-outline-danger rounded-pill px-3">Logout</button>';
+  if (u) document.getElementById('navAuthArea').innerHTML = '<a href="' + (u.role==='admin'?'dashboard-admin.html':u.role==='tutor'?'dashboard-tutor.html':'dashboard-student.html') + '" class="btn moodle-btn-primary rounded-pill px-3">Dashboard</a><button onclick="logout()" class="btn btn-outline-danger rounded-pill px-3">Logout</button>';
   function globalSearch(e) {
     e.preventDefault();
     const q = document.getElementById('globalSearchInput').value.trim();

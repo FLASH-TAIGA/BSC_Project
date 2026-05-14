@@ -83,6 +83,21 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
         $nid = $stmt->insert_id;
         $stmt->close();
         $db->close();
+
+        // Email notification to tutor
+        if ($ok) {
+            require_once 'notify_email.php';
+            $tutorRow = (new mysqli(DB_HOST, DB_USER, DB_PASS, DB_NAME, DB_PORT))
+                ->query("SELECT email, name FROM users WHERE id=$tutor_id")
+                ->fetch_assoc();
+            if ($tutorRow) {
+                emailSessionBooked(
+                    $tutorRow['email'], $tutorRow['name'],
+                    $tutor_name, $subject, $session_date, $session_time
+                );
+            }
+        }
+
         echo json_encode(['success' => $ok, 'session_id' => $nid, 'platform_fee' => $platform_fee, 'tutor_earnings' => $tutor_earnings]);
 
     } elseif ($action === 'update_status') {
@@ -105,6 +120,20 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
         $ok = $stmt->execute();
         $stmt->close();
         $db->close();
+
+        // Email notification to student when status changes
+        if ($ok && in_array($status, ['confirmed','cancelled','completed'])) {
+            require_once 'notify_email.php';
+            $db2 = new mysqli(DB_HOST, DB_USER, DB_PASS, DB_NAME, DB_PORT);
+            $row = $db2->query("SELECT s.subject, s.session_date, u.email, u.name
+                                FROM sessions s JOIN users u ON s.student_id=u.id
+                                WHERE s.id=$id")->fetch_assoc();
+            if ($row) {
+                emailSessionUpdated($row['email'], $row['name'], $status, $row['subject'], $row['session_date']);
+            }
+            $db2->close();
+        }
+
         echo json_encode(['success' => $ok]);
     }
 }

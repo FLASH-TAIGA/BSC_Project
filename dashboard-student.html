@@ -45,12 +45,13 @@
         .subject-tag:hover,.subject-tag.selected{background:#4CAF50;color:#fff;border-color:#4CAF50;}
         .rec-card{border:1px solid #dee2e6;border-radius:1rem;padding:1rem;transition:box-shadow 0.2s;}
         .rec-card:hover{box-shadow:0 4px 16px rgba(76,175,80,0.15);}
-        @media(max-width:768px){.sidebar{width:100%;min-height:auto;position:relative;}.main-content{margin-left:0;}}
+        @media(max-width:768px){.main-content{margin-left:0;}}
     </style>
 </head>
 <body>
+<div class="sidebar-overlay" id="sidebarOverlay" onclick="closeSidebar()"></div>
 <div class="d-flex">
-  <div class="sidebar">
+  <div class="sidebar" id="sidebar">
     <div class="brand"><span>~</span>FL<span>~</span> Student</div>
     <nav class="nav flex-column mt-3">
       <a class="nav-link active" href="#" onclick="showSection('overview',this)"><i class="fas fa-th-large me-2"></i>Overview</a>
@@ -60,6 +61,7 @@
       <a class="nav-link" href="#" onclick="showSection('qa',this)"><i class="fas fa-question-circle me-2"></i>Q&amp;A Bank</a>
       <a class="nav-link" href="#" onclick="showSection('book',this)"><i class="fas fa-plus-circle me-2"></i>Book Session</a>
       <a class="nav-link" href="#" onclick="showSection('chat',this)"><i class="fas fa-comments me-2"></i>Messages <span class="badge bg-danger ms-1" id="unreadBadge" style="display:none">0</span></a>
+      <a class="nav-link" href="#" onclick="showSection('contact',this)"><i class="fas fa-headset me-2"></i>Contact Admin</a>
       <hr style="border-color:rgba(255,255,255,0.1);margin:0.5rem 1rem;">
       <a class="nav-link" href="home.html"><i class="fas fa-globe me-2"></i>Back to Site</a>
       <a class="nav-link text-danger" href="#" onclick="logout()"><i class="fas fa-sign-out-alt me-2"></i>Logout</a>
@@ -71,7 +73,9 @@
   </div>
   <div class="main-content flex-grow-1">
     <div class="topbar d-flex justify-content-between align-items-center">
-      <button class="theme-toggle" onclick="toggleTheme()"><i class="fas fa-moon icon-moon"></i><i class="fas fa-sun icon-sun"></i></button>
+      <div class="d-flex align-items-center gap-2">
+        <button class="sidebar-toggle" onclick="toggleSidebar()" title="Menu"><i class="fas fa-bars"></i></button>
+      </div>
       <h5 class="mb-0 fw-bold" id="pageTitle">Overview</h5>
       <div class="d-flex align-items-center gap-3">
         <span class="text-muted small">Welcome, <strong id="userName"></strong></span>
@@ -545,12 +549,53 @@
         </div>
       </div>
 
+      <!-- CONTACT ADMIN -->
+      <div id="section-contact" class="d-none">
+        <div class="row g-4">
+          <div class="col-md-6">
+            <div class="card border-0 shadow-sm rounded-3 p-4">
+              <h6 class="fw-bold mb-1"><i class="fas fa-headset me-2 text-success"></i>Contact Admin</h6>
+              <p class="text-muted small mb-3">Send a message, complaint, or inquiry directly to the Flash Learning admin team.</p>
+              <div id="studentContactSuccess" class="alert alert-success d-none"><i class="fas fa-check-circle me-2"></i>Message sent! We'll respond within 2 business days.</div>
+              <div id="studentContactError" class="alert alert-danger d-none"></div>
+              <form id="studentContactForm">
+                <div class="mb-3">
+                  <label class="form-label fw-semibold small">Subject</label>
+                  <select id="studentContactSubject" class="form-select">
+                    <option>Booking Issue</option>
+                    <option>Payment Problem</option>
+                    <option>Complaint about Tutor</option>
+                    <option>Technical Support</option>
+                    <option>Account Issue</option>
+                    <option>Other</option>
+                  </select>
+                </div>
+                <div class="mb-3">
+                  <label class="form-label fw-semibold small">Your Message</label>
+                  <textarea id="studentContactMessage" class="form-control" rows="5" placeholder="Describe your issue or inquiry..." required></textarea>
+                </div>
+                <button type="submit" class="btn moodle-btn-primary w-100" id="studentContactBtn">
+                  <i class="fas fa-paper-plane me-2"></i>Send to Admin
+                </button>
+              </form>
+            </div>
+          </div>
+          <div class="col-md-6">
+            <div class="card border-0 shadow-sm rounded-3 p-4">
+              <h6 class="fw-bold mb-3"><i class="fas fa-bullhorn me-2 text-warning"></i>Announcements from Admin</h6>
+              <div id="studentBroadcastList"><div class="text-muted text-center py-3"><div class="spinner-border spinner-border-sm me-2"></div>Loading...</div></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
     </div>
   </div>
 </div>
 
 <script src="libs/bootstrap/js/bootstrap.bundle.min.js"></script>
 <script src="auth.js"></script>
+<script src="notify.js"></script>
 <script>
 const user = requireAuth('student');
 if (user) {
@@ -558,13 +603,13 @@ if (user) {
     document.getElementById('userAvatar').textContent = user.name.charAt(0).toUpperCase();
 }
 
-const SECTIONS = ['overview','sessions','notes','qa','book','chat','profile'];
+const SECTIONS = ['overview','sessions','notes','qa','book','chat','profile','contact'];
 function showSection(id, el) {
     SECTIONS.forEach(s => document.getElementById('section-'+s).classList.add('d-none'));
     document.getElementById('section-'+id).classList.remove('d-none');
     document.querySelectorAll('.sidebar .nav-link').forEach(l => l.classList.remove('active'));
     if (el) el.classList.add('active');
-    const titles = {overview:'Overview',sessions:'My Sessions',notes:'Study Notes',qa:'Q&A Bank',book:'Book Session',chat:'Messages',profile:'My Profile'};
+    const titles = {overview:'Overview',sessions:'My Sessions',notes:'Study Notes',qa:'Q&A Bank',book:'Book Session',chat:'Messages',profile:'My Profile',contact:'Contact Admin'};
     document.getElementById('pageTitle').textContent = titles[id] || id;
     if (id === 'overview')  loadOverview();
     if (id === 'sessions')  loadMySessions();
@@ -575,6 +620,7 @@ function showSection(id, el) {
     }
     if (id === 'chat')      { loadContacts(); loadTutorContacts(); }
     if (id === 'profile')   loadStudentProfile();
+    if (id === 'contact')   loadBroadcasts('student');
 }
 
 // ── Overview ──────────────────────────────────────────────
@@ -947,6 +993,9 @@ async function confirmPayment() {
     const net     = bookingData.amount - fee;
     const payIcon = selectedPayMethod === 'mtn' ? '🟡 MTN MoMo' : '🟠 Orange Money';
 
+    // Browser notification to student
+    FL_NOTIFY.show('✅ Booking Confirmed!', 'Your ' + bookingData.subject + ' session with ' + bookingData.tutor_name + ' is booked.', 'dashboard-student.html');
+
     document.getElementById('confirmTutor').textContent    = bookingData.tutor_name;
     document.getElementById('confirmSubject').textContent  = bookingData.subject;
     document.getElementById('confirmDateTime').textContent = bookingData.date + ' at ' + bookingData.time;
@@ -1025,6 +1074,7 @@ async function loadMessages() {
     if (!chatPartnerId) return;
     const msgs = await getConversation(user.id, chatPartnerId);
     const box  = document.getElementById('chatBox');
+    const prevCount = box.querySelectorAll('.msg-bubble').length;
     box.innerHTML = msgs.length === 0
         ? '<div class="text-muted text-center pt-5 small">No messages yet. Say hello!</div>'
         : msgs.map(m => `
@@ -1033,6 +1083,12 @@ async function loadMessages() {
               <div class="msg-time px-1">${new Date(m.created_at).toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'})}</div>
             </div>`).join('');
     box.scrollTop = box.scrollHeight;
+    // Notify if new messages arrived from the other person
+    const newCount = msgs.filter(m => m.sender_id != user.id).length;
+    if (newCount > prevCount && prevCount > 0 && document.hidden) {
+        const last = msgs.filter(m => m.sender_id != user.id).pop();
+        FL_NOTIFY.newMessage(document.getElementById('chatWithName').textContent, last.message);
+    }
 }
 
 async function sendMsg() {
@@ -1044,8 +1100,71 @@ async function sendMsg() {
     loadMessages();
 }
 
+// ── Contact Admin & Broadcasts ────────────────────────────
+async function loadBroadcasts(role) {
+    try {
+        const r = await fetch(`api/broadcast.php?role=${role}`);
+        const d = await r.json();
+        const list = document.getElementById('studentBroadcastList');
+        if (!list) return;
+        list.innerHTML = (d.broadcasts||[]).length === 0
+            ? '<div class="text-muted text-center py-3">No announcements yet.</div>'
+            : d.broadcasts.map(b => `
+                <div class="card border-0 bg-light p-3 mb-2">
+                  <div class="d-flex justify-content-between align-items-start mb-1">
+                    <strong class="small">${b.title}</strong>
+                    <span class="badge ${b.target_role==='all'?'bg-primary':b.target_role==='student'?'bg-success':'bg-warning text-dark'}">${b.target_role}</span>
+                  </div>
+                  <p class="text-muted small mb-1">${b.message}</p>
+                  <small class="text-muted">${new Date(b.created_at).toLocaleString()}</small>
+                </div>`).join('');
+    } catch {}
+}
+
+document.getElementById('studentContactForm').addEventListener('submit', async function(e) {
+    e.preventDefault();
+    if (!confirm('Send this message to the admin?')) return;
+    const btn = document.getElementById('studentContactBtn');
+    const suc = document.getElementById('studentContactSuccess');
+    const err = document.getElementById('studentContactError');
+    suc.classList.add('d-none'); err.classList.add('d-none');
+    btn.disabled = true; btn.innerHTML = '<span class="spinner-border spinner-border-sm me-2"></span>Sending...';
+    try {
+        const res  = await fetch('api/contact.php', {
+            method: 'POST', headers: {'Content-Type':'application/json'},
+            body: JSON.stringify({
+                action:  'send',
+                name:    user.name,
+                email:   user.email || 'student@flashlearn',
+                subject: document.getElementById('studentContactSubject').value,
+                message: document.getElementById('studentContactMessage').value.trim()
+            })
+        });
+        const text = await res.text();
+        let data; try { data = JSON.parse(text); } catch { data = {success:false, message: text.substring(0,200)}; }
+        if (data.success) { suc.classList.remove('d-none'); this.reset(); }
+        else { err.textContent = data.message || 'Failed to send.'; err.classList.remove('d-none'); }
+    } catch { err.textContent = 'Cannot reach server.'; err.classList.remove('d-none'); }
+    btn.disabled = false; btn.innerHTML = '<i class="fas fa-paper-plane me-2"></i>Send to Admin';
+});
+
 // Init
 loadOverview();
+FL_NOTIFY.requestPermission();
+function toggleSidebar() {
+    document.getElementById('sidebar').classList.toggle('open');
+    document.getElementById('sidebarOverlay').classList.toggle('active');
+}
+function closeSidebar() {
+    document.getElementById('sidebar').classList.remove('open');
+    document.getElementById('sidebarOverlay').classList.remove('active');
+}
+// Close sidebar when a nav link is clicked on mobile
+document.querySelectorAll('.sidebar .nav-link').forEach(function(link) {
+    link.addEventListener('click', function() {
+        if (window.innerWidth <= 768) closeSidebar();
+    });
+});
 
 // Handle search query from public pages
 const savedSearch = sessionStorage.getItem('fl_search_query');

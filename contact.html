@@ -32,7 +32,7 @@
                     </div>
                 </form>
                 <div class="d-flex align-items-center gap-2" id="navAuthArea">
-                    <button class="theme-toggle" onclick="toggleTheme()" title="Toggle dark/light mode"><i class="fas fa-moon icon-moon"></i><i class="fas fa-sun icon-sun"></i></button><a href="login.html" class="btn btn-outline-success rounded-pill px-3">Log In</a><a href="signup.html" class="btn moodle-btn-primary rounded-pill px-3">Sign Up</a></div>
+                    <a href="login.html" class="btn btn-outline-success rounded-pill px-3">Log In</a><a href="signup.html" class="btn moodle-btn-primary rounded-pill px-3">Sign Up</a></div>
             </div>
         </div>
     </nav>
@@ -42,30 +42,33 @@
             <!-- Contact Form -->
             <div class="col-md-6">
                 <h2 class="fw-bold mb-4">Get in Touch</h2>
-                <form action="#" class="row g-3">
+                <div id="contactSuccess" class="alert alert-success d-none"><i class="fas fa-check-circle me-2"></i>Your message has been sent! We'll get back to you within 2 business days.</div>
+                <div id="contactError" class="alert alert-danger d-none"></div>
+                <form id="contactForm" class="row g-3">
                     <div class="col-md-6">
                         <label class="form-label">Full Name</label>
-                        <input type="text" class="form-control" placeholder="Flash Taiga">
+                        <input type="text" id="contactName" class="form-control" placeholder="Flash Taiga" required>
                     </div>
                     <div class="col-md-6">
                         <label class="form-label">Email Address</label>
-                        <input type="email" class="form-control" placeholder="name@email.com">
+                        <input type="email" id="contactEmail" class="form-control" placeholder="name@email.com" required>
                     </div>
                     <div class="col-md-12">
                         <label class="form-label">Subject</label>
-                        <select class="form-select">
+                        <select id="contactSubject" class="form-select">
                             <option>Booking Inquiry</option>
                             <option>Technical Support</option>
                             <option>Tutor Application</option>
+                            <option>Complaint</option>
                             <option>Other</option>
                         </select>
                     </div>
                     <div class="col-md-12">
                         <label class="form-label">Your Message</label>
-                        <textarea class="form-control" rows="5"></textarea>
+                        <textarea id="contactMessage" class="form-control" rows="5" required></textarea>
                     </div>
                     <div class="col-md-12">
-                        <button class="btn btn-primary px-5 py-2 rounded-pill">Send Message <i class="fas fa-paper-plane ms-2"></i></button>
+                        <button type="submit" class="btn btn-primary px-5 py-2 rounded-pill" id="contactBtn">Send Message <i class="fas fa-paper-plane ms-2"></i></button>
                     </div>
                 </form>
             </div>
@@ -175,7 +178,6 @@
     <script>
         const u = getCurrentUser();
         if (u) document.getElementById('navAuthArea').innerHTML = `
-            <button class="theme-toggle" onclick="toggleTheme()"><i class="fas fa-moon icon-moon"></i><i class="fas fa-sun icon-sun"></i></button>
             <a href="${u.role==='admin'?'dashboard-admin.html':u.role==='tutor'?'dashboard-tutor.html':'dashboard-student.html'}" class="btn moodle-btn-primary rounded-pill px-3">Dashboard</a>
             <button onclick="logout()" class="btn btn-outline-danger rounded-pill px-3">Logout</button>`;
         function globalSearch(e) {
@@ -187,6 +189,59 @@
             else if (uu) { window.location.href = 'dashboard-' + uu.role + '.html'; }
             else { sessionStorage.setItem('fl_search_query', q); window.location.href = 'signup.html'; }
         }
+
+        // ── Contact Form Submission ───────────────────────────
+        document.getElementById('contactForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            const btn     = document.getElementById('contactBtn');
+            const success = document.getElementById('contactSuccess');
+            const error   = document.getElementById('contactError');
+            success.classList.add('d-none');
+            error.classList.add('d-none');
+
+            // Confirmation popup before sending
+            if (!confirm('Send your message to Flash Learning support?')) return;
+
+            btn.disabled = true;
+            btn.innerHTML = '<span class="spinner-border spinner-border-sm me-2"></span>Sending...';
+            try {
+                const res  = await fetch('api/contact.php', {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify({
+                        action:  'send',
+                        name:    document.getElementById('contactName').value.trim(),
+                        email:   document.getElementById('contactEmail').value.trim(),
+                        subject: document.getElementById('contactSubject').value,
+                        message: document.getElementById('contactMessage').value.trim()
+                    })
+                });
+                const text = await res.text();
+                let data;
+                try { data = JSON.parse(text); }
+                catch {
+                    error.textContent = 'Server error: ' + text.substring(0, 300);
+                    error.classList.remove('d-none');
+                    btn.disabled = false;
+                    btn.innerHTML = 'Send Message <i class="fas fa-paper-plane ms-2"></i>';
+                    return;
+                }
+                if (data.success) {
+                    success.classList.remove('d-none');
+                    document.getElementById('contactForm').reset();
+                    // Scroll to success message
+                    success.scrollIntoView({behavior:'smooth', block:'center'});
+                } else {
+                    error.textContent = data.message || 'Failed to send. Please try again.';
+                    error.classList.remove('d-none');
+                }
+            } catch {
+                error.textContent = 'Cannot reach server. Please check your connection.';
+                error.classList.remove('d-none');
+            }
+            btn.disabled = false;
+            btn.innerHTML = 'Send Message <i class="fas fa-paper-plane ms-2"></i>';
+        });
     </script>
 </body>
 </html>

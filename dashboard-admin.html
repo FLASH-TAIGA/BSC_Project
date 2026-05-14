@@ -25,13 +25,14 @@
         .chat-box{height:320px;overflow-y:auto;background:#f8f9fa;border-radius:0.75rem;padding:1rem;}
         .msg-bubble{max-width:75%;padding:0.5rem 0.9rem;border-radius:1rem;margin-bottom:0.4rem;font-size:0.85rem;}
         .msg-in{background:#e9ecef;color:#333;} .msg-out{background:#ffc107;color:#333;margin-left:auto;}
-        @media(max-width:768px){.sidebar{width:100%;min-height:auto;position:relative;}.main-content{margin-left:0;}}
+        @media(max-width:768px){.main-content{margin-left:0;}}
     </style>
 </head>
 <body>
+<div class="sidebar-overlay" id="sidebarOverlay" onclick="closeSidebar()"></div>
 <div class="d-flex">
     <!-- SIDEBAR -->
-    <div class="sidebar">
+    <div class="sidebar" id="sidebar">
         <div class="brand"><span>~</span>FL<span>~</span> Admin</div>
         <nav class="nav flex-column mt-3">
             <a class="nav-link active" href="#" onclick="showSection('overview',this)"><i class="fas fa-th-large me-2"></i>Overview</a>
@@ -40,6 +41,8 @@
             <a class="nav-link" href="#" onclick="showSection('sessions',this)"><i class="fas fa-calendar-alt me-2"></i>All Sessions</a>
             <a class="nav-link" href="#" onclick="showSection('materials',this)"><i class="fas fa-file-alt me-2"></i>Materials</a>
             <a class="nav-link" href="#" onclick="showSection('chat',this)"><i class="fas fa-comments me-2"></i>Chat</a>
+            <a class="nav-link" href="#" onclick="showSection('complaints',this)"><i class="fas fa-envelope me-2"></i>Complaints <span class="badge bg-danger ms-1" id="unreadComplaintsBadge" style="display:none;">0</span></a>
+            <a class="nav-link" href="#" onclick="showSection('broadcast',this)"><i class="fas fa-bullhorn me-2"></i>Broadcast</a>
             <a class="nav-link" href="#" onclick="showSection('reports',this)"><i class="fas fa-chart-bar me-2"></i>Reports</a>
             <a class="nav-link" href="#" onclick="showSection('revenue',this)"><i class="fas fa-coins me-2"></i>Revenue</a>
             <a class="nav-link" href="#" onclick="showSection('settings',this)"><i class="fas fa-cog me-2"></i>Settings</a>
@@ -56,7 +59,9 @@
     <div class="main-content flex-grow-1">
         <!-- TOPBAR -->
         <div class="topbar d-flex justify-content-between align-items-center">
-            <button class="theme-toggle" onclick="toggleTheme()" title="Toggle dark/light mode"><i class="fas fa-moon icon-moon"></i><i class="fas fa-sun icon-sun"></i></button>
+            <div class="d-flex align-items-center gap-2">
+                <button class="sidebar-toggle" onclick="toggleSidebar()" title="Menu"><i class="fas fa-bars"></i></button>
+            </div>
             <h5 class="mb-0 fw-bold" id="pageTitle">Admin Overview</h5>
             <div class="d-flex align-items-center gap-3">
                 <span class="badge bg-danger px-3 py-2">Administrator</span>
@@ -173,6 +178,68 @@
             </div>
         </div>
 
+        <!-- SECTION: COMPLAINTS -->
+        <div id="section-complaints" class="d-none">
+            <div class="card border-0 shadow-sm rounded-3 p-4">
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <h6 class="fw-bold mb-0"><i class="fas fa-envelope me-2 text-danger"></i>Contact Form Messages &amp; Complaints</h6>
+                    <div class="d-flex gap-2">
+                        <button class="btn btn-sm btn-outline-secondary" onclick="loadComplaints()"><i class="fas fa-sync-alt me-1"></i>Refresh</button>
+                        <button class="btn btn-sm btn-outline-success" onclick="markAllRead()">Mark All Read</button>
+                    </div>
+                </div>
+                <div class="table-responsive">
+                    <table class="table table-hover">
+                        <thead class="table-dark"><tr><th>Name</th><th>Email</th><th>Subject</th><th>Message</th><th>Date</th><th>Status</th><th>Actions</th></tr></thead>
+                        <tbody id="complaintsBody"><tr><td colspan="7" class="text-center text-muted">Loading...</td></tr></tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- SECTION: BROADCAST -->
+        <div id="section-broadcast" class="d-none">
+            <div class="row g-4">
+                <div class="col-md-6">
+                    <div class="card border-0 shadow-sm rounded-3 p-4">
+                        <h6 class="fw-bold mb-3"><i class="fas fa-bullhorn me-2 text-warning"></i>Send Announcement</h6>
+                        <div id="broadcastSuccess" class="alert alert-success d-none"><i class="fas fa-check-circle me-2"></i>Announcement sent successfully!</div>
+                        <div id="broadcastError" class="alert alert-danger d-none"></div>
+                        <form id="broadcastForm">
+                            <div class="mb-3">
+                                <label class="form-label fw-semibold">Title</label>
+                                <input type="text" id="broadcastTitle" class="form-control" placeholder="e.g. Platform Maintenance Notice" required>
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label fw-semibold">Send To</label>
+                                <select id="broadcastTarget" class="form-select">
+                                    <option value="all">All Users (Students &amp; Tutors)</option>
+                                    <option value="student">Students Only</option>
+                                    <option value="tutor">Tutors Only</option>
+                                </select>
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label fw-semibold">Message</label>
+                                <textarea id="broadcastMessage" class="form-control" rows="5" placeholder="Write your announcement here..." required></textarea>
+                            </div>
+                            <button type="submit" class="btn btn-warning w-100 fw-bold" id="broadcastBtn">
+                                <i class="fas fa-paper-plane me-2"></i>Send Announcement
+                            </button>
+                        </form>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="card border-0 shadow-sm rounded-3 p-4">
+                        <div class="d-flex justify-content-between align-items-center mb-3">
+                            <h6 class="fw-bold mb-0">Sent Announcements</h6>
+                            <button class="btn btn-sm btn-outline-secondary" onclick="loadBroadcastSection()"><i class="fas fa-sync-alt me-1"></i>Refresh</button>
+                        </div>
+                        <div id="broadcastList"><div class="text-muted text-center py-3">Loading...</div></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
         <!-- SECTION: REPORTS -->
         <div id="section-reports" class="d-none">
             <div class="row g-4">
@@ -250,10 +317,11 @@
 
 <script src="libs/bootstrap/js/bootstrap.bundle.min.js"></script>
 <script src="auth.js"></script>
+<script src="notify.js"></script>
 <script>
 requireAuth('admin');
 
-const SECTIONS = ['overview','users','tutors','sessions','materials','chat','reports','revenue','settings'];
+const SECTIONS = ['overview','users','tutors','sessions','materials','chat','complaints','broadcast','reports','revenue','settings'];
 
 function showSection(id, el) {
     SECTIONS.forEach(s => {
@@ -267,15 +335,18 @@ function showSection(id, el) {
     const titles = {
         overview:'Admin Overview', users:'Manage Users', tutors:'Tutor Profiles',
         sessions:'All Sessions', materials:'Materials', chat:'Message Monitor',
+        complaints:'Complaints & Contact Messages', broadcast:'Broadcast to Users',
         reports:'Reports', revenue:'Revenue', settings:'Settings'
     };
     document.getElementById('pageTitle').textContent = titles[id] || id;
     if (id==='overview' || id==='users') loadUsers();
-    if (id==='tutors')    loadTutorProfiles();
-    if (id==='sessions')  loadSessions();
-    if (id==='materials') loadMaterials();
-    if (id==='chat')      loadAllMessages();
-    if (id==='revenue')   loadRevenue();
+    if (id==='tutors')      loadTutorProfiles();
+    if (id==='sessions')    loadSessions();
+    if (id==='materials')   loadMaterials();
+    if (id==='chat')        loadAllMessages();
+    if (id==='complaints')  loadComplaints();
+    if (id==='broadcast')   loadBroadcastSection();
+    if (id==='revenue')     loadRevenue();
 }
 
 // ── Users ─────────────────────────────────────────────────
@@ -468,6 +539,109 @@ async function adminDeleteMsg(id) {
     } catch {}
 }
 
+// ── Complaints ────────────────────────────────────────────
+async function loadComplaints() {
+    try {
+        const r = await fetch('api/contact.php');
+        const d = await r.json();
+        const badge = document.getElementById('unreadComplaintsBadge');
+        if (d.unread > 0) {
+            badge.textContent = d.unread;
+            badge.style.display = 'inline';
+        } else {
+            badge.style.display = 'none';
+        }
+        const tbody = document.getElementById('complaintsBody');
+        tbody.innerHTML = (d.messages||[]).length === 0
+            ? '<tr><td colspan="7" class="text-center text-muted">No messages yet</td></tr>'
+            : d.messages.map(m => `<tr class="${m.is_read=='0'?'table-warning':''}">
+                <td><strong>${m.name}</strong></td>
+                <td><a href="mailto:${m.email}" class="text-success">${m.email}</a></td>
+                <td><span class="badge bg-secondary">${m.subject}</span></td>
+                <td style="max-width:250px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;" title="${m.message}">${m.message}</td>
+                <td class="text-muted small">${new Date(m.created_at).toLocaleString()}</td>
+                <td>${m.is_read=='0'?'<span class="badge bg-warning text-dark">Unread</span>':'<span class="badge bg-success">Read</span>'}</td>
+                <td>
+                    ${m.is_read=='0'?`<button class="btn btn-sm btn-outline-success me-1" onclick="markRead(${m.id})">Mark Read</button>`:''}
+                    <button class="btn btn-sm btn-outline-danger" onclick="deleteComplaint(${m.id})">Delete</button>
+                </td>
+              </tr>`).join('');
+    } catch { document.getElementById('complaintsBody').innerHTML = '<tr><td colspan="7" class="text-center text-danger">Could not load messages.</td></tr>'; }
+}
+
+async function markRead(id) {
+    await fetch('api/contact.php', {method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify({action:'mark_read', id})});
+    loadComplaints();
+}
+
+async function markAllRead() {
+    await fetch('api/contact.php', {method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify({action:'mark_all_read'})});
+    loadComplaints();
+}
+
+async function deleteComplaint(id) {
+    if (!confirm('Delete this message?')) return;
+    await fetch('api/contact.php', {method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify({action:'delete', id})});
+    loadComplaints();
+}
+
+// ── Broadcast ─────────────────────────────────────────────
+async function loadBroadcastSection() {
+    try {
+        const r = await fetch('api/broadcast.php');
+        const d = await r.json();
+        const list = document.getElementById('broadcastList');
+        list.innerHTML = (d.broadcasts||[]).length === 0
+            ? '<div class="text-muted text-center py-3">No announcements sent yet.</div>'
+            : d.broadcasts.map(b => `
+                <div class="card border-0 bg-light p-3 mb-2">
+                  <div class="d-flex justify-content-between align-items-start">
+                    <div>
+                      <strong class="small">${b.title}</strong>
+                      <span class="badge ms-2 ${b.target_role==='all'?'bg-primary':b.target_role==='student'?'bg-success':'bg-warning text-dark'}">${b.target_role}</span>
+                    </div>
+                    <button class="btn btn-sm btn-outline-danger py-0" onclick="deleteBroadcast(${b.id})"><i class="fas fa-trash"></i></button>
+                  </div>
+                  <p class="text-muted small mb-1 mt-1">${b.message}</p>
+                  <small class="text-muted">${new Date(b.created_at).toLocaleString()}</small>
+                </div>`).join('');
+    } catch { document.getElementById('broadcastList').innerHTML = '<div class="text-danger small">Could not load.</div>'; }
+}
+
+document.getElementById('broadcastForm').addEventListener('submit', async function(e) {
+    e.preventDefault();
+    if (!confirm('Send this announcement to all selected users?')) return;
+    const btn = document.getElementById('broadcastBtn');
+    const suc = document.getElementById('broadcastSuccess');
+    const err = document.getElementById('broadcastError');
+    suc.classList.add('d-none'); err.classList.add('d-none');
+    btn.disabled = true; btn.innerHTML = '<span class="spinner-border spinner-border-sm me-2"></span>Sending...';
+    try {
+        const res  = await fetch('api/broadcast.php', {
+            method: 'POST', headers: {'Content-Type':'application/json'},
+            body: JSON.stringify({
+                action:      'send',
+                title:       document.getElementById('broadcastTitle').value.trim(),
+                message:     document.getElementById('broadcastMessage').value.trim(),
+                target_role: document.getElementById('broadcastTarget').value,
+                sent_by:     'Administrator'
+            })
+        });
+        const data = await res.json();
+        if (data.success) { suc.classList.remove('d-none'); this.reset(); loadBroadcastSection();
+            FL_NOTIFY.show('📢 Broadcast Sent', 'Your announcement has been sent to ' + document.getElementById('broadcastTarget').value + ' users.', 'dashboard-admin.html');
+        }
+        else { err.textContent = data.message || 'Failed to send.'; err.classList.remove('d-none'); }
+    } catch { err.textContent = 'Cannot reach server.'; err.classList.remove('d-none'); }
+    btn.disabled = false; btn.innerHTML = '<i class="fas fa-paper-plane me-2"></i>Send Announcement';
+});
+
+async function deleteBroadcast(id) {
+    if (!confirm('Delete this announcement?')) return;
+    await fetch('api/broadcast.php', {method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify({action:'delete', id})});
+    loadBroadcastSection();
+}
+
 // ── Revenue ───────────────────────────────────────────────
 async function loadRevenue() {
     try {
@@ -492,8 +666,33 @@ async function loadRevenue() {
     } catch {}
 }
 
+// ── Sidebar toggle (mobile) ───────────────────────────────
+function toggleSidebar() {
+    document.getElementById('sidebar').classList.toggle('open');
+    document.getElementById('sidebarOverlay').classList.toggle('active');
+}
+function closeSidebar() {
+    document.getElementById('sidebar').classList.remove('open');
+    document.getElementById('sidebarOverlay').classList.remove('active');
+}
+document.querySelectorAll('.sidebar .nav-link').forEach(function(link) {
+    link.addEventListener('click', function() {
+        if (window.innerWidth <= 768) closeSidebar();
+    });
+});
+
 // ── Init ──────────────────────────────────────────────────
 loadUsers();
+FL_NOTIFY.requestPermission();
+
+// Check unread complaints badge on load
+fetch('api/contact.php').then(r=>r.json()).then(d=>{
+    if (d.unread > 0) {
+        const b = document.getElementById('unreadComplaintsBadge');
+        b.textContent = d.unread;
+        b.style.display = 'inline';
+    }
+}).catch(()=>{});
 </script>
 </body>
 </html>
