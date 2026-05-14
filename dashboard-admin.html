@@ -108,16 +108,19 @@
             <div class="card border-0 shadow-sm rounded-3 p-4">
                 <div class="d-flex justify-content-between align-items-center mb-3">
                     <h6 class="fw-bold mb-0">All Registered Users</h6>
-                    <select class="form-select form-select-sm" style="width:160px;" id="roleFilter" onchange="filterUsers()">
-                        <option value="all">All Roles</option>
-                        <option value="student">Students</option>
-                        <option value="tutor">Tutors</option>
-                    </select>
+                    <div class="d-flex gap-2">
+                        <input type="text" class="form-control form-control-sm" id="userSearchInput" placeholder="Search name or email..." oninput="filterUserTable()" style="width:220px;">
+                        <select class="form-select form-select-sm" style="width:140px;" id="roleFilter" onchange="filterUsers()">
+                            <option value="all">All Roles</option>
+                            <option value="student">Students</option>
+                            <option value="tutor">Tutors</option>
+                        </select>
+                    </div>
                 </div>
                 <div class="table-responsive">
                     <table class="table table-hover">
-                        <thead class="table-dark"><tr><th>#</th><th>Name</th><th>Email</th><th>Role</th><th>Joined</th><th>Actions</th></tr></thead>
-                        <tbody id="allUsersBody"><tr><td colspan="6" class="text-center text-muted">No users yet</td></tr></tbody>
+                        <thead class="table-dark"><tr><th>#</th><th>Photo</th><th>Name</th><th>Email</th><th>Role</th><th>Joined</th><th>Actions</th></tr></thead>
+                        <tbody id="allUsersBody"><tr><td colspan="7" class="text-center text-muted">No users yet</td></tr></tbody>
                     </table>
                 </div>
             </div>
@@ -126,11 +129,14 @@
         <!-- SECTION: TUTORS -->
         <div id="section-tutors" class="d-none">
             <div class="card border-0 shadow-sm rounded-3 p-4">
-                <h6 class="fw-bold mb-3">Tutor Profiles &amp; Approval</h6>
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <h6 class="fw-bold mb-0">Tutor Profiles &amp; Approval</h6>
+                    <input type="text" class="form-control form-control-sm" id="tutorSearchInput" placeholder="Search name or subject..." oninput="filterTutorTable()" style="width:260px;">
+                </div>
                 <div class="table-responsive">
                     <table class="table table-hover">
-                        <thead class="table-dark"><tr><th>Name</th><th>Qualification</th><th>Subjects</th><th>Rate (XAF/hr)</th><th>Approved</th><th>Actions</th></tr></thead>
-                        <tbody id="tutorProfilesBody"><tr><td colspan="6" class="text-center text-muted">No tutors yet</td></tr></tbody>
+                        <thead class="table-dark"><tr><th>Photo</th><th>Name</th><th>Qualification</th><th>Subjects</th><th>Rate (XAF/hr)</th><th>Approved</th><th>Actions</th></tr></thead>
+                        <tbody id="tutorProfilesBody"><tr><td colspan="7" class="text-center text-muted">No tutors yet</td></tr></tbody>
                     </table>
                 </div>
             </div>
@@ -392,19 +398,25 @@ async function loadUsers() {
     const allBody    = document.getElementById('allUsersBody');
     if (recentBody) recentBody.innerHTML = users.length === 0
         ? '<tr><td colspan="4" class="text-center text-muted">No users yet</td></tr>'
-        : users.slice(0,5).map(u => `<tr>
-            <td>${u.name}</td><td>${u.email}</td>
-            <td><span class="badge ${u.role==='tutor'?'bg-danger':'bg-primary'}">${u.role}</span></td>
-            <td><button class="btn btn-sm btn-outline-danger" onclick="deleteUser(${u.id})">Remove</button></td>
-          </tr>`).join('');
+        : users.slice(0,5).map(u => {
+            const avatar = u.photo_filename
+                ? `<img src="image/${u.photo_filename}" style="width:36px;height:36px;border-radius:50%;object-fit:cover;">`
+                : `<div class="rounded-circle ${u.role==='tutor'?'bg-danger':'bg-primary'} bg-opacity-10 d-inline-flex align-items-center justify-content-center" style="width:36px;height:36px;font-weight:700;font-size:0.9rem;">${u.name.charAt(0)}</div>`;
+            return `<tr><td>${avatar}</td><td>${u.name}</td><td>${u.email}</td><td><span class="badge ${u.role==='tutor'?'bg-danger':'bg-primary'}">${u.role}</span></td><td><button class="btn btn-sm btn-outline-danger" onclick="deleteUser(${u.id})">Remove</button></td></tr>`;
+          }).join('');
     if (allBody) allBody.innerHTML = users.length === 0
-        ? '<tr><td colspan="6" class="text-center text-muted">No users yet</td></tr>'
-        : users.map((u,i) => `<tr>
-            <td>${i+1}</td><td>${u.name}</td><td>${u.email}</td>
-            <td><span class="badge ${u.role==='tutor'?'bg-danger':'bg-primary'}">${u.role}</span></td>
-            <td>${u.created_at||'—'}</td>
-            <td><button class="btn btn-sm btn-outline-danger" onclick="deleteUser(${u.id})">Remove</button></td>
-          </tr>`).join('');
+        ? '<tr><td colspan="7" class="text-center text-muted">No users yet</td></tr>'
+        : users.map((u,i) => {
+            const avatar = u.photo_filename
+                ? `<img src="image/${u.photo_filename}" style="width:36px;height:36px;border-radius:50%;object-fit:cover;">`
+                : `<div class="rounded-circle ${u.role==='tutor'?'bg-danger':'bg-primary'} bg-opacity-10 d-inline-flex align-items-center justify-content-center" style="width:36px;height:36px;font-weight:700;font-size:0.9rem;">${u.name.charAt(0)}</div>`;
+            return `<tr data-name="${u.name.toLowerCase()}" data-email="${u.email.toLowerCase()}" data-role="${u.role}">
+                <td>${i+1}</td><td>${avatar}</td><td>${u.name}</td><td>${u.email}</td>
+                <td><span class="badge ${u.role==='tutor'?'bg-danger':'bg-primary'}">${u.role}</span></td>
+                <td>${u.created_at||'—'}</td>
+                <td><button class="btn btn-sm btn-outline-danger" onclick="deleteUser(${u.id})">Remove</button></td>
+              </tr>`;
+          }).join('');
 }
 
 async function filterUsers() {
@@ -413,13 +425,26 @@ async function filterUsers() {
     const users = role === 'all' ? all : all.filter(u => u.role === role);
     const allBody = document.getElementById('allUsersBody');
     allBody.innerHTML = users.length === 0
-        ? '<tr><td colspan="6" class="text-center text-muted">No users found</td></tr>'
-        : users.map((u,i) => `<tr>
-            <td>${i+1}</td><td>${u.name}</td><td>${u.email}</td>
-            <td><span class="badge ${u.role==='tutor'?'bg-danger':'bg-primary'}">${u.role}</span></td>
-            <td>${u.created_at||'—'}</td>
-            <td><button class="btn btn-sm btn-outline-danger" onclick="deleteUser(${u.id})">Remove</button></td>
-          </tr>`).join('');
+        ? '<tr><td colspan="7" class="text-center text-muted">No users found</td></tr>'
+        : users.map((u,i) => {
+            const avatar = u.photo_filename
+                ? `<img src="image/${u.photo_filename}" style="width:36px;height:36px;border-radius:50%;object-fit:cover;">`
+                : `<div class="rounded-circle ${u.role==='tutor'?'bg-danger':'bg-primary'} bg-opacity-10 d-inline-flex align-items-center justify-content-center" style="width:36px;height:36px;font-weight:700;font-size:0.9rem;">${u.name.charAt(0)}</div>`;
+            return `<tr data-name="${u.name.toLowerCase()}" data-email="${u.email.toLowerCase()}" data-role="${u.role}">
+                <td>${i+1}</td><td>${avatar}</td><td>${u.name}</td><td>${u.email}</td>
+                <td><span class="badge ${u.role==='tutor'?'bg-danger':'bg-primary'}">${u.role}</span></td>
+                <td>${u.created_at||'—'}</td>
+                <td><button class="btn btn-sm btn-outline-danger" onclick="deleteUser(${u.id})">Remove</button></td>
+              </tr>`;
+          }).join('');
+}
+
+function filterUserTable() {
+    const q = document.getElementById('userSearchInput').value.toLowerCase().trim();
+    document.querySelectorAll('#allUsersBody tr[data-name]').forEach(row => {
+        const match = !q || row.dataset.name.includes(q) || row.dataset.email.includes(q) || row.dataset.role.includes(q);
+        row.style.display = match ? '' : 'none';
+    });
 }
 
 // ── Tutors ────────────────────────────────────────────────
@@ -429,23 +454,37 @@ async function loadTutorProfiles() {
     const tutors = d.success ? d.tutors : [];
     const tbody  = document.getElementById('tutorProfilesBody');
     tbody.innerHTML = tutors.length === 0
-        ? '<tr><td colspan="6" class="text-center text-muted">No tutors yet</td></tr>'
-        : tutors.map(t => `<tr>
-            <td>${t.name}</td>
-            <td>${t.qualification||'—'}</td>
-            <td>${t.subjects||'—'}</td>
-            <td><strong>${parseInt(t.hourly_rate||5000).toLocaleString()} XAF</strong></td>
-            <td>${t.is_approved=='1'
-                ? '<span class="badge bg-success">Approved</span>'
-                : '<span class="badge bg-warning text-dark">Pending</span>'}</td>
-            <td>
-              <button class="btn btn-sm ${t.is_approved=='1'?'btn-outline-warning':'btn-outline-success'} me-1"
-                onclick="toggleApprove(${t.id},${t.is_approved=='1'?0:1})">
-                ${t.is_approved=='1'?'Revoke':'Approve'}
-              </button>
-              <button class="btn btn-sm btn-outline-primary" onclick="setRate(${t.id})">Set Rate</button>
-            </td>
-          </tr>`).join('');
+        ? '<tr><td colspan="7" class="text-center text-muted">No tutors yet</td></tr>'
+        : tutors.map(t => {
+            const avatar = t.photo_filename
+                ? `<img src="image/${t.photo_filename}" style="width:40px;height:40px;border-radius:50%;object-fit:cover;">`
+                : `<div class="rounded-circle bg-danger bg-opacity-10 text-danger d-inline-flex align-items-center justify-content-center" style="width:40px;height:40px;font-weight:700;">${t.name.charAt(0)}</div>`;
+            return `<tr data-name="${t.name.toLowerCase()}" data-subjects="${(t.subjects||'').toLowerCase()}">
+                <td>${avatar}</td>
+                <td>${t.name}</td>
+                <td>${t.qualification||'—'}</td>
+                <td style="max-width:180px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;" title="${t.subjects||''}">${t.subjects||'—'}</td>
+                <td><strong>${parseInt(t.hourly_rate||5000).toLocaleString()} XAF</strong></td>
+                <td>${t.is_approved=='1'
+                    ? '<span class="badge bg-success">Approved</span>'
+                    : '<span class="badge bg-warning text-dark">Pending</span>'}</td>
+                <td>
+                  <button class="btn btn-sm ${t.is_approved=='1'?'btn-outline-warning':'btn-outline-success'} me-1"
+                    onclick="toggleApprove(${t.id},${t.is_approved=='1'?0:1})">
+                    ${t.is_approved=='1'?'Revoke':'Approve'}
+                  </button>
+                  <button class="btn btn-sm btn-outline-primary" onclick="setRate(${t.id})">Set Rate</button>
+                </td>
+              </tr>`;
+          }).join('');
+}
+
+function filterTutorTable() {
+    const q = document.getElementById('tutorSearchInput').value.toLowerCase().trim();
+    document.querySelectorAll('#tutorProfilesBody tr[data-name]').forEach(row => {
+        const match = !q || row.dataset.name.includes(q) || row.dataset.subjects.includes(q);
+        row.style.display = match ? '' : 'none';
+    });
 }
 
 async function toggleApprove(userId, val) {

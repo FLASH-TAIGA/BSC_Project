@@ -6,9 +6,19 @@ require_once 'config.php';
 $db = getDB();
 
 if ($_SERVER['REQUEST_METHOD'] === 'GET') {
-    $result = $db->query('SELECT id, name, email, role, created_at FROM users ORDER BY created_at DESC');
-    $users  = [];
+    $result = $db->query(
+        'SELECT u.id, u.name, u.email, u.role, u.created_at,
+                sp.photo_filename AS student_photo,
+                tp.photo_filename AS tutor_photo
+         FROM users u
+         LEFT JOIN student_profiles sp ON u.id = sp.user_id AND u.role = "student"
+         LEFT JOIN tutor_profiles   tp ON u.id = tp.user_id AND u.role = "tutor"
+         ORDER BY u.created_at DESC'
+    );
+    $users = [];
     while ($row = $result->fetch_assoc()) {
+        $row['photo_filename'] = $row['tutor_photo'] ?: $row['student_photo'] ?: null;
+        unset($row['student_photo'], $row['tutor_photo']);
         $users[] = $row;
     }
     $db->close();
