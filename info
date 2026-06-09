@@ -1,514 +1,583 @@
-
+﻿================================================================
+        FLASH LEARNING  COMPLETE SYSTEM DOCUMENTATION
 ================================================================
-        FLASH LEARNING — HOW THE WEBSITE WORKS
+  Last updated: May 2026
+  Platform: Peer-to-peer academic tutoring (Cameroon)
+  Local URL: http://10.232.170.188/flashlearn/
+  Live URL:  https://flashlearning.atwebpages.com
 ================================================================
 
+  +-----------------------------------------------------+
+  |                  ADMIN LOGIN                        |
+  |                                                     |
+  |  Email    :  admin@flashlearn.edu                   |
+  |  Password :  Admin@FL2026                           |
+  |  URL      :  /login.html                            |
+  +-----------------------------------------------------+
+
+
 
 ----------------------------------------------------------------
- WHAT IS FLASH LEARNING?
+ 1. WHAT IS FLASH LEARNING?
 ----------------------------------------------------------------
 
-Flash Learning is an online peer-to-peer tutoring platform built
-for university and high school students in Cameroon. It connects
-students who need academic help with qualified tutors who can
-teach them — either online or in person on campus. Payments are
-made via Mobile Money (MTN MoMo or Orange Money).
+Flash Learning is an online peer-to-peer tutoring platform
+built for university and high school students in Cameroon.
+It connects students who need academic help with qualified
+tutors who can teach them  either online or in person on
+campus. Payments are made via Mobile Money (MTN MoMo or
+Orange Money).
 
 
 ----------------------------------------------------------------
- THE THREE USER ROLES
+ 2. TECHNOLOGIES USED
+----------------------------------------------------------------
+
+  FRONTEND
+    Language   : HTML5, CSS3, JavaScript (vanilla  no framework)
+    UI Library : Bootstrap 5.3 (grid, components, utilities)
+    Icons      : Font Awesome 6 (all icons across the site)
+    Fonts      : Google Fonts (Open Sans, Playfair Display)
+    Storage    : sessionStorage (login session)
+                 localStorage (theme preference  removed)
+
+  BACKEND
+    Language   : PHP 8.2 (plain PHP, no framework)
+    DB Driver  : MySQLi extension (prepared statements)
+    Email      : PHP mail() function (built-in)
+    Uploads    : PHP move_uploaded_file()
+
+  DATABASE
+    Engine     : MySQL (relational database)
+    Charset    : utf8mb4 (full Unicode support)
+
+  HOSTING
+    Frontend   : AwardSpace (free shared hosting)
+                 URL: flashlearning.atwebpages.com
+    Backend    : Same AwardSpace account (PHP + MySQL together)
+    Local Dev  : XAMPP (Apache + MySQL + PHP)
+
+  NOTIFICATIONS
+    Browser    : Web Push API + Service Worker (sw.js)
+    Email      : PHP mail() via notify_email.php
+
+
+----------------------------------------------------------------
+ 3. THE THREE USER ROLES
 ----------------------------------------------------------------
 
   STUDENT
-    A student signs up, sets up their profile, browses tutors,
-    books sessions, accesses study materials, and chats with
-    tutors. They pay for sessions through Mobile Money.
+    Signs up, sets up profile, browses tutors, books sessions,
+    accesses study materials, chats with tutors, contacts admin.
+    Pays for sessions through Mobile Money.
 
   TUTOR
-    A tutor signs up, fills in their profile (qualification,
-    subjects, bio, photo), and waits for admin approval. Once
-    approved, students can see them, book sessions with them,
-    and message them. Tutors can also upload study materials
-    (PDFs) for students to access.
+    Signs up, fills in profile (qualification, subjects, bio,
+    photo), waits for admin approval. Once approved, students
+    can book sessions. Tutors upload study materials, manage
+    their schedule, view earnings, and contact admin.
 
   ADMIN
-    The admin is a single hardcoded account:
+    Single hardcoded account (not in the database):
       Email    : admin@flashlearn.edu
-      Password : Admin@FL2024
-    The admin approves tutors, manages all users, monitors
-    sessions, views platform revenue, and can delete messages
-    or materials.
+      Password : Admin@FL2026
+    Approves tutors, manages all users, monitors sessions,
+    views revenue, sends broadcasts, reads complaints.
 
 
 ----------------------------------------------------------------
- HOW A STUDENT USES THE SITE
+ 4. HOW A STUDENT USES THE SITE
 ----------------------------------------------------------------
 
-  1.  Goes to index.html (splash page) and clicks Sign Up
+  1.  Goes to index.html (splash page)  clicks Sign Up
   2.  Fills in name, email, password, selects "Student" role
   3.  Gets redirected to dashboard-student.html
-  4.  Sets up their profile — date of birth, optional photo,
-      and subjects they need help with
-  5.  The overview page shows recommended tutors based on
-      those subjects
+  4.  Sets up profile  date of birth, optional photo, and
+      subjects they need help with
+  5.  Overview shows recommended tutors based on subjects
   6.  To book a session:
         - Clicks "Book Session" in the sidebar
         - Searches for a tutor by name or subject
-        - Selects a tutor
-        - Fills in subject, date, time, and mode
-          (online or onsite)
+        - Selects a tutor (approved ones are bookable)
+        - Fills in subject, date, time, mode (online/onsite)
+        - If online: selects platform (Zoom, Meet, WhatsApp,
+          Telegram)
+        - If onsite: enters meeting spot + optional map view
         - Chooses payment method (MTN MoMo or Orange Money)
-        - Enters their phone number
-        - Payment is processed → booking is confirmed
-  7.  The booked session appears in "My Sessions" with status
-      "pending" until the tutor confirms it
-  8.  Students can access study notes and past papers in the
-      "Study Notes" and "Q&A Bank" sections
-  9.  Students can message any tutor directly through the
-      "Messages" section
+        - Enters phone number  confirmation popup  pay
+        - Booking confirmed with full receipt shown
+  7.  Session appears in "My Sessions" as "pending" until
+      the tutor confirms it
+  8.  Student receives browser notification + email on
+      session status changes
+  9.  Study notes and past papers in "Study Notes" / "Q&A Bank"
+  10. Messages any tutor via "Messages" section
+  11. Contacts admin via "Contact Admin" section
+  12. Views admin announcements in "Contact Admin" section
 
 
 ----------------------------------------------------------------
- HOW A TUTOR USES THE SITE
+ 5. HOW A TUTOR USES THE SITE
 ----------------------------------------------------------------
 
-  1.  Goes to index.html → clicks Sign Up → selects "Tutor"
+  1.  Goes to index.html  Sign Up  selects "Tutor" role
   2.  Gets redirected to dashboard-tutor.html
-  3.  A basic profile is auto-created immediately so they
-      appear in the system right away
-  4.  They fill in their full profile:
+  3.  A basic profile is auto-created immediately (visible
+      for messaging even before admin approval)
+  4.  Fills in full profile:
         - Date of birth
         - Qualification (Certificate / Diploma / Bachelor /
           Master / PhD)
         - Subjects they teach
         - Bio and optional photo
-  5.  Hourly rate is set automatically by qualification:
+  5.  Hourly rate set automatically by qualification:
 
-        Certificate  →  3,000 XAF/hr
-        Diploma      →  4,000 XAF/hr
-        Bachelor     →  5,000 XAF/hr
-        Master       →  7,000 XAF/hr
-        PhD          → 10,000 XAF/hr
+        Certificate    3,000 XAF/hr
+        Diploma        4,000 XAF/hr
+        Bachelor       5,000 XAF/hr
+        Master         7,000 XAF/hr
+        PhD           10,000 XAF/hr
 
-  6.  Admin must approve their profile before students can
-      book them (students can still message them immediately)
-  7.  When a student books a session, it appears in the
-      tutor's "My Schedule" with status "pending"
-  8.  The tutor can update the session status to:
-        confirmed / completed / cancelled
-  9.  Tutors can upload PDF study materials (notes, past
-      papers, exercises) for students to access
-  10. Tutors can view their earnings in "My Earnings":
-        - Gross amount paid by student
-        - 15% platform fee deducted
-        - Their 85% net earnings per session
+  6.  Admin must approve before students can book them
+  7.  When a student books, it appears in "My Schedule"
+      as "pending"  tutor updates to confirmed/completed
+  8.  Tutor receives browser notification + email on booking
+  9.  Uploads PDF study materials (notes, past papers,
+      exercises) for students
+  10. Views earnings in "My Earnings":
+        - Gross amount, 15% fee deducted, 85% net earnings
+  11. Contacts admin via "Contact Admin" section
+  12. Views admin announcements in "Contact Admin" section
 
 
 ----------------------------------------------------------------
- HOW THE ADMIN USES THE SITE
+ 6. HOW THE ADMIN USES THE SITE
 ----------------------------------------------------------------
 
-  1.  Logs in at login.html with the hardcoded credentials
-  2.  Gets redirected to dashboard-admin.html
+  Logs in at login.html  redirected to dashboard-admin.html
 
   Dashboard sections:
 
-    Overview    — Live counts: students, tutors, sessions
-                  this month, messages, pending sessions,
-                  and pending tutor approvals
+    Overview      Live counts: students, tutors, sessions
+                   this month, today, pending, messages,
+                   pending tutor approvals
 
-    Users       — All registered users, filter by role,
-                  remove any user
+    Users         All registered users with photos, search
+                   by name/email/role, remove any user
 
-    Tutors      — All tutor profiles, approve or revoke
-                  approval, manually set hourly rate
+    Tutors        All tutor profiles with photos, search by
+                   name/subject, approve/revoke, set rate
 
-    Sessions    — Every session on the platform, update
-                  any session's status
+    Sessions      Every session on the platform, update
+                   any session status
 
-    Materials   — All uploaded study materials, delete any
+    Materials     All uploaded study materials, delete any
 
-    Chat        — Monitor all messages, delete any message
+    Chat          Monitor all in-platform messages, delete
 
-    Revenue     — Total gross revenue, platform's 15% cut,
-                  total tutor payouts, breakdown per tutor
+    Complaints    All contact form messages from students,
+                   tutors, and public; mark read, delete;
+                   unread badge shows in sidebar
 
-    Settings    — Platform name, support email, phone,
-                  min/max session rates, maintenance mode
+    Broadcast     Send announcements to all users, students
+                   only, or tutors only; emails sent to all
+                   matching users automatically
+
+    Revenue       Total gross revenue, platform 15% cut,
+                   tutor payouts, breakdown per tutor
+
+    Reports       Session statistics by subject
+
+    Settings      Platform name, email, phone, rate limits
 
 
 ----------------------------------------------------------------
- THE PAYMENT SYSTEM
+ 7. THE PAYMENT SYSTEM
 ----------------------------------------------------------------
 
   When a student books a session and pays (e.g. 5,000 XAF):
 
-    Full amount paid by student  →  5,000 XAF
-    Platform fee (15%)           →    750 XAF  (to admin)
-    Tutor receives (85%)         →  4,250 XAF
+    Full amount paid by student    5,000 XAF
+    Platform fee (15%)               750 XAF  (to admin)
+    Tutor receives (85%)           4,250 XAF
 
-  - The split is calculated and stored in the database at
-    the moment of booking
-  - Tutors see their net earnings in their dashboard
-  - The admin sees total platform revenue in the Revenue
-    section
-  - Full details are in the Terms of Use page (terms.html)
-
-
-----------------------------------------------------------------
- THE DATABASE
-----------------------------------------------------------------
-
-  Database name: flashlearn
-
-  Table               What it stores
-  ----------------    ----------------------------------------
-  users               All accounts — name, email, hashed
-                      password, role
-  tutor_profiles      Tutor details — qualification, subjects,
-                      rate, approval status
-  student_profiles    Student details — DOB, subjects needing
-                      help, photo
-  sessions            All booked sessions — student, tutor,
-                      subject, date, amount, fee split, status
-  messages            All in-platform chat messages
-  materials           All uploaded PDFs — title, subject,
-                      type, filename
+  - Split calculated and stored in the database at booking
+  - Tutors see net earnings in "My Earnings" dashboard
+  - Admin sees total platform revenue in "Revenue" section
+  - Payment is simulated (MTN MoMo / Orange Money UI shown)
+  - Full details in terms.html (Terms of Use)
 
 
 ----------------------------------------------------------------
- THE API (BACKEND)
+ 8. THE DATABASE
 ----------------------------------------------------------------
 
-  All data is handled by PHP files in the /api/ folder:
+  Database name: flashlearn (local) / 4758498_flashlearn (live)
 
-  File                  What it does
-  ------------------    --------------------------------------
-  login.php             Checks credentials, returns user data
-  signup.php            Creates new account (auto-creates
-                        tutor profile if role is tutor)
-  tutors.php            Returns tutor list — approved only,
-                        all, or all for chat
-  profile.php           Gets or saves a tutor's profile
-  student_profile.php   Gets or saves a student's profile
-  sessions.php          Gets sessions and creates/updates them
-  materials.php         Lists materials, handles uploads and
-                        deletes
-  messages.php          Gets conversations, sends/deletes msgs
-  users.php             Lists all users, handles deletion
-  earnings.php          Earnings breakdown for tutor or admin
-  stats.php             Live platform stats (counts)
+  Table                What it stores
+  -------------------  ----------------------------------------
+  users                All accounts  name, email, hashed
+                       password (bcrypt), role, created_at
+  tutor_profiles       Tutor details  qualification, subjects,
+                       bio, hourly_rate, photo_filename,
+                       is_approved, date_of_birth
+  student_profiles     Student details  DOB, subjects needing
+                       help, bio, photo_filename
+  sessions             All booked sessions  student_id,
+                       tutor_id, subject, date, time, mode,
+                       platform, amount_paid, platform_fee
+                       (15%), tutor_earnings (85%), status
+  messages             In-platform chat  sender_id,
+                       receiver_id, message, is_read
+  materials            Uploaded PDFs  title, subject, type,
+                       filename, uploaded_by
+  contact_messages     Contact form submissions  name, email,
+                       subject, message, is_read
+  broadcasts           Admin announcements  title, message,
+                       target_role (all/student/tutor), sent_by
 
 
 ----------------------------------------------------------------
- KEY PAGES
+ 9. THE API (BACKEND  /api/ folder)
+----------------------------------------------------------------
+
+  File                  Method   What it does
+  --------------------  -------  ------------------------------
+  login.php             POST     Checks credentials, returns
+                                 user object. Checks hardcoded
+                                 admin first, then DB users
+                                 with password_verify()
+
+  signup.php            POST     Creates new user account.
+                                 Auto-creates basic tutor
+                                 profile if role is tutor
+
+  tutors.php            GET      Returns tutor list:
+                                 ?all=1  all tutors (admin)
+                                 ?chat=1  all for messaging
+                                 default  approved first
+
+  profile.php           GET/POST Gets or saves tutor profile.
+                                 Supports multipart (photo
+                                 upload). Admin can approve
+                                 or set rate via JSON POST
+
+  student_profile.php   GET/POST Gets or saves student profile.
+                                 Supports photo upload
+
+  sessions.php          GET/POST GET: filter by student_id,
+                                 tutor_id, or all.
+                                 POST action=book: creates
+                                 session, calculates fee split,
+                                 emails tutor.
+                                 POST action=update_status:
+                                 updates status, emails student
+
+  materials.php         GET/POST GET: list all materials.
+                                 POST: upload PDF or delete
+
+  messages.php          GET/POST GET: conversation between two
+                                 users, or all convos for user,
+                                 or all messages (admin).
+                                 POST: send or delete message
+
+  users.php             GET/POST GET: all users with photos
+                                 (joins student/tutor profiles).
+                                 POST action=delete: remove user
+
+  earnings.php          GET      ?tutor_id=X  tutor breakdown.
+                                 ?admin=1  platform revenue
+                                 and per-tutor breakdown
+
+  stats.php             GET      Live counts: students, tutors,
+                                 sessions, distinct subjects
+
+  contact.php           GET/POST GET: all contact messages.
+                                 POST action=send: save message,
+                                 email admin.
+                                 POST action=mark_read/delete/
+                                 mark_all_read
+
+  broadcast.php         GET/POST GET: all broadcasts (filter
+                                 by role).
+                                 POST action=send: save and
+                                 email all matching users.
+                                 POST action=delete
+
+  notify_email.php      (helper) Email templates  not a
+                                 public endpoint. Required by
+                                 sessions.php, contact.php,
+                                 broadcast.php. Uses PHP mail()
+
+
+----------------------------------------------------------------
+ 10. KEY PAGES
 ----------------------------------------------------------------
 
   Page                      Purpose
   ------------------------  ----------------------------------
-  index.html                Splash page — login or sign up
-  home.html                 Public homepage
-  about.html                About page — live stats, tutors
-  contact.html              Contact form and map
-  login.html                Login form
-  signup.html               Registration form
+  index.html                Splash page  login or sign up
+  home.html                 Public homepage  features,
+                            live tutors, student reviews
+  about.html                About page  live stats, subjects,
+                            live tutor grid (8 tutors max)
+  contact.html              Contact form (saves to DB + emails
+                            admin), map of CATUC campus
+  login.html                Login form (split layout with image)
+  signup.html               Registration form (split layout)
   dashboard-student.html    Full student dashboard
   dashboard-tutor.html      Full tutor dashboard
   dashboard-admin.html      Full admin dashboard
   terms.html                Terms of Use (13 sections)
   privacy.html              Privacy Policy (10 sections)
+  questions.html            Public study notes viewer
+  solutions.html            Public Q&A bank viewer
+  resources.html            Resources page
+  services.html             Services page
 
 
 ----------------------------------------------------------------
- IMPORTANT NOTES
+ 11. JAVASCRIPT FILES
 ----------------------------------------------------------------
 
-  - The site runs on XAMPP (Apache + MySQL). Both Apache and
-    MySQL must be running for the site to work.
+  auth.js       Core auth and API functions. Defines API_BASE
+                URL. All fetch() calls to the backend go
+                through functions defined here:
+                  getCurrentUser(), setCurrentUser(), logout()
+                  requireAuth(), redirectToDashboard()
+                  handleLogin(), handleSignup()
+                  getTutors(), getSessions(), bookSession()
+                  getMaterials(), getConversation()
+                  sendMessage(), getAllMessages(), etc.
 
-  - The admin account is hardcoded — it does not exist in the
-    database. It is checked directly in login.php.
+  theme.js      Minimal file (dark mode removed). Kept as
+                placeholder since all pages reference it.
+
+  theme.css     Minimal file (dark mode removed). Kept as
+                placeholder.
+
+  proj.css      Main stylesheet  navbar, hero, features,
+                reviews, buttons, responsive sidebar CSS,
+                animated logo, booking cards, chat bubbles,
+                subject tags, recommendation cards.
+
+  notify.js     Browser notification manager. Registers the
+                service worker (sw.js), requests permission,
+                and exposes FL_NOTIFY object with methods:
+                  FL_NOTIFY.show(title, body, url)
+                  FL_NOTIFY.newMessage(sender, preview)
+                  FL_NOTIFY.sessionBooked(student, subject)
+                  FL_NOTIFY.sessionUpdated(status, subject)
+                  FL_NOTIFY.broadcast(title, message)
+                  FL_NOTIFY.newContactMessage(name, subject)
+
+  sw.js         Service Worker for browser push notifications.
+                Handles push events and notification clicks.
+                Must be at the root of the site (not in /api/).
+
+
+----------------------------------------------------------------
+ 12. NOTIFICATIONS SYSTEM
+----------------------------------------------------------------
+
+  BROWSER NOTIFICATIONS (Web Push API)
+    - Requires HTTPS and user permission
+    - Service worker registered via notify.js on dashboard load
+    - Permission requested automatically when dashboard opens
+    - Triggers:
+        Student books session  tutor gets browser notification
+        Session status changes  student gets notification
+        Admin sends broadcast  all users get notification
+        New chat message arrives  receiver gets notification
+
+  EMAIL NOTIFICATIONS (PHP mail())
+    - Sent automatically by the backend on key events
+    - Uses notify_email.php helper with HTML email templates
+    - Triggers:
+        Session booked  email sent to tutor
+        Session status updated  email sent to student
+        Contact form submitted  email sent to admin
+        Broadcast sent  email sent to all matching users
+    - From address: noreply@flashlearning.atwebpages.com
+    - Reply-to: support@flashlearn.edu
+
+
+----------------------------------------------------------------
+ 13. PDF SECURITY
+----------------------------------------------------------------
+
+  PDFs are displayed inside iframes  not as direct links.
+
+  STEP 1  iframe display (not a download link)
+    <iframe src="" oncontextmenu="return false;"></iframe>
+
+  STEP 2  URL hash parameters hide browser toolbar
+    viewer.src = file + "#toolbar=0&navpanes=0&scrollbar=0"
+    #toolbar=0    hides download/print buttons
+    #navpanes=0   hides navigation panel
+    #scrollbar=0  hides scrollbar UI
+
+  STEP 3  Right-click disabled
+    oncontextmenu="return false;"
+
+  STEP 4  No download buttons in the UI
+    Buttons say "View" or "View Only"  never "Download"
+
+  Applied in: questions.html, solutions.html,
+              dashboard-student.html (Notes + Q&A sections)
+
+  LIMITATION: A determined user can still find the URL via
+  browser DevTools. True protection requires serving PDFs
+  through a PHP authentication script.
+
+
+----------------------------------------------------------------
+ 14. GOOGLE MAPS
+----------------------------------------------------------------
+
+  Embedded on contact.html using Google Maps free Embed URL.
+  No API key required.
+
+  Location: Catholic University of Cameroon (CATUC)
+  Place ID: 0x0:0x2366174a3388a463
+
+  Embed URL format:
+    https://www.google.com/maps/embed?pb=[encoded data]
+
+  HTML wrapper uses Bootstrap ratio-16x9 for responsiveness:
+    <div class="ratio ratio-16x9 rounded-4 shadow
+                overflow-hidden border">
+        <iframe src="..." allowfullscreen loading="lazy"
+                referrerpolicy="no-referrer-when-downgrade">
+        </iframe>
+    </div>
+
+  Also appears in dashboard-student.html booking section
+  (onsite mode) as an optional collapsible map to help
+  students find their meeting spot on campus.
+
+
+----------------------------------------------------------------
+ 15. RESPONSIVE SIDEBAR (DASHBOARDS)
+----------------------------------------------------------------
+
+  On screens wider than 768px:
+    - Sidebar is fixed on the left (250px wide)
+    - Main content has margin-left: 250px
+
+  On screens 768px and below (mobile):
+    - Sidebar slides off-screen to the left (hidden)
+    - A hamburger button () appears in the topbar
+    - Tapping  slides the sidebar in from the left
+    - A dark overlay covers the rest of the screen
+    - Tapping the overlay or any nav link closes the sidebar
+
+  CSS in proj.css (.sidebar-overlay, .sidebar-toggle,
+  .sidebar.open)
+  JS in each dashboard (toggleSidebar, closeSidebar)
+
+
+----------------------------------------------------------------
+ 16. SEARCH BARS
+----------------------------------------------------------------
+
+  Location                  Searches by
+  ------------------------  ----------------------------------
+  Booking  Step 1          Tutor name, subject, qualification
+  Booking  Step 2          Subject name (filters dropdown)
+  Admin  Users section     Name, email, role
+  Admin  Tutors section    Tutor name, subjects taught
+  Tutor  My Schedule       Student name, subject
+  Tutor  My Students       Student name
+  All public pages navbar   Subject or tutor name (redirects
+                            to booking section if logged in)
+
+
+----------------------------------------------------------------
+ 17. PROFILE PHOTOS
+----------------------------------------------------------------
+
+  - Tutors upload photos in "My Profile" section
+  - Students upload photos in "My Profile" section
+  - Photos stored in /image/ folder as:
+      tutor_[user_id]_[timestamp].[ext]
+      student_[user_id]_[timestamp].[ext]
+  - Supported formats: JPEG, PNG, WebP
+  - Photos appear in:
+      Topbar avatar (all dashboards)
+      Tutor cards in booking section
+      Tutor cards in recommendations
+      Tutor grid on about.html and home.html
+      Admin users table
+      Admin tutors table
+      Tutor schedule table (student photos)
+      Tutor students section (student photos)
+  - If no photo: first letter of name shown in colored circle
+
+
+----------------------------------------------------------------
+ 18. SEED DATA (PRE-LOADED TUTORS)
+----------------------------------------------------------------
+
+  15 tutors are pre-loaded in the database.
+  All have password: Tutor@1234
+
+  Name                    Email
+  ----------------------  ----------------------------------
+  Dr. Amara Nkosi         amara.nkosi@flashlearn.edu
+  Prof. Jean-Paul Mbeki   jeanpaul.mbeki@flashlearn.edu
+  Dr. Fatima Ouedraogo    fatima.ouedraogo@flashlearn.edu
+  Mr. Kwame Asante        kwame.asante@flashlearn.edu
+  Dr. Chioma Eze          chioma.eze@flashlearn.edu
+  Prof. Samuel Tabi       samuel.tabi@flashlearn.edu
+  Ms. Aisha Diallo        aisha.diallo@flashlearn.edu
+  Dr. Emmanuel Fon        emmanuel.fon@flashlearn.edu
+  Prof. Grace Mensah      grace.mensah@flashlearn.edu
+  Mr. Olivier Kamga       olivier.kamga@flashlearn.edu
+  Dr. Nadia Bello         nadia.bello@flashlearn.edu
+  Prof. Isaac Yeboah      isaac.yeboah@flashlearn.edu
+  Ms. Celine Ngono        celine.ngono@flashlearn.edu
+  Dr. Patrick Osei        patrick.osei@flashlearn.edu
+  Prof. Marie Tchamba     marie.tchamba@flashlearn.edu
+
+
+----------------------------------------------------------------
+ 19. IMPORTANT NOTES
+----------------------------------------------------------------
+
+  - Admin account is hardcoded  not in the database.
+    Checked directly in login.php against ADMIN_EMAIL and
+    ADMIN_PASSWORD constants defined in config.php.
 
   - Tutor profiles are auto-created on signup so new tutors
     are immediately visible for messaging, even before admin
-    approval.
+    approval. Unapproved tutors show "Pending Approval" badge
+    and cannot be booked.
 
-  - Unapproved tutors show a "Pending Approval" badge in the
-    booking section and cannot be booked until approved.
-
-  - All background images, uploaded photos, and PDFs are
-    stored in the /image/ folder.
-
-  - Dark/light mode is handled by theme.js and theme.css and
-    persists across pages using localStorage.
-
-  - Session authentication uses sessionStorage — logging out
+  - Session authentication uses sessionStorage  logging out
     or closing the browser clears the login session.
 
-local host link to open on phone:  http://10.232.170.188/flashlearn/
-
-================================================================
-
-
-----------------------------------------------------------------
- PDF SECURITY — HOW IT WAS DONE
-----------------------------------------------------------------
-
-  PDFs (study notes and past papers) are displayed inside the
-  platform but protected from easy downloading or printing.
-  Here is exactly what was done and how each step works:
-
-
-  STEP 1 — Display inside an iframe, not a direct link
-  -------------------------------------------------------
-  Instead of giving users a direct download link to the PDF
-  file, the PDF is loaded inside an HTML <iframe> element
-  embedded within the page. This means the user sees the
-  content inside the platform rather than opening the file
-  directly in a new tab or downloading it automatically.
-
-  Example:
-    <iframe id="pdfViewer" src="" width="100%" height="100%"
-            style="display:none;"
-            oncontextmenu="return false;">
-    </iframe>
-
-
-  STEP 2 — URL hash parameters to suppress browser PDF tools
-  -----------------------------------------------------------
-  When the PDF source is set, special hash parameters are
-  appended to the file URL. These are browser-level hints
-  that tell the built-in PDF viewer to hide its toolbar,
-  navigation panel, and scrollbar controls:
-
-    viewer.src = fileName + "#toolbar=0&navpanes=0&scrollbar=0";
-
-    #toolbar=0   — hides the top toolbar (which contains the
-                   download and print buttons in most browsers)
-    #navpanes=0  — hides the side navigation/bookmarks panel
-    #scrollbar=0 — hides the scrollbar UI in the PDF viewer
-
-  This works in Chrome, Edge, and Firefox's built-in PDF
-  viewers. It does not physically block downloading but
-  removes the obvious one-click download button from view.
-
-
-  STEP 3 — Right-click disabled on the iframe
-  --------------------------------------------
-  The oncontextmenu attribute is set to "return false" on
-  every PDF iframe. This disables the right-click context
-  menu on the viewer, preventing users from using the
-  browser's "Save as" or "Open in new tab" options that
-  would normally appear on right-click.
-
-    oncontextmenu="return false;"
-
-
-  STEP 4 — No direct download links in the UI
-  --------------------------------------------
-  In the Study Notes and Q&A Bank sections, buttons say
-  "View" or "View Only" — not "Download". The JavaScript
-  function that loads the PDF only sets the iframe src; it
-  never creates an anchor tag with a download attribute or
-  opens the file in a new window.
-
-
-  WHERE THIS IS APPLIED
-  ----------------------
-  - questions.html     (Study Notes public page)
-  - solutions.html     (Q&A Bank public page)
-  - dashboard-student.html  (Study Notes and Q&A Bank
-                             sections inside the dashboard)
-
-
-  IMPORTANT LIMITATION
-  ----------------------
-  These measures make downloading inconvenient but do not
-  make it technically impossible. A determined user could
-  still:
-    - Open browser developer tools and find the file URL
-    - Type the direct file path into the address bar
-    - Use browser extensions that bypass iframe restrictions
-
-  True PDF protection would require serving PDFs through a
-  PHP script that checks authentication before streaming the
-  file, and storing PDFs outside the public web root folder.
-  That level of protection was not implemented in this
-  version but can be added as a future improvement.
-
-----------------------------------------------------------------
- GOOGLE MAPS — HOW IT WAS IMPLEMENTED
-----------------------------------------------------------------
-
-  The map appears on the Contact page (contact.html) under
-  the heading "Locate our Tutoring Hub". It shows the location
-  of the tutoring hub so students can find their scheduled
-  onsite meeting spot.
-
-
-  HOW IT WORKS
-  -------------
-  No Google Maps API key was used. The map was embedded using
-  Google Maps' free Embed URL feature, which generates a
-  shareable iframe link directly from Google Maps. This
-  requires no account, no billing, and no JavaScript SDK.
-
-
-  STEP 1 — Get the embed URL from Google Maps
-  --------------------------------------------
-  1. Go to maps.google.com
-  2. Search for the location you want to show
-  3. Click Share → Embed a map
-  4. Google generates a full <iframe> code with a src URL
-     in this format:
-       https://www.google.com/maps/embed?pb=!1m18!...
-  5. Copy that URL
-
-
-  STEP 2 — Place it inside a responsive container
-  ------------------------------------------------
-  Bootstrap's ratio utility class was used to make the map
-  responsive. The class "ratio ratio-21x9" forces the iframe
-  to maintain a 21:9 widescreen aspect ratio on all screen
-  sizes without needing fixed pixel heights.
-
-  The full HTML used:
-
-    <div class="ratio ratio-21x9 rounded-4 shadow overflow-hidden border">
-        <iframe
-            src="https://www.google.com/maps/embed?pb=..."
-            allowfullscreen=""
-            loading="lazy">
-        </iframe>
-    </div>
-
-  Breakdown of each attribute:
-
-    ratio ratio-21x9     — Bootstrap class that makes the
-                           iframe scale responsively at a
-                           21:9 aspect ratio
-
-    rounded-4            — Bootstrap class for rounded corners
-
-    shadow               — Bootstrap class for a drop shadow
-
-    overflow-hidden      — clips the map corners so they
-                           respect the border-radius
-
-    border               — adds a subtle border around the map
-
-    allowfullscreen=""   — lets the user expand the map to
-                           full screen if they want
-
-    loading="lazy"       — the map only loads when the user
-                           scrolls near it, improving page
-                           load speed
-
-
-  STEP 3 — Caption below the map
-  --------------------------------
-  A small instruction line was added below the map:
-
-    "Use the map to find your scheduled onsite meeting spot."
-
-  This tells students why the map is there — to help them
-  locate the physical location for onsite sessions.
-
-
-  WHERE IT APPEARS
-  -----------------
-  - contact.html  (the Contact page, in the lower section
-                   below the contact form and details)
-
-
-  IMPORTANT NOTE
-  ---------------
-  The current embed URL points to a placeholder location
-  (Envato in Melbourne, Australia) because the real campus
-  location was not provided during development. To update it
-  to the correct location:
-
-    1. Go to maps.google.com
-    2. Search for the actual tutoring hub address
-    3. Click Share → Embed a map → Copy the iframe src URL
-    4. Replace the src value in contact.html with the new URL
-
-
-======================
-================================================================
-
-----------------------------------------------------------------
- GOOGLE MAPS — HOW IT WAS IMPLEMENTED
-----------------------------------------------------------------
-
-  The map is embedded on the Contact page (contact.html) and
-  shows the location of the Catholic University of Cameroon,
-  which is the physical tutoring hub for onsite sessions.
-
-
-  HOW IT WORKS
-  -------------
-  Google Maps was embedded using a free Google Maps Embed URL.
-  No API key is required for this method. The map is loaded
-  inside an HTML <iframe> element directly on the page.
-
-  The embed URL format used:
-    https://www.google.com/maps/embed?pb=[encoded location data]
-
-  The place identifier used to pin the exact location:
-    Place  : Catholic University of Cameroon
-    Place ID: 0x0:0x2366174a3388a463
-    Source : https://www.google.com/maps/place/
-             Catholic+University+of+Cameroon
-
-
-  THE HTML CODE USED
-  -------------------
-  A Bootstrap responsive ratio wrapper (ratio-21x9) is used
-  so the map scales correctly on all screen sizes:
-
-    <div class="ratio ratio-21x9 rounded-4 shadow
-                overflow-hidden border">
-        <iframe
-            src="https://www.google.com/maps/embed?pb=..."
-            allowfullscreen=""
-            loading="lazy"
-            referrerpolicy="no-referrer-when-downgrade">
-        </iframe>
-    </div>
-
-  Key attributes explained:
-
-    ratio ratio-21x9    — Bootstrap class that makes the
-                          iframe maintain a 21:9 aspect ratio
-                          and fill its container responsively
-
-    allowfullscreen     — lets the user expand the map to
-                          full screen inside the browser
-
-    loading="lazy"      — the map only loads when the user
-                          scrolls to it, improving page speed
-
-    referrerpolicy      — controls what information is sent
-    no-referrer-when    — to Google when the map loads
-    -downgrade
-
-
-  WHERE IT APPEARS
-  -----------------
-  - contact.html — under the heading "Locate our Tutoring Hub"
-  - A note below the map reads: "Use the map to find your
-    scheduled onsite meeting spot."
-
-
-  WHY NO API KEY?
-  ----------------
-  Google Maps offers a free embed option that does not require
-  an API key. You simply use the /maps/embed URL with the
-  place data encoded in the URL. This is suitable for simple
-  location display. An API key would only be needed if you
-  wanted interactive features like directions, custom markers,
-  or Street View integration.
+  - All uploaded files (photos, PDFs) go into /image/ folder.
+
+  - The 15% platform fee is calculated and stored at the
+    moment of booking  not recalculated later.
+
+  - Dark mode was removed. The site is light mode only.
+    theme.js and theme.css are kept as empty placeholders
+    since all pages reference them.
+
+  - sw.js (Service Worker) must be at the root of the site
+    for browser notifications to work. It cannot be inside
+    a subfolder.
+
+  - To switch between local (XAMPP) and live (AwardSpace),
+    change the fallback credentials in api/config.php.
+    The file uses getenv() so Railway/AwardSpace env vars
+    take priority automatically.
+
+  - Local XAMPP URL: http://localhost/flashlearn/
+  - Phone access on same WiFi: http://10.232.170.188/flashlearn/
+  - Live site: https://flashlearning.atwebpages.com
 
 
 ================================================================
